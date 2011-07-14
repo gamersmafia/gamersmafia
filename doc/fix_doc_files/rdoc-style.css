@@ -1,7 +1,6 @@
-
 body {
     font-family: Verdana,Arial,Helvetica,sans-serif;
-    font-size:   90%;
+    font-size: 90%;
     margin: 0;
     margin-left: 40px;
     padding: 0;
@@ -45,18 +44,18 @@ div#index a {
 
 div#index .section-bar {
    margin-left: 0px;
-	padding: 2px 0;
+padding: 2px 0;
    padding-left: 0.7em;
    background: #048;
    font-size: small;
-	text-align: center;
-	color: #fff;
-	border-bottom: 1px solid black;
+text-align: center;
+color: #fff;
+border-bottom: 1px solid black;
 }
 
 div#index-entries {
-	font-size: xx-small;
-	    white-space: nowrap;
+font-size: xx-small;
+white-space: nowrap;
 }
 
 div#classHeader, div#fileHeader {
@@ -86,7 +85,7 @@ div#classHeader {
 
 
 .class-name-in-header {
-  font-size:  180%;
+  font-size: 180%;
   font-weight: bold;
 }
 
@@ -155,7 +154,7 @@ table.header-table {
     border: 1px solid #999;
 }
 
-.top-aligned-row {  vertical-align: top }
+.top-aligned-row { vertical-align: top }
 .bottom-aligned-row { vertical-align: bottom }
 
 /* --- Context section classes ----------------------- */
@@ -202,12 +201,12 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
 
 .standalone-code { background: #221111; color: #ffdead; overflow: hidden; }
 
-.ruby-constant  { color: #98FB98; background: transparent; }
+.ruby-constant { color: #98FB98; background: transparent; }
 .ruby-keyword { color: #CD5C5C; background: transparent; }
-.ruby-ivar    { color: #eedd82; background: transparent; }
-.ruby-operator  { color: #FFFFFF; background: transparent; }
+.ruby-ivar { color: #eedd82; background: transparent; }
+.ruby-operator { color: #FFFFFF; background: transparent; }
 .ruby-identifier { color: #fff; background: transparent; }
-.ruby-node    { color: #FFA0A0; background: transparent; }
+.ruby-node { color: #FFA0A0; background: transparent; }
 .ruby-comment { color: #87CEEB; font-weight: bold; background: transparent; }
-.ruby-regexp  { color: #ffa07a; background: transparent; }
-.ruby-value   { color: #FFA0A0	; background: transparent; }
+.ruby-regexp { color: #ffa07a; background: transparent; }
+.ruby-value { color: #FFA0A0 ; background: transparent; }

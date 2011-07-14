@@ -42,7 +42,7 @@ Instrucciones mínimas (seguir en este orden)
     pg 
     rack 
     rails 
-    rake 
+    rake (instalar versión 8.0.7. haciendo uso del comando "gem install rake --version 0.8.7")
     rcov 
     rmagick 
     rubyforge 
@@ -65,7 +65,7 @@ Instrucciones mínimas (seguir en este orden)
     createdb gamersmafia
     psql -f db/create.sql gamersmafia
 
-- crea la bd de test (puedes hacerlo automáticamente con el siguiente script):
+- crea la bd de test (puedes hacerlo automáticamente con el siguiente script desde la carpeta en la que tienes el git de gamersmafia):
     ./script/sync_testenv.sh
 
 - intenta ejecutar algún test, por ejemplo:
