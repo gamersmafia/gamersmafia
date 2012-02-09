@@ -295,6 +295,18 @@ dat = Stats.user_contents_by_portal(@curuser)
       <td><%=@curuser.irc%></td>
     </tr>
 <% end -%>
+<% if @curuser.steam.to_s != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">Steam</td>
+      <td><%=@curuser.steam%></td>
+    </tr>
+<% end -%>
+<% if @curuser.psnid.to_s != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">PSN ID</td>
+      <td><%=@curuser.psnid%></td>
+    </tr>
+<% end -%>
 <% if @curuser.xfire.to_s != '' then %>
     <tr class="<%=oddclass%>">
       <td class="w100">Xfire</td>
