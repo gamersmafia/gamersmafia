@@ -2,8 +2,7 @@
 
 <div class="facebox-content">
 <div id="aaa"></div>
-<%=form_tag({:update => 'aaa', :url => "/admin/usuarios/report/#{params[:id]}",
-    :evalScripts => true, :remote => true})%>
+<%=form_tag("/admin/usuarios/report/#{params[:id]}", :remote => true})%>
 <input type="text" class="w100pc text virgin" id="report-user-reason" name="reason" value="Razón..." /><br />
 <br />
 <div class="action-buttons">
