@@ -8,7 +8,7 @@ if out then %>
 <div class="mpager">
   <div class="pager-<%=pos%>">
     <span class="pages">
-    Páginas: <%=out.gsub(/(xs=[a-z0-9A-Z]+)/, '').gsub('&amp;', '&').gsub(/[&]{2,}/, '&').gsub('&', '&amp;').gsub('&amp;hellip;', '&hellip;').gsub('&amp;#8', '&#8')%></span>
+    Páginas: <%=out.gsub(/(_xs=[a-z0-9A-Z]+)/, '').gsub('&amp;', '&').gsub(/[&]{2,}/, '&').gsub('&', '&amp;').gsub('&amp;hellip;', '&hellip;').gsub('&amp;#8', '&#8')%></span>
 	</div>
 </div>
 <% end -%>
