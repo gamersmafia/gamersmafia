@@ -8,5 +8,5 @@ out = will_paginate(collection, {:previous_label => 'Anterior',
 								 :params => pager_params
 								  })
 if out then %>
-  	<span class="pages">Páginas: <%=out.gsub(/(xs=[a-z0-9A-Z]+)/, '').gsub('&amp;', '&').gsub(/[&]{2,}/, '&').gsub('&', '&amp;').gsub('&amp;hellip;', '&hellip;')%></span>
+  	<span class="pages">Páginas: <%=out.gsub(/(_xs=[a-z0-9A-Z]+)/, '').gsub('&amp;', '&').gsub(/[&]{2,}/, '&').gsub('&', '&amp;').gsub('&amp;hellip;', '&hellip;')%></span>
 <% end -%>
