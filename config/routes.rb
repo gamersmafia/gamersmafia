@@ -100,6 +100,7 @@ Gamersmafia::Application.routes.draw do
   match 'cuenta/distrito/categorias/term/:id/destroy' => 'cuenta/distrito/categorias#destroy'
   match 'cuenta/distrito/categorias/term/:id/hijos/:content_type' => 'cuenta/distrito/categorias#hijos'
   match 'cuenta/distrito/categorias/term/:id/update' => 'cuenta/distrito/categorias#update'
+  match 'cuenta/distrito/:action' => 'cuenta/distrito'
   match 'cuenta/estadisticas' => 'cuenta/cuenta#estadisticas'
   match 'cuenta/estadisticas/hits' => 'cuenta/cuenta#estadisticas_hits'
   match 'cuenta/estadisticas/registros' => 'cuenta/cuenta#estadisticas_registros'
