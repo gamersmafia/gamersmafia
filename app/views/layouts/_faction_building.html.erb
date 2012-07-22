@@ -1,0 +1,7 @@
+<div id="faction-building" style="position: absolute; margin-left: 850px; top: -12px; height: 80px; overflow: hidden; z-index: 5;">
+  <% if controller.portal.class.name == 'FactionsPortal' then %>
+      <%=draw_organization_building(controller.portal.factions[0], 0)%>
+  <% elsif controller.portal.class.name == 'BazarDistrictPortal' then %>
+      <%=draw_organization_building(controller.portal.bazar_district, 0)%>
+  <% end -%>
+</div>
