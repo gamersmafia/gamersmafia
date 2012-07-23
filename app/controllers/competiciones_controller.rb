@@ -22,7 +22,8 @@ class CompeticionesController < ArenaController
         items<< ['Partidas', "/competiciones/show/#{@competition.id}/partidas"]
       end
 
-      items<< ['Participantes', "/competiciones/show/#{@competition.id}/participantes"]
+      items<< ['Participantes',
+               "/competiciones/show/#{@competition.id}/participantes"]
       items<< ['Reglas', "/competiciones/show/#{@competition.id}/reglas"]
     end
   end
@@ -42,46 +43,60 @@ class CompeticionesController < ArenaController
     @competition = Competition.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @competition.state > 0
     @title = @competition.name
-    @navpath = [['Competiciones', '/competiciones'], [@title, "/competiciones/show/#{@competition.id}"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@title, "/competiciones/show/#{@competition.id}"]]
   end
 
   def noticias
     @competition = Competition.find(params[:id])
     @title = "Noticias sobre #{@competition.name}"
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Noticias', "/competiciones/show/#{@competition.id}/noticias"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Noticias', "/competiciones/show/#{@competition.id}/noticias"]]
   end
 
   def partidas
     @competition = Competition.find(params[:id])
     @title = "Partidas de #{@competition.name}"
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Partidas', "/competiciones/show/#{@competition.id}/partidas"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Partidas', "/competiciones/show/#{@competition.id}/partidas"]]
   end
 
   def ranking
     @competition = Competition.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless (!@competition.kind_of?(Tournament) && @competition.state >= 3)
+    raise ActiveRecord::RecordNotFound unless (!@competition.kind_of?(Tournament) &&
+                                                @competition.state >= 3)
     @title = "Partidas de #{@competition.name}"
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Ranking', "/competiciones/show/#{@competition.id}/ranking"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Ranking', "/competiciones/show/#{@competition.id}/ranking"]]
   end
 
   def participantes
     @competition = Competition.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @competition.state > 0
     @title = "Participantes en #{@competition.name}"
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Participantes', "/competiciones/show/#{@competition.id}/participantes"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Participantes', "/competiciones/show/#{@competition.id}/participantes"]]
   end
 
   def reglas
     @competition = Competition.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @competition.state > 0
     @title = "Reglas de #{@competition.name}"
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Reglas', "/competiciones/show/#{@competition.id}/reglas"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Reglas', "/competiciones/show/#{@competition.id}/reglas"]]
   end
 
   def leave
     require_auth_users
     @competition = Competition.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless (@competition.state == 1 or (@competition.state == 3 and @competition.class.name == 'Ladder'))
+    raise ActiveRecord::RecordNotFound unless (@competition.state == 1 or
+                                               (@competition.state == 3 and
+                                                @competition.class.name == 'Ladder'))
 
     if @competition.user_is_participant(@user.id)
       participant = @competition.get_active_participant_for_user(@user)
@@ -101,7 +116,9 @@ class CompeticionesController < ArenaController
     require_auth_users
     @competition = Competition.find(params[:id])
 
-    raise ActiveRecord::RecordNotFound unless (@competition.state == 1 or (@competition.state == 3 and @competition.class.name == 'Ladder'))
+    raise ActiveRecord::RecordNotFound unless (@competition.state == 1 or
+                                               (@competition.state == 3 and
+                                                @competition.class.name == 'Ladder'))
 
     begin
       @competition.join(@user)
@@ -131,8 +148,10 @@ class CompeticionesController < ArenaController
     @competition = @competitions_match.competition
     @competitions_matches_report = CompetitionsMatchesReport.new
     raise AccessDenied unless @competitions_match.user_can_upload_attachment(@user)
-    @title = "Nuevo informe para #{@competitions_match.participant1.name} vs #{@competitions_match.participant2.name}"
-    @navpath = [['Competiciones', '/competiciones'], ['Nuevo informe', request.fullpath]]
+    @title = "Nuevo informe para #{@competitions_match.participant1.name}"+
+             " vs #{@competitions_match.participant2.name}"
+    @navpath = [['Competiciones', '/competiciones'],
+                ['Nuevo informe', request.fullpath]]
   end
 
   def editar_informe
@@ -143,8 +162,10 @@ class CompeticionesController < ArenaController
     raise AccessDenied unless @competitions_match.user_can_upload_attachment(@user)
     @competition = @competitions_match.competition
 
-    @title = "Editar informe para #{@competitions_match.participant1.name} vs #{@competitions_match.participant2.name}"
-    @navpath = [['Competiciones', '/competiciones'], ['Editar informe', request.fullpath]]
+    @title = "Editar informe para #{@competitions_match.participant1.name}"+
+             " vs #{@competitions_match.participant2.name}"
+    @navpath = [['Competiciones', '/competiciones'],
+                ['Editar informe', request.fullpath]]
   end
 
   def update_report
@@ -170,7 +191,8 @@ class CompeticionesController < ArenaController
     @competition = @competitions_match.competition
     raise AccessDenied unless @competitions_match.user_can_upload_attachment(@user)
     params[:competitions_matches_report][:user_id] = @user.id
-    new_report = @competitions_match.competitions_matches_reports.create(params[:competitions_matches_report])
+    new_report = @competitions_match.competitions_matches_reports.create(
+                 params[:competitions_matches_report])
 
     if new_report
       flash[:notice] = 'Informe creado correctamente.'
@@ -187,7 +209,9 @@ class CompeticionesController < ArenaController
     @competition = @competitions_match.competition
     @competitions_participant = @competition.get_active_participant_for_user(@report.user)
     @title = "Informe de #{@report.user.login}"
-    @navpath = [['Competiciones', '/competiciones'], ["Informe de #{@report.user.login}", "/competiciones/informe/#{@report.id}"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                ["Informe de #{@report.user.login}",
+                  "/competiciones/informe/#{@report.id}"]]
   end
 
 
@@ -200,7 +224,8 @@ class CompeticionesController < ArenaController
 
     params[:competitions_matches_upload][:competitions_match_id] = @competitions_match.id
     params[:competitions_matches_upload][:user_id] = @user.id
-    @competitions_matches_upload = CompetitionsMatchesUpload.new(params[:competitions_matches_upload])
+    @competitions_matches_upload = CompetitionsMatchesUpload.new(
+                                   params[:competitions_matches_upload])
 
     if @competitions_matches_upload.save
       flash[:notice] = 'Archivo subido correctamente'
@@ -235,17 +260,23 @@ class CompeticionesController < ArenaController
     @competitions_participant = CompetitionsParticipant.find(params[:id])
     @competition = @competitions_participant.competition
     p = @competition.get_active_participant_for_user(@user)
-    params[:competitions_match][:play_on] = Time.parse_from_attributes(params[:competitions_match], 'play_on') if params[:competitions_match]['play_on(1i)'.to_sym].to_s != ''
+    params[:competitions_match][:play_on] = Time.parse_from_attributes(params[
+                                            :competitions_match], 'play_on') if(
+                                            params[:competitions_match]
+                                                  ['play_on(1i)'.to_sym].to_s != '')
     params[:competitions_match][:play_maps] = params[:play_maps]
     begin
-      cm = @competition.challenge(p, @competitions_participant, HashWithIndifferentAccess.new(params[:competitions_match]))
+      cm = @competition.challenge(p, @competitions_participant,
+                                  HashWithIndifferentAccess.new(
+                                    params[:competitions_match]))
     rescue Exception
       flash[:error] = $!
       retar
       render :action => :retar
     else
       if cm.new_record?
-        flash[:error] = "Error al crear el reto:<br />#{cm.errors.full_messages_html}"
+        flash[:error] = "Error al crear el reto:<br />"+
+                        " #{cm.errors.full_messages_html}"
         retar
         render :action => :retar
       else
@@ -262,8 +293,11 @@ class CompeticionesController < ArenaController
     @competitions_match = CompetitionsMatch.find(params[:competitions_match_id])
     @competition = @competitions_match.competition
     p = @competition.get_active_participant_for_user(@user)
-    raise AccessDenied unless @competitions_match.participant1_id == p.id || @competitions_match.participant2_id == p.id
-    params[:competitions_match][:play_on] = Time.parse_from_attributes(params[:competitions_match], 'play_on')
+    raise AccessDenied unless (@competitions_match.participant1_id == p.id ||
+                               @competitions_match.participant2_id == p.id)
+    params[:competitions_match][:play_on] = Time.parse_from_attributes(
+                                                 params[:competitions_match],
+                                                        'play_on')
     params[:competitions_match][:play_maps] = params[:play_maps]
     if @competitions_match.equals_options(params[:competitions_match]) # TODO asegurarnos de que el que está aceptando es el que queda
       @competitions_match.accept_challenge
@@ -274,7 +308,8 @@ class CompeticionesController < ArenaController
         flash[:notice] = 'Contrarreto creado correctamente.'
         redirect_to "/cuenta/competiciones/mis_partidas"
       else
-        flash[:error] = "Error al contrarretar:<br />#{@competitions_match.errors.full_messages_html}"
+        flash[:error] = "Error al contrarretar:<br />"+
+                        " #{@competitions_match.errors.full_messages_html}"
         @title = "Contrarreto"
         render :action => :retar
       end
@@ -324,7 +359,11 @@ class CompeticionesController < ArenaController
       # Ya estamos seguros de que es quien dice ser
       for p1_id in params[:retos].keys
         p1 = @competition.competitions_participants.find(p1_id)
-        cm = @competition.competitions_matches.find(:first, :conditions => ['participant1_id = ? and participant2_id = ? and accepted = \'f\'', p1_id, p2.id])
+        cm = @competition.competitions_matches.find(
+             :first,
+             :conditions => ['participant1_id = ? and
+                              participant2_id = ? and
+                              accepted = \'f\'', p1_id, p2.id])
         if cm.nil? then
           flash[:error] = 'El reto elegido ya no está pendiente de confirmación.'
         else
@@ -368,7 +407,11 @@ class CompeticionesController < ArenaController
     # TODO end copypasted
     #
     p2 = @competition.competitions_participants.find(params[:participant2_id])
-    cm = @competition.competitions_matches.find(:first, :conditions => ['participant1_id = ? and participant2_id = ? and accepted = \'f\'', p1.id, p2.id])
+    cm = @competition.competitions_matches.find(
+         :first,
+         :conditions => ['participant1_id = ? and
+                          participant2_id = ? and
+                          accepted = \'f\'', p1.id, p2.id])
     cm.destroy
     @competition.log("#{p1.name} cancela su reto con #{p2.name}")
     redirect_to '/cuenta/competiciones/mis_partidas'
@@ -382,15 +425,24 @@ class CompeticionesController < ArenaController
     # TODO copypasted en varios sitios
 
     track_item(event)
-    @title = "#{@competitions_match.participant1_id ? @competitions_match.participant1.name : ''} vs #{@competitions_match.participant2_id ? @competitions_match.participant2.name : ''}"
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Partidas', "/competiciones/show/#{@competition.id}/partidas"], [@title, "/competiciones/partida/#{@competitions_match.id}"]]
+    @title = "#{@competitions_match.participant1_id ?
+                @competitions_match.participant1.name : ''} vs
+              #{@competitions_match.participant2_id ?
+                @competitions_match.participant2.name : ''}"
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Partidas', "/competiciones/show/#{@competition.id}/partidas"],
+                [@title, "/competiciones/partida/#{@competitions_match.id}"]]
   end
 
   def participante
     @competitions_participant = CompetitionsParticipant.find(params[:id])
     @competition = @competitions_participant.competition
     @title = @competitions_participant.name
-    @navpath = [['Competiciones', '/competiciones'], [@competition.name, "/competiciones/show/#{@competition.id}"], ['Participantes', "/competiciones/show/#{@competition.id}/participantes"], [@title, "/competiciones/participante/#{@competitions_participant.id}"]]
+    @navpath = [['Competiciones', '/competiciones'],
+                [@competition.name, "/competiciones/show/#{@competition.id}"],
+                ['Participantes', "/competiciones/show/#{@competition.id}/participantes"],
+                [@title, "/competiciones/participante/#{@competitions_participant.id}"]]
   end
 
   def confirmar_resultado
@@ -399,9 +451,11 @@ class CompeticionesController < ArenaController
     m.complete_match(@user, params)
 
     if not m.completed? then
-      flash[:notice] = 'Resultado enviado correctamente. El otro participante debe confirmar el resultado.'
+      flash[:notice] = 'Resultado enviado correctamente.'+
+                       ' El otro participante debe confirmar el resultado.'
     else
-      flash[:notice] = 'Resultado confirmado correctamente. La partida ya está completa.'
+      flash[:notice] = 'Resultado confirmado correctamente.'+
+                       ' La partida ya está completa.'
     end
 
     redirect_to "/competiciones/partida/#{m.id}"
