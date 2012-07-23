@@ -8,9 +8,15 @@ class Admin::ContenidosController < ApplicationController
 
   def submenu_items
     if @user.is_bigboss? then
-      return [['Hotmap', '/admin/contenidos/hotmap'], ['Pendientes', '/admin/contenidos'], ['Huérfanos', '/admin/contenidos/huerfanos'], ['Últimas decisiones', '/admin/contenidos/ultimas_decisiones'], ['Papelera', '/admin/contenidos/papelera'], ]
+      return [['Hotmap', '/admin/contenidos/hotmap'],
+              ['Pendientes', '/admin/contenidos'],
+              ['Huérfanos', '/admin/contenidos/huerfanos'],
+              ['Últimas decisiones', '/admin/contenidos/ultimas_decisiones'],
+              ['Papelera', '/admin/contenidos/papelera'], ]
     elsif @user.is_editor? then
-      return [['Pendientes', '/admin/contenidos'], ['Huérfanos', '/admin/contenidos/huerfanos'], ['Papelera', '/admin/contenidos/papelera'], ]
+      return [['Pendientes', '/admin/contenidos'],
+              ['Huérfanos', '/admin/contenidos/huerfanos'],
+              ['Papelera', '/admin/contenidos/papelera'], ]
     else
       return [['Pendientes', '/admin/contenidos'], ]
     end
@@ -22,7 +28,9 @@ class Admin::ContenidosController < ApplicationController
 
     for c in Cms::contents_classes_publishable
       controller = Cms::translate_content_name(c.name)
-      @contents<< [Cms::translate_content_name(c.name).capitalize, c.pending, controller]
+      @contents<< [Cms::translate_content_name(c.name).capitalize,
+                   c.pending,
+                   controller]
     end
   end
 
@@ -32,7 +40,9 @@ class Admin::ContenidosController < ApplicationController
 
   def papelera
     require_user_is_staff
-    params[:portal] = self.portal.code if params[:portal].nil? && self.portal.id != -1 && self.portal.type == 'FactionsPortal'
+    params[:portal] = self.portal.code if (params[:portal].nil? &&
+                                           self.portal.id != -1 &&
+                                           self.portal.type == 'FactionsPortal')
 
     if params[:portal].to_s != '' then
       b = FactionsPortal.find_by_code(params[:portal])
@@ -42,7 +52,10 @@ class Admin::ContenidosController < ApplicationController
     @title = 'Contenidos en la papelera'
     @contents = []
     for c in Cms::contents_classes_publishable + [Topic]
-      @contents<< [Cms::translate_content_name(c.name).capitalize, b.send(ActiveSupport::Inflector::underscore(c.name)).find(:deleted, :conditions => 'contents.updated_on > now() - \'1 month\'::interval'), Cms::translate_content_name(c.name)]
+      @contents<< [Cms::translate_content_name(c.name).capitalize,
+       b.send(ActiveSupport::Inflector::underscore(c.name)).find(:deleted,
+              :conditions => 'contents.updated_on > now() - \'1 month\'::interval'),
+       Cms::translate_content_name(c.name)]
     end
   end
 
@@ -104,11 +117,14 @@ class Admin::ContenidosController < ApplicationController
     pd = PublishingDecision.find(params[:id], :include => :content)
     require_user_can_edit pd.content.real_content
     Cms::publish_content(pd.content.real_content, pd.user)
-    redirect_to Routing.url_for_content_onlyurl(pd.content.real_content).gsub('show', 'edit')
+    redirect_to Routing.url_for_content_onlyurl(pd.content.real_content).gsub(
+                                                                         'show',
+                                                                         'edit')
   end
 
   def publish_content
-    Cms::publish_content(Content.find(params[:id]).real_content, @user, params[:accept_comment])
+    Cms::publish_content(Content.find(params[:id]).real_content,
+                         @user, params[:accept_comment])
     flash[:notice] = 'Tu voto se ha contabilizado correctamente. Gracias'
     redirect_to '/admin/contenidos'
   end
@@ -118,7 +134,9 @@ class Admin::ContenidosController < ApplicationController
     if params[:deny_reason].to_s == ''
       flash[:error] = 'Debes especificar una razón para denegar el contenido'
     else
-      Cms::deny_content(Content.find(params[:id]).real_content, @user, params[:deny_reason])
+      Cms::deny_content(Content.find(params[:id]).real_content,
+                        @user,
+                        params[:deny_reason])
       flash[:notice] = 'Tu voto se ha contabilizado correctamente. Gracias'
     end
     redirect_to '/admin/contenidos'
@@ -129,9 +147,17 @@ class Admin::ContenidosController < ApplicationController
     raise AccessDenied unless @user.is_hq?
 
     ttype, scope = SlogEntry.fill_ttype_and_scope_for_content_report(@content)
-    sl = SlogEntry.create({:scope => scope, :type_id => ttype, :reporter_user_id => @user.id, :headline => "#{Cms.faction_favicon(@content.real_content)}<strong><a href=\"#{Routing.url_for_content_onlyurl(@content.real_content)}\">#{@content.id}</a></strong> reportado (#{params[:reason]}) por <a href=\"#{gmurl(@user)}\">#{@user.login}</a>"})
+    sl = SlogEntry.create({:scope => scope,
+                           :type_id => ttype,
+                           :reporter_user_id => @user.id,
+         :headline => "#{Cms.faction_favicon(@content.real_content)}"+
+         "<strong><a href=\"#{Routing.url_for_content_onlyurl(
+                              @content.real_content)}\">"+
+         "#{@content.id}</a></strong> reportado (#{params[:reason]})"+
+         " por <a href=\"#{gmurl(@user)}\">#{@user.login}</a>"})
     if sl.new_record?
-      flash[:error] = "Error al reportar el contenido:<br />#{sl.errors.full_messages_html}"
+      flash[:error] = "Error al reportar el contenido:<br />"+
+                      "#{sl.errors.full_messages_html}"
     else
       flash[:notice] = "Contenido reportado correctamente"
     end
@@ -149,7 +175,8 @@ class Admin::ContenidosController < ApplicationController
       if @content.close(@user, params[:reason])
         flash[:notice] = "Contenido '#{@content}' cerrado a comentarios."
       else
-        flash[:error] = "Error al cerrar contenido: #{@content.errors.full_messages_html}."
+        flash[:error] = "Error al cerrar contenido:"+
+                        " #{@content.errors.full_messages_html}."
       end
     end
 
@@ -159,7 +186,10 @@ class Admin::ContenidosController < ApplicationController
   def tag_content
     @content = Content.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @content
-    UsersContentsTag.tag_content(@content, @user, params[:tags], delete_missing=false)
+    UsersContentsTag.tag_content(@content,
+                                 @user,
+                                 params[:tags],
+                                 delete_missing=false)
     # TODO(slnc): crear los tags por ajax en lugar de redirigir
     redirect_to gmurl(@content)
   end
