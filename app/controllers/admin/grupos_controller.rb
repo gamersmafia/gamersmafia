@@ -15,7 +15,9 @@ class Admin::GruposController < AdministrationController
 
   def update
     @group = Group.find(params[:id])
-    update_attributes_or_error(@group, "/admin/grupos/edit/#{@group.id}", "/admin/grupos/edit/#{@group.id}")
+    update_attributes_or_error(@group,
+                               "/admin/grupos/edit/#{@group.id}",
+                               "/admin/grupos/edit/#{@group.id}")
   end
 
   def add_user_to_group
