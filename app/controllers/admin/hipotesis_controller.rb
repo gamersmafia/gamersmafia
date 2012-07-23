@@ -14,7 +14,8 @@ class Admin::HipotesisController < AdministrationController
   end
 
   def nueva
-    @navpath = [['Hipotesis', '/admin/hipotesis'], ['Nuevo', '/admin/hipotesis/nueva']]
+    @navpath = [['Hipotesis', '/admin/hipotesis'],
+                ['Nuevo', '/admin/hipotesis/nueva']]
     @title = 'Nueva hipótesis'
     @ab_test = AbTest.new
   end
@@ -25,7 +26,8 @@ class Admin::HipotesisController < AdministrationController
       flash[:notice] = 'Hipótesis creada correctamente.'
       redirect_to :action => 'index'
     else
-      flash[:error] = "Error al crear la hipótesis: #{@ab_test.errors.full_messages_html}"
+      flash[:error] = "Error al crear la hipótesis:"+
+                      " #{@ab_test.errors.full_messages_html}"
       render :action => 'nueva'
     end
   end
@@ -33,7 +35,9 @@ class Admin::HipotesisController < AdministrationController
   def editar
     @ab_test = AbTest.find(params[:id])
     @title = "Editar #{@ab_test.name}"
-    @navpath = [['Hipotesis', '/admin/hipotesis'], ["Editar #{@ab_test.name}", "/admin/hipotesis/editar/#{@ab_test.id}"]]
+    @navpath = [['Hipotesis', '/admin/hipotesis'],
+                ["Editar #{@ab_test.name}",
+                  "/admin/hipotesis/editar/#{@ab_test.id}"]]
   end
 
   def update
@@ -42,7 +46,8 @@ class Admin::HipotesisController < AdministrationController
       flash[:notice] = 'Hipótesis actualizado correctamente.'
       redirect_to :action => 'editar', :id => @ab_test
     else
-      flash[:error] = "Error al actualizar la hipótesis: #{@ab_test.errors.full_messages_html}"
+      flash[:error] = "Error al actualizar la hipótesis:"+
+                      " #{@ab_test.errors.full_messages_html}"
       render :action => 'editar'
     end
   end
