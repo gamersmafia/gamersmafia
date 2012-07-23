@@ -49,7 +49,7 @@ hidden_comments_count = 0
     show_signature = false
   else
     show_signature = (comment.user.enable_comments_sig? &&
-                      !comment.user.comments_sig.empty?)
+                      !comment.user.comments_sig.to_s.empty?)
   end
 %>
 <%= render :partial => 'shared/comment', :locals => {

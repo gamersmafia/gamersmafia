@@ -63,6 +63,17 @@ module GmSys
     self.start_workers unless is_running
   end
 
+  def self.job(task)
+    # performs or schedules a lengthy job depending on the current configuration
+    if App.enable_bgjobs?
+      Delayed::Job.enqueue(DjJobWrapper.new(task))
+    else
+      Rails.logger.info("App.enable_bgjobs is disabled. Evaluating: #{task}")
+      eval(task)
+    end
+  end
+
+
   def self.command(task, run_now=false)
     # performs or schedules a direct bash command
     if run_now || !App.enable_bgjobs?

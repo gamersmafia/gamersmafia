@@ -44,9 +44,12 @@ class Comment < ActiveRecord::Base
 
   def check_crowd_decision_on_visibility
     negative_valorations = self.comments_valorations.negative.count
-    if negative_valorations >= NEGATIVE_VALORATIONS_TO_HIDE && self.visible?
+    positive_valorations = self.comments_valorations.positive.count
+    neutral_valorations = self.comments_valorations.neutral.count
+    absolute_negative = negative_valorations - positive_valorations - neutral_valorations
+    if absolute_negative >= NEGATIVE_VALORATIONS_TO_HIDE && self.visible?
       self.update_attributes(:state => HIDDEN)
-    elsif negative_valorations < NEGATIVE_VALORATIONS_TO_HIDE && self.hidden?
+    elsif absolute_negative < NEGATIVE_VALORATIONS_TO_HIDE && self.hidden?
       self.update_attributes(:state => VISIBLE)
     end
   end
