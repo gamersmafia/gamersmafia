@@ -24,7 +24,8 @@ class Cuenta::Clanes::SponsorsController < ApplicationController
 
   def index
     @title = 'Sponsors'
-    @navpath = [['Mis clanes', '/cuenta/clanes'], ['Sponsors', '/cuenta/clanes/sponsors']]
+    @navpath = [['Mis clanes', '/cuenta/clanes'],
+                ['Sponsors', '/cuenta/clanes/sponsors']]
     list
     render :action => 'list'
   end
@@ -32,7 +33,8 @@ class Cuenta::Clanes::SponsorsController < ApplicationController
   # TODO remove list and leave index
   def list
     @title = 'Sponsors'
-    @navpath = [['Mis clanes', '/cuenta/clanes'], ['Sponsors', '/cuenta/clanes/sponsors']]
+    @navpath = [['Mis clanes', '/cuenta/clanes'],
+                ['Sponsors', '/cuenta/clanes/sponsors']]
     @clans_sponsors = ClansSponsor.paginate(
       :conditions => ['clan_id = ?', @clan.id],
       :page => params[:page],
@@ -41,7 +43,9 @@ class Cuenta::Clanes::SponsorsController < ApplicationController
 
   def new
     @title = 'Nuevo sponsor'
-    @navpath = [['Mis clanes', '/cuenta/clanes'], ['Sponsors', '/cuenta/clanes/sponsors'], ['Nuevo', '/cuenta/clanes/sponsors/new']]
+    @navpath = [['Mis clanes', '/cuenta/clanes'],
+                ['Sponsors', '/cuenta/clanes/sponsors'],
+                ['Nuevo', '/cuenta/clanes/sponsors/new']]
     @clans_sponsor = ClansSponsor.new
   end
 
@@ -58,13 +62,23 @@ class Cuenta::Clanes::SponsorsController < ApplicationController
   end
 
   def edit
-    @clans_sponsor = ClansSponsor.find_or_404(:first, :conditions => ['id = ? and clan_id = ?', params[:id], @clan.id])
+    @clans_sponsor = (
+      ClansSponsor.find_or_404(:first,
+                               :conditions => ['id = ? and clan_id = ?',
+                                                params[:id],
+                                                @clan.id]))
     @title = 'Nuevo sponsor'
-    @navpath = [['Mis clanes', '/cuenta/clanes'], ['Sponsors', '/cuenta/clanes/sponsors'], ['Nuevo', "/cuenta/clanes/sponsors/edit/#{@clans_sponsor.id}"]]
+    @navpath = [['Mis clanes', '/cuenta/clanes'],
+                ['Sponsors', '/cuenta/clanes/sponsors'],
+                ['Nuevo', "/cuenta/clanes/sponsors/edit/#{@clans_sponsor.id}"]]
   end
 
   def update
-    @clans_sponsor = ClansSponsor.find_or_404(:first, :conditions => ['id = ? and clan_id = ?', params[:id], @clan.id])
+    @clans_sponsor = (
+      ClansSponsor.find_or_404(:first,
+                               :conditions => ['id = ? and clan_id = ?',
+                                                params[:id],
+                                                @clan.id]))
     if @clans_sponsor.update_attributes(params[:clans_sponsor])
       flash[:notice] = 'Sponsor actualizado correctamente.'
       redirect_to :action => 'edit', :id => @clans_sponsor
@@ -74,7 +88,10 @@ class Cuenta::Clanes::SponsorsController < ApplicationController
   end
 
   def destroy
-    ClansSponsor.find_or_404(:first, :conditions => ['id = ? and clan_id = ?', params[:id], @clan.id]).destroy
+    ClansSponsor.find_or_404(:first,
+                             :conditions => ['id = ? and clan_id = ?',
+                                              params[:id],
+                                              @clan.id]).destroy
     flash[:notice] = 'Sponsor borrado correctamente.'
     redirect_to :action => 'list'
   end
