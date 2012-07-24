@@ -11,11 +11,31 @@ url = n ? gmurl(n) : '/noticias' %>
 <% end -%>
 <% end -%>
 <% end -%>
+
+<% show_ab_test("mostrar_redes_gm_en_footer", 0, opts={:add_xab_to_links => true}) do %>
   <div class="mcontent">
-	<ul class="second">
-		<li><a href="/site/faq">ayuda</a></li>
-    <li><a href="/site/netiquette">código de conducta</a></li>
-    <li class="last"><a href="http://wiki.lastinieblas.com/">wiki</a></li>
-	</ul>
-  </div>
+	    <ul class="second">
+		     <li><a href="/site/faq">ayuda</a></li>
+         <li><a href="/site/netiquette">código de conducta</a></li>
+         <li class="last"><a href="http://wiki.lastinieblas.com/">wiki</a></li>
+      </ul></br>
+   </div>
+<% end -%>
+
+<% show_ab_test("mostrar_redes_gm_en_footer", 1, opts={:add_xab_to_links => true}) do %>
+  <div class="mcontent">
+	    <ul class="second">
+		     <li><a href="/site/faq">Ayuda</a></li>
+         <li><a href="/site/netiquette">Código de Conducta</a></li>
+         <li class="last"><a href="http://wiki.lastinieblas.com/">Wiki</a></li>
+      </ul></br>
+      <ul class="second">
+         <strong>Síguenos en: &nbsp;</strong>
+         <li><a href="http://bit.ly/QfJyJS">Twitter</a></li>
+         <li><a href="http://bit.ly/PBawZU">Google+</a></li>
+         <li class="last"><a href="http://bit.ly/PBanpv">Facebook</a></li>
+      </ul>
+   </div>
+<% end -%>
+
 </div>

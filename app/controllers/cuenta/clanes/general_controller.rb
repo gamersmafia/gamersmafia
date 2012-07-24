@@ -29,7 +29,8 @@ class Cuenta::Clanes::GeneralController < ApplicationController
   def new
     @user.last_clan_id = nil
     @title = 'Nuevo clan'
-    @navpath = [['Mis clanes', '/cuenta/clanes'], ['Nuevo', '/cuenta/clanes/new']]
+    @navpath = [['Mis clanes', '/cuenta/clanes'],
+                ['Nuevo', '/cuenta/clanes/new']]
     @newclan = Clan.new
   end
 
@@ -42,7 +43,8 @@ class Cuenta::Clanes::GeneralController < ApplicationController
       flash[:notice] = 'Clan creado correctamente.'
       redirect_to :action => 'index'
     else
-      flash[:error] = "Error al crear el clan: #{@newclan.errors.full_messages_html}"
+      flash[:error] = "Error al crear el clan:"+
+                      " #{@newclan.errors.full_messages_html}"
       render :action => 'new'
     end
   end
@@ -60,7 +62,8 @@ class Cuenta::Clanes::GeneralController < ApplicationController
     @clan = Clan.find(params[:clan_id])
     require_auth_member
     if @clan.all_users_of_this_clan.size == 1
-      flash[:error] = "Eres el último miembro del clan. Si quieres abandonarlo tendrás que borrarlo."
+      flash[:error] = "Eres el último miembro del clan."+
+                      " Si quieres abandonarlo tendrás que borrarlo."
     else
       clan.member_leave(@user)
       flash[:notice] = "Has abandonado el clan \"#{clan.id}\"."
@@ -70,12 +73,15 @@ class Cuenta::Clanes::GeneralController < ApplicationController
 
   def update
     require_auth_clan_leader
-    params[:clan][:irc_channel] = params[:clan][:irc_channel].gsub('#', '').strip if params[:clan][:irc_channel]
+    params[:clan][:irc_channel] = (
+      params[:clan][:irc_channel].gsub('#', '').strip if (
+                                                params[:clan][:irc_channel]))
     if @clan.update_attributes(params[:clan]) then
       flash[:notice] = 'Cambios guardados correctamente.'
       redirect_to '/cuenta/clanes/configuracion'
     else
-      flash[:error] = "Error al guardar los datos: #{@clan.errors.full_messages_html}"
+      flash[:error] = "Error al guardar los datos:"+
+                       " #{@clan.errors.full_messages_html}"
       render :action => 'configuracion'
     end
   end
@@ -86,7 +92,9 @@ class Cuenta::Clanes::GeneralController < ApplicationController
     if u
       g = @clan.clans_groups.find(params[:clans_group_id])
       g.users<< u unless g.users.find_by_id(u.id)
-      ClansMovement.create(:clan_id => @clan.id, :user_id => u.id, :direction => ClansMovement::IN)
+      ClansMovement.create(:clan_id => @clan.id,
+                           :user_id => u.id,
+                           :direction => ClansMovement::IN)
       @clan.recalculate_members_count
       flash[:notice] = "Usuario añadido al grupo \"#{g.name}\" correctamente"
     else
@@ -105,7 +113,9 @@ class Cuenta::Clanes::GeneralController < ApplicationController
       flash[:error] = 'El usuario especificado no existe.'
     else
       @clan.clans_groups.find(params[:clans_group_id]).users.delete(u)
-      ClansMovement.create(:clan_id => @clan.id, :user_id => u.id, :direction => ClansMovement::OUT)
+      ClansMovement.create(:clan_id => @clan.id,
+                           :user_id => u.id,
+                           :direction => ClansMovement::OUT)
       @clan.recalculate_members_count
     end
 
@@ -156,7 +166,8 @@ class Cuenta::Clanes::GeneralController < ApplicationController
           flash[:error] = "Clan #{c} no encontrado."
         else
           @clan.del_friend(clan)
-          flash[:notice]<< "Amistad con clan <strong>#{clan.tag}</strong> eliminada<br />"
+          flash[:notice]<< "Amistad con clan <strong>#{clan.tag}</strong>"+
+                           " eliminada<br />"
         end
       end
     end
