@@ -3,7 +3,9 @@ class ClanesController < ComunidadController
   allowed_portals [:gm, :faction]
 
   before_filter :except => [ :index, :buscar, :clan_selector_list ] do |c|
-    c.curclan = Clan.find(:first, :conditions => ['id = ? and deleted is false', c.params[:id].to_i])
+    c.curclan = Clan.find(:first,
+                          :conditions => ['id = ? and deleted is false',
+                                          c.params[:id].to_i])
     raise ActiveRecord::RecordNotFound unless c.curclan
   end
 

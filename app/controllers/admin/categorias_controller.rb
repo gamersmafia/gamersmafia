@@ -8,11 +8,15 @@ class Admin::CategoriasController < ApplicationController
     if params[:id]
       t = Term.find_by_id(params[:id])
       if t && (params[:content_type] || t.taxonomy)
-        raise AccessDenied unless Cms::can_admin_term?(user, t, params[:content_type] ? params[:content_type] : Cms.extract_content_name_from_taxonomy(t.taxonomy))
+        raise AccessDenied unless Cms::can_admin_term?(
+          user, t, (params[:content_type] ? params[:content_type] :
+                    Cms.extract_content_name_from_taxonomy(t.taxonomy)))
       end
     end
 
-    raise AccessDenied unless user.users_roles.count(:conditions => "role IN ('Boss', 'Underboss', 'Don', 'ManoDerecha', 'Sicario', 'Editor')") > 0 || user.has_admin_permission?(:capo)
+    raise AccessDenied unless user.users_roles.count(
+        :conditions => "role IN ('Boss', 'Underboss', 'Don',
+        'ManoDerecha', 'Sicario', 'Editor')") > 0 || user.has_admin_permission?(:capo)
   end
 
   public
@@ -22,7 +26,8 @@ class Admin::CategoriasController < ApplicationController
 
   def index
     @title = "Categorías"
-    @navpath = [['Admin', '/admin'], ['Categorías de Contenidos', '/admin/categorias']]
+    @navpath = [['Admin', '/admin'],
+                ['Categorías de Contenidos', '/admin/categorias']]
     @categories = nil
     render :template => "/admin/categorias/index"
   end
@@ -65,7 +70,8 @@ class Admin::CategoriasController < ApplicationController
     # TODO permisos
     @term = Term.find(params[:id])
     dst = Term.find(params[:destination_term_id])
-    @term.find(:all, :content_type => params[:content_type], :conditions => "contents.id in (#{params[:contents].join(', ')})").each do |c|
+    @term.find(:all, :content_type => params[:content_type],
+               :conditions => "contents.id in (#{params[:contents].join(', ')})").each do |c|
       @term.unlink(c.unique_content)
       dst.link(c.unique_content)
     end
@@ -79,9 +85,11 @@ class Admin::CategoriasController < ApplicationController
 
     if @term.can_be_destroyed?
       @term.destroy
-      flash[:notice] = "Categoría <strong>#{@term.name}(#{@term.taxonomy})</strong> destruída correctamente. Khali se complace."
+      flash[:notice] = "Categoría <strong>#{@term.name}(#{@term.taxonomy})</strong>"+
+                       " destruída correctamente. Khali se complace."
     else
-      flash[:error] = "No se puede eliminar la categoría. Asegúrate de que no tiene subcategorías ni contenidos."
+      flash[:error] = "No se puede eliminar la categoría. Asegúrate de que"+
+                      " no tiene subcategorías ni contenidos."
     end
     redirect_to params[:redirto] ? params[:redirto] : '/admin/categorias'
   end
