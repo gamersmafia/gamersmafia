@@ -13,3 +13,11 @@ two:
   treatments: 1
   metrics: ---
     - :comments
+
+three:
+  id: 3
+  name: mostrar_redes_gm_en_footer
+  min_difference: 0.2
+  treatments: 1
+  metrics: ---
+    - :comments
