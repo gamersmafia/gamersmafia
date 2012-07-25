@@ -1,24 +1,56 @@
 # -*- encoding : utf-8 -*-
 class Admin::UsuariosController < ApplicationController
-  before_filter :require_auth_admins, :except => [ :edit, :index, :clear_photo, :clear_description, :report, :ban_request, :create_unban_request, :confirm_unban_request, :create_ban_request, :confirm_ban_request, :cancel_ban_request, :confirmar_ban_request , :set_antiflood_level, :update, :users_role_destroy, :ipsduplicadas]
-  before_filter :only => [ :index, :clear_photo, :clear_description, :ban_request, :create_unban_request, :confirm_unban_request, :create_ban_request, :confirm_ban_request, :cancel_ban_request] do |c|
+  before_filter :require_auth_admins, :except => [ :edit,
+                                                   :index,
+                                                   :clear_photo,
+                                                   :clear_description,
+                                                   :report,
+                                                   :ban_request,
+                                                   :create_unban_request,
+                                                   :confirm_unban_request,
+                                                   :create_ban_request,
+                                                   :confirm_ban_request,
+                                                   :cancel_ban_request,
+                                                   :confirmar_ban_request ,
+                                                   :set_antiflood_level,
+                                                   :update,
+                                                   :users_role_destroy,
+                                                   :ipsduplicadas]
+  before_filter :only => [ :index,
+                           :clear_photo,
+                           :clear_description,
+                           :ban_request,
+                           :create_unban_request,
+                           :confirm_unban_request,
+                           :create_ban_request,
+                           :confirm_ban_request,
+                           :cancel_ban_request] do |c|
     raise AccessDenied unless c.user && c.user.has_admin_permission?(:capo)
   end
   before_filter :only => [ :confirmar_ban_request ] do |c|
-    raise AccessDenied unless c.user && (c.user.has_admin_permission?(:capo) || c.user.is_hq?)
+    raise AccessDenied unless (c.user && (c.user.has_admin_permission?(:capo) ||
+                                          c.user.is_hq?))
   end
   before_filter :only => [ :report, :set_antiflood_level ] do |c|
     raise AccessDenied unless c.user && c.user.is_hq?
   end
 
-  #verify :method => :post, :only => [ :update, :check_karma, :check_faith, :check_registered_on ], :redirect_to => '/admin/usuarios'
+  #verify :method => :post, :only => ([ :update,
+  #                                     :check_karma,
+  #                                     :check_faith,
+  #                                     :check_registered_on ],
+  #                                   :redirect_to => '/admin/usuarios')
 
   def index
     order_by = 'id DESC'
     conditions = ''
     if params[:s]
       params[:s].strip!
-      conditions = ['lower(login) like lower(?) or lower(email) like lower(?) or lower(firstname) like lower(?) or lower(lastname) like lower(?) or ipaddr LIKE ?',
+      conditions = ['lower(login) like lower(?) or
+                     lower(email) like lower(?) or
+                     lower(firstname) like lower(?) or
+                     lower(lastname) like lower(?) or
+                     ipaddr LIKE ?',
 				'%' + params[:s].gsub(/[']/) { '\\'+$& } + '%',
 				'%' + params[:s].gsub(/[']/) { '\\'+$& } + '%',
 				'%' + params[:s].gsub(/[']/) { '\\'+$& } + '%',
@@ -34,12 +66,16 @@ class Admin::UsuariosController < ApplicationController
       smc[:banned] = "state = #{User::ST_BANNED}"
       smc[:disabled] = "state = #{User::ST_DISABLED}"
       smc[:zombies] = "state = #{User::ST_ZOMBIE}"
-      smc[:antiflood] = "state <> #{User::ST_UNCONFIRMED} and antiflood_level > -1"
+      smc[:antiflood] = "state <> #{User::ST_UNCONFIRMED} and
+                         antiflood_level > -1"
 
       conditions = smc.fetch(params[:sm].to_sym)
     end
 
-    @users = User.paginate(:page => params[:page], :per_page => 20, :conditions => conditions, :order => order_by)
+    @users = User.paginate(:page => params[:page],
+                           :per_page => 20,
+                           :conditions => conditions,
+                           :order => order_by)
   end
 
   def ipsduplicadas
@@ -47,16 +83,26 @@ class Admin::UsuariosController < ApplicationController
 
   def destroy
 	  raise AccessDenied unless @user.is_hq?
-    @edituser = User.find_or_404(:first, :conditions => ['id = ? and is_superadmin is false', params[:id]])
-    flash[:notice] = "Usuario #{@edituser.login} borrado correctamente." if @edituser.destroy
+    @edituser = User.find_or_404(:first,
+                            :conditions => ['id = ? and is_superadmin is false',
+                            params[:id]])
+    flash[:notice] = "Usuario #{@edituser.login}"+
+                     " borrado correctamente." if @edituser.destroy
     redirect_to '/admin/usuarios'
   end
 
   def ban
-    @edituser = User.find_or_404(:first, :conditions => ['id = ? and is_superadmin is false', params[:id]])
+    @edituser = User.find_or_404(:first,
+                            :conditions => ['id = ? and is_superadmin is false',
+                            params[:id]])
     @edituser.change_internal_state 'banned'
-    IpBan.create({:user_id => @user.id, :ip => @edituser.ipaddr, :comment => "Ban al usuario #{@edituser.login}", :expires_on => 7.days.since})
-    flash[:notice] = "Usuario <strong>#{@edituser.login}</strong> baneado. Ip <strong>#{@edituser.ipaddr}</strong> baneada para nuevos registros durante 7 días."
+    IpBan.create({:user_id => @user.id,
+                  :ip => @edituser.ipaddr,
+                  :comment => "Ban al usuario #{@edituser.login}",
+                  :expires_on => 7.days.since})
+    flash[:notice] = "Usuario <strong>#{@edituser.login}</strong> baneado."+
+                      " Ip <strong>#{@edituser.ipaddr}</strong> baneada para"+
+                      " nuevos registros durante 7 días."
     redirect_to '/admin/usuarios'
   end
 
@@ -74,11 +120,22 @@ class Admin::UsuariosController < ApplicationController
     end
 
     if params[:users_role] && params[:users_role][:role].to_s != '' # añadir rol
-      u.users_roles<< UsersRole.create(:role => params[:users_role][:role], :role_data => params[:users_role][:role_data])
+      u.users_roles<< UsersRole.create(:role => params[:users_role][:role],
+                                  :role_data => params[:users_role][:role_data])
     end
 
-    u.update_admin_permissions(params[:edituser][:admin_permissions]) if params[:edituser][:admin_permissions].to_s != ''
-    if u.update_attributes(params[:edituser].pass_sym(:firstname, :lastname, :login, :antiflood_level, :state, :password, :password_confirmation, :email, :is_hq, :comments_sig))
+    u.update_admin_permissions(params[:edituser][:admin_permissions]) if (
+                               params[:edituser][:admin_permissions].to_s != '')
+    if u.update_attributes(params[:edituser].pass_sym(:firstname,
+                                                      :lastname,
+                                                      :login,
+                                                      :antiflood_level,
+                                                      :state,
+                                                      :password,
+                                                      :password_confirmation,
+                                                      :email,
+                                                      :is_hq,
+                                                      :comments_sig))
       flash[:notice] = 'Cambios guardados correctamente.'
       redirect_to :action => 'edit', :id => u.id
     else
@@ -174,7 +231,8 @@ class Admin::UsuariosController < ApplicationController
     if u.pref_public_ban_reason = params[:public_ban_reason]
       flash[:notice] = "Razón de ban actualizada correctamente"
     else
-      flash[:error] = "Error al actualizar la razón de ban: #{u.errors.full_messages_html}"
+      flash[:error] = "Error al actualizar la razón de ban:"+
+                      " #{u.errors.full_messages_html}"
     end
     redirect_to "/admin/usuarios/edit/#{params[:id]}"
   end
@@ -188,7 +246,9 @@ class Admin::UsuariosController < ApplicationController
     params[:public_ban_reason] = [] if params[:public_ban_reason].nil?
     require_admin_permission(:capo)
     u = User.find_by_login!(params[:login])
-    b = BanRequest.new({:user_id => @user.id, :banned_user_id => u.id, :reason => params[:reason]})
+    b = BanRequest.new({:user_id => @user.id,
+                        :banned_user_id => u.id,
+                        :reason => params[:reason]})
     if b.save
       flash[:notice] = "Ban creado correctamente."
       out = "<ul>"
@@ -207,9 +267,13 @@ class Admin::UsuariosController < ApplicationController
   def create_unban_request
     require_admin_permission(:capo)
     u = User.find_by_login!(params[:login])
-    b = BanRequest.find(:first, :conditions => ['banned_user_id = ? and confirmed_on is not null', u.id], :order => 'confirmed_on DESC')
+    b = BanRequest.find(:first,
+                        :conditions => ['banned_user_id = ? and
+                                         confirmed_on is not null', u.id],
+                        :order => 'confirmed_on DESC')
     raise ActiveRecord::RecordNotFound unless b
-    if b.update_attributes({:unban_user_id => @user.id, :reason_unban => params[:reason_unban]})
+    if b.update_attributes({:unban_user_id => @user.id,
+                            :reason_unban => params[:reason_unban]})
       flash[:notice] = "Unban iniciado correctamente."
     else
       flash[:error] = "Error al iniciar el unban: #{b.errors.full_messages_html}"

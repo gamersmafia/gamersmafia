@@ -7,8 +7,12 @@ class Cuenta::AmigosController < ApplicationController
     fail = []
      (1..5).each do |i|
       next unless params["email_invitation_eml#{i}"].to_s != ''
-      next if SilencedEmail.find(:first, :conditions => ['lower(email) = lower(?)', params["email_invitation_eml#{i}"]])
-      u = User.find(:first, :conditions => ['lower(email) = lower(?)', params["email_invitation_eml#{i}"]])
+      next if SilencedEmail.find(:first,
+                                 :conditions => ['lower(email) = lower(?)',
+                                            params["email_invitation_eml#{i}"]])
+      u = User.find(:first,
+                    :conditions => ['lower(email) = lower(?)',
+                                     params["email_invitation_eml#{i}"]])
       # user is local, add as a local friendship, not external
       if u
         # if there is already a friendship between them we do nothing
@@ -18,7 +22,10 @@ class Cuenta::AmigosController < ApplicationController
             :receiver_user_id => u.id,
             :invitation_text => params["email_invitation_msg#{i}"])
       else
-        f = Friendship.new({:sender_user_id => @user.id, :receiver_email => params["email_invitation_eml#{i}"], :invitation_text => params["email_invitation_msg#{i}"]})
+        f = Friendship.new(
+              {:sender_user_id => @user.id,
+               :receiver_email => params["email_invitation_eml#{i}"],
+               :invitation_text => params["email_invitation_msg#{i}"]})
       end
 
       if f.save
@@ -27,7 +34,8 @@ class Cuenta::AmigosController < ApplicationController
         fail<< [params["email_invitation_eml#{i}"], f.errors.full_messages_html]
       end
     end
-    flash[:notice] = "Invitaciones enviadas correctamente a #{suc.join('<br />')}"
+    flash[:notice] = "Invitaciones enviadas correctamente a"+
+                     " #{suc.join('<br />')}"
     if fail.size > 0
       flash[:error] = "Error al enviar las invitaciones a #{fail.join(' ')}"
     end
@@ -48,11 +56,17 @@ class Cuenta::AmigosController < ApplicationController
     params[:u][:ipaddr] = self.remote_ip
     params[:u][:lastseen_on] = Time.now
     params[:u][:referer_user_id] = freq.sender_user_id
-    @u = User.new(params[:u].pass_sym(:login, :password, :email, :ipaddr, :lastseen_on)) # TODO testear que solo se pasan estos atributos
+    @u = User.new(params[:u].pass_sym(:login,
+                                      :password,
+                                      :email,
+                                      :ipaddr,
+                                      :lastseen_on)) # TODO testear que solo se
+                                                     # pasan estos atributos
     if params[:u] && params[:u][:password].to_s.empty? then
       flash[:error] = 'Debes introducir una contraseña'
       render :action => :external_user_aceptar_amistad
-    elsif params[:u] && params[:u][:password] != params[:u][:password_confirm] then
+    elsif (params[:u] && params[:u][:password] !=
+           params[:u][:password_confirm]) then
       flash[:error] = 'Las dos contraseñas introducidas no coinciden'
       render :action => :external_user_aceptar_amistad
     else
@@ -60,12 +74,14 @@ class Cuenta::AmigosController < ApplicationController
       if @u.save then
         confirmar_nueva_cuenta(@u)
         session[:user] = @u.id
-        flash[:notice] = 'Cuenta creada y confirmada correctamente. Bienvenid@ a Gamersmafia.'
+        flash[:notice] = 'Cuenta creada y confirmada correctamente.'+
+                         ' Bienvenid@ a Gamersmafia.'
         redirect_to '/cuenta'
         # TODO send email to referrer
         freq.accept_external(@u)
       else
-        flash[:error] = 'Error al crear la cuenta<br />' << @u.errors.full_messages.join('<br />')
+        flash[:error] = ('Error al crear la cuenta<br />' <<
+                          @u.errors.full_messages.join('<br />'))
         render :action => :external_user_aceptar_amistad
       end
     end
@@ -75,7 +91,8 @@ class Cuenta::AmigosController < ApplicationController
     f = Friendship.find_by_external_invitation_key(params[:eik])
     raise ActiveRecord::RecordNotFound unless f
     SilencedEmail.create({:email => f.receiver_email})
-    flash[:notice] = "Email añadido a la lista negra. No te enviaremos ninguna invitación más."
+    flash[:notice] = "Email añadido a la lista negra."+
+                     " No te enviaremos ninguna invitación más."
     redirect_to "/"
   end
 
@@ -88,10 +105,14 @@ class Cuenta::AmigosController < ApplicationController
     u = User.find(:first, :conditions => ['lower(email) = lower(?)', email])
     if u then # user is local, add as a local friendship, not external
       f = Friendship.find_between(@user, u)
-      return f if f # if there is already a friendship between them we do nothing
-      f = Friendship.new({:sender_user_id => @user.id, :receiver_user_id => u.id, :invitation_text => invite_text})
+      return f if f #if there is already a friendship between them we do nothing
+      f = Friendship.new({:sender_user_id => @user.id,
+                          :receiver_user_id => u.id,
+                          :invitation_text => invite_text})
     else
-      f = Friendship.new({:sender_user_id => @user.id, :receiver_email => email, :invitation_text => invite_text})
+      f = Friendship.new({:sender_user_id => @user.id,
+                          :receiver_email => email,
+                          :invitation_text => invite_text})
     end
     f.save
     f
@@ -103,11 +124,15 @@ class Cuenta::AmigosController < ApplicationController
     raise ActiveRecord::RecordNotFound unless u
     f = Friendship.find_between(u, @user)
     if f.nil?
-      f = Friendship.new({:sender_user_id => @user.id, :receiver_user_id => u.id})
+      f = Friendship.new({:sender_user_id => @user.id,
+                          :receiver_user_id => u.id})
       if f.save
-        flash[:notice] = "Amistad iniciada correctamente. Debes esperar a que <b>#{u.login}</b> acepte tu amistad."
+        flash[:notice] = (
+          "Amistad iniciada correctamente."+
+          " Debes esperar a que <b>#{u.login}</b> acepte tu amistad.")
       else
-        flash[:error] = "Error al iniciar la amistad: #{f.errors.full_messages_html}"
+        flash[:error] = "Error al iniciar la amistad:"+
+                        " #{f.errors.full_messages_html}"
       end
       redirto_or "/miembros/#{u.login}"
     else
