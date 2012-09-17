@@ -1,21 +1,57 @@
 <div id="footer-spirit"></div>
 
 <div id="mgfooter" class="module">
-	<% if user_is_authed then %>
+<% if user_is_authed then %>
 <% cache('/common/gmversion') do %>
-<%n = News.published.find(:first, :conditions => "title LIKE 'Gamersmafia actualizada a la versión%'", :order => 'created_on DESC')
-url = n ? gmurl(n) : '/noticias' %>
-<div id="gmversion"><div class="content<%=n ? n.unique_content_id : 'foooo'%> new"><a href="<%=url%>"><%=n ? n.title.split(' ').last : 'HEAD' %></a></div></div>
-<% if n then %>
-<script type="text/javascript">contents = contents.concat(<%=n.unique_content_id%>);</script>
-<% end -%>
-<% end -%>
-<% end -%>
-  <div class="mcontent">
-	<ul class="second">
-		<li><a href="/site/faq">ayuda</a></li>
-    <li><a href="/site/netiquette">código de conducta</a></li>
-    <li class="last"><a href="http://wiki.gamersmafia.com/">wiki</a></li>
-	</ul>
+
+<%n = News.published.find(
+    :first,
+    :conditions => "title LIKE 'Gamersmafia actualizada a la versión%'",
+    :order => 'created_on DESC')
+    url = n ? gmurl(n) : '/noticias' %>
+
+<div id="gmversion">
+  <div class="content<%=n ? n.unique_content_id : 'foooo'%> new">
+    <a href="<%=url%>"><%=n ? n.title.split(' ').last : 'HEAD' %></a>
   </div>
+</div>
+
+<% if n then %>
+
+<script type="text/javascript">contents = contents.concat(
+    <%=n.unique_content_id%>);</script>
+<% end -%>
+<% end -%>
+<% end -%>
+
+<% show_ab_test("mostrar_redes_gm_en_footer", 0, opts={:add_xab_to_links => true}) do %>
+<div class="mcontent">
+	  <ul class="second">
+		   <li><a href="/site/faq">ayuda</a></li>
+       <li><a href="/site/netiquette">código de conducta</a></li>
+       <li class="last"><a href="http://wiki.gamersmafia.com/">wiki</a></li>
+   </ul>
+</div>
+<% end -%>
+
+
+<% show_ab_test("mostrar_redes_gm_en_footer", 1, opts={:add_xab_to_links => true}) do %>
+<div class="mcontent">
+    <ul class="second">
+       <li><a href="/site/faq">Ayuda</a></li>
+       <li><a href="/site/netiquette">Código de Conducta</a></li>
+       <li class="last"><a href="http://wiki.gamersmafia.com/">Wiki</a></li>
+    </ul></br>
+    <ul class="second">
+       Síguenos en: &nbsp;
+       <li><a href="https://twitter.com/gamersmafia">Twitter</a></li>
+       <li>
+           <a href="https://plus.google.com/109520685609143417377">Google+</a>
+       </li>
+       <li class="last">
+           <a href="http://es-es.facebook.com/pages/Gamersmafia/301286104355">Facebook</a>
+       </li>
+    </ul>
+<% end -%>
+
 </div>
