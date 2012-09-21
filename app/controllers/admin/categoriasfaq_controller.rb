@@ -3,10 +3,10 @@ class Admin::CategoriasfaqController < ApplicationController
   require_admin_permission :faq
 
   def index
-    @faq_categories = FaqCategory.find(:all,
-                                       :conditions => 'parent_id is null',
-                                       :order => 'position, root_id, parent_id desc,' +
-                                                 'lower(name)')
+    @faq_categories = FaqCategory.find(
+        :all,
+        :conditions => 'parent_id is null',
+        :order => 'position, root_id, parent_id desc,' + 'lower(name)')
   end
 
   def new

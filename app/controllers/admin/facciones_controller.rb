@@ -8,19 +8,25 @@ class Admin::FaccionesController < ApplicationController
   def index
     @title = 'Facciones'
     @navpath = [['Admin', '/admin'], ['Facciones', '/admin/facciones'], ]
-    @factions = Faction.find(:all, :order => 'lower(name) asc')
+    @factions = Faction.find(:all, :order => 'LOWER(name)')
   end
 
   def edit
     @faction = Faction.find(params[:id])
     @title = "Editando #{@faction.name}"
-    @navpath = [['Admin', '/admin'], ['Facciones', '/admin/facciones'], [@faction.name, "/admin/facciones/edit/#{@faction.id}"]]
+    @navpath = [
+        ['Admin', '/admin'],
+        ['Facciones', '/admin/facciones'],
+        [@faction.name, "/admin/facciones/edit/#{@faction.id}"]]
   end
 
   def update
     @faction = Faction.find(params[:id])
     @title = "Editando #{@faction.name}"
-    @navpath = [['Admin', '/admin'], ['Facciones', '/admin/facciones'], [@faction.name, "/admin/facciones/edit/#{@faction.id}"]]
+    @navpath = [
+        ['Admin', '/admin'],
+        ['Facciones', '/admin/facciones'],
+        [@faction.name, "/admin/facciones/edit/#{@faction.id}"]]
 
     if params[:faction][:boss].to_s != '' then
       params[:faction][:boss] = User.find_by_login(params[:faction][:boss])
@@ -29,7 +35,8 @@ class Admin::FaccionesController < ApplicationController
     end
 
     if params[:faction][:underboss].to_s != '' then
-      params[:faction][:underboss] = User.find_by_login(params[:faction][:underboss])
+      params[:faction][:underboss] = User.find_by_login(
+          params[:faction][:underboss])
     else
       params[:faction][:underboss] = nil
     end
@@ -40,7 +47,10 @@ class Admin::FaccionesController < ApplicationController
     if @faction.update_attributes(params[:faction])
       @faction.update_boss(boss)
       @faction.update_underboss(underboss)
-      expire_fragment(:controller => 'home', :action => 'index', :part => 'factions')
+      expire_fragment(
+          :controller => 'home',
+          :action => 'index',
+          :part => 'factions')
       flash[:notice] = 'Facción actualizada correctamente.'
       redirect_to :action => 'edit', :id => @faction
     else
@@ -52,7 +62,8 @@ class Admin::FaccionesController < ApplicationController
     faction = Faction.find(params[:id])
     raise AccessDenied unless faction.created_on >= Faction::GRACE_DAYS.days.ago
     faction.destroy
-    flash[:notice] = "Facción <strong>#{faction.name}(#{faction.code})</strong> borrada correctamente"
+    flash[:notice] = "Facción <strong>#{faction.name}"+
+                     "(#{faction.code})</strong> borrada correctamente"
     redirect_to '/admin/facciones'
   end
 end

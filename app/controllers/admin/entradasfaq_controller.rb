@@ -12,8 +12,10 @@ class Admin::EntradasfaqController < ApplicationController
   end
 
   def index
-    @faq_entries = FaqEntry.paginate(:page => params[:page], :per_page => 50,
-                                     :order => '(select position from faq_categories where id = faq_category_id), position')
+    @faq_entries = FaqEntry.paginate(
+        :page => params[:page],
+        :per_page => 50,
+        :order => '(SELECT position FROM faq_categories WHERE id = faq_category_id), position')
   end
 
   def new
@@ -56,7 +58,12 @@ class Admin::EntradasfaqController < ApplicationController
 
   def moveup
     @faq_entry = FaqEntry.find(params[:id])
-    @prev = @faq_entry.faq_category.faq_entries.find(:first, :conditions => ['position < ?', @faq_entry.position], :order => 'position DESC', :limit => 1)
+    @prev = @faq_entry.faq_category.faq_entries.find(
+        :first,
+        :conditions => ['position < ?',
+                         @faq_entry.position],
+                         :order => 'position DESC',
+                         :limit => 1)
     if @prev
       tmp = @prev.position
       @prev.position = @faq_entry.position
@@ -72,7 +79,11 @@ class Admin::EntradasfaqController < ApplicationController
 
   def movedown
     @faq_entry = FaqEntry.find(params[:id])
-    @prev = @faq_entry.faq_category.faq_entries.find(:first, :conditions => ['position > ?', @faq_entry.position], :order => 'position ASC', :limit => 1)
+    @prev = @faq_entry.faq_category.faq_entries.find(
+        :first,
+        :conditions => ['position > ?', @faq_entry.position],
+        :order => 'position',
+        :limit => 1)
     if @prev
       tmp = @prev.position
       @prev.position = @faq_entry.position

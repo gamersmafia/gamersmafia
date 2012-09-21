@@ -2,7 +2,10 @@
 class Admin::JuegosController < AdministrationController
 
   def index
-    @games = Game.paginate(:order => 'lower(name) asc', :per_page => 50, :page => params[:page])
+    @games = Game.paginate(
+        :order => 'LOWER(name)',
+        :page => params[:page],
+        :per_page => 50)
   end
 
   def new
@@ -25,7 +28,8 @@ class Admin::JuegosController < AdministrationController
     if gm.save
       flash[:notice] = 'Versión de juego creada correctamente.'
     else
-      flash[:error] = "Error al crear la versión: #{gm.errors.full_messages_html}"
+      flash[:error] = "Error al crear la versión: "+
+                      "#{gm.errors.full_messages_html}"
     end
 
     redirect_to "/admin/juegos/edit/#{gm.game_id}"
@@ -36,7 +40,8 @@ class Admin::JuegosController < AdministrationController
     if gm.save
       flash[:notice] = 'Modo de juego creado correctamente.'
     else
-      flash[:error] = "Error al crear el modo de juego: #{gm.errors.full_messages_html}"
+      flash[:error] = "Error al crear el modo de juego: "+
+                      "#{gm.errors.full_messages_html}"
     end
 
     redirect_to "/admin/juegos/edit/#{gm.game_id}"
@@ -48,7 +53,8 @@ class Admin::JuegosController < AdministrationController
       gv.destroy
       flash[:notice] = "Version #{gv.version} borrada correctamente"
     else
-      flash[:error] = "Error al borrar la versión: #{gv.errors.full_messages_html}"
+      flash[:error] = "Error al borrar la versión: "+
+                      "#{gv.errors.full_messages_html}"
     end
     redirect_to "/admin/juegos/edit/#{gv.game_id}"
   end
@@ -59,7 +65,8 @@ class Admin::JuegosController < AdministrationController
       gv.destroy
       flash[:notice] = "Modo de juego #{gv.name} borrada correctamente"
     else
-      flash[:error] = "Error al borrar el modo de juego: #{gv.errors.full_messages_html}"
+      flash[:error] = "Error al borrar el modo de juego: "+
+                      "#{gv.errors.full_messages_html}"
     end
     redirect_to "/admin/juegos/edit/#{gv.game_id}"
   end
@@ -74,7 +81,8 @@ class Admin::JuegosController < AdministrationController
       flash[:notice] = 'Juego actualizado correctamente.'
       redirect_to :action => 'edit', :id => @game
     else
-      flash[:error] = "Error al actualizar el juego: #{@game.errors.full_messages_html}"
+      flash[:error] = "Error al actualizar el juego: "+
+                      "#{@game.errors.full_messages_html}"
       render :action => 'edit'
     end
   end

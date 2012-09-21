@@ -6,7 +6,11 @@ class Admin::MapasJuegosController < ApplicationController
   def index
     @title = 'Mapas de juegos'
     @navpath = [['Mapas de juegos', '/admin/mapas_juegos'],]
-    @games_maps = GamesMap.paginate(:page => params[:page], :per_page => 50, :order => 'games_maps.game_id ASC, lower(games_maps.name) ASC', :include => :game)
+    @games_maps = GamesMap.paginate(
+        :include => :game,
+        :order => 'games_maps.game_id, LOWER(games_maps.name)',
+        :page => params[:page],
+        :per_page => 50)
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
@@ -19,7 +23,9 @@ class Admin::MapasJuegosController < ApplicationController
 
   def create
     @games_map = GamesMap.new(params[:games_map])
-    if params[:games_map][:download_id].to_s != '' && Download.find_by_id(params[:games_map][:download_id].to_i).nil? then
+    if (params[:games_map][:download_id].to_s != '' &&
+        Download.find_by_id(params[:games_map][:download_id].to_i).nil?)
+      then
       flash[:error] = 'La ID de descarga especificada no es válida.'
       render :action => 'new'
     else
@@ -36,12 +42,16 @@ class Admin::MapasJuegosController < ApplicationController
   def edit
     @games_map = GamesMap.find(params[:id])
     @title = "#{@games_map.game.code} #{@games_map.name}"
-    @navpath = [['Mapas de juegos', '/admin/mapas_juegos'], [@title, "/admin/mapas_juegos/edit/#{@games_map.id}"]]
+    @navpath = [
+        ['Mapas de juegos', '/admin/mapas_juegos'],
+        [@title, "/admin/mapas_juegos/edit/#{@games_map.id}"]]
   end
 
   def update
     @games_map = GamesMap.find(params[:id])
-    if params[:games_map][:download_id].to_s != '' && Download.find_by_id(params[:games_map][:download_id].to_i).nil? then
+    if (params[:games_map][:download_id].to_s != '' &&
+        Download.find_by_id(params[:games_map][:download_id].to_i).nil?)
+      then
       flash[:error] = 'La ID de descarga especificada no es válida.'
       render :action => 'edit'
     else

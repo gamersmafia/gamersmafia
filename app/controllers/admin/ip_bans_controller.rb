@@ -12,7 +12,8 @@ class Admin::IpBansController < ApplicationController
       flash[:notice] = 'Ban creado correctamente.'
       redirect_to :action => 'index'
     else
-      flash[:error] = "Error al crear el ban: #{@ip_ban.errors.full_messages_html}"
+      flash[:error] = "Error al crear el ban: "+
+                      "#{@ip_ban.errors.full_messages_html}"
       render :action => 'index'
     end
   end

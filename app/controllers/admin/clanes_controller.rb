@@ -5,7 +5,11 @@ class Admin::ClanesController < ApplicationController
   def index
     @title = 'Clanes'
     @navpath = [['Admin', '/admin'], ['Clanes', '/admin/clanes']]
-    @clans = Clan.paginate(:page => params[:page], :per_page => 50, :conditions => 'deleted is false', :order => 'created_on DESC')
+    @clans = Clan.paginate(
+        :conditions => 'deleted is false',
+        :order => 'created_on DESC',
+        :page => params[:page],
+        :per_page => 50)
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
@@ -14,7 +18,10 @@ class Admin::ClanesController < ApplicationController
 
   def edit
     @clan = Clan.find(params[:id])
-    @navpath = [['Admin', '/admin'], ['Clanes', '/admin/clanes'], [@clan.name, "/admin/clanes/edit/#{@clan.id}"]]
+    @navpath = [
+        ['Admin', '/admin'],
+        ['Clanes', '/admin/clanes'],
+        [@clan.name, "/admin/clanes/edit/#{@clan.id}"]]
     @title = "Editar #{@clan.name}"
   end
 
