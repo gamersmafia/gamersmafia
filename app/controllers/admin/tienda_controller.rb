@@ -17,7 +17,8 @@ class Admin::TiendaController < ApplicationController
       flash[:notice] = "Producto actualizado correctamente"
       redirect_to "/admin/tienda/producto/#{@product.id}"
     else
-      flash[:error] = "Error al actualizar el producto: #{@product.errors.full_messages_html}"
+      flash[:error] = "Error al actualizar el producto: "+
+                      "#{@product.errors.full_messages_html}"
     end
   end
 end
