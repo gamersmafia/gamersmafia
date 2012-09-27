@@ -67,36 +67,51 @@
     <th colspan="2" style="padding-top: 30px;">Contacto</th>
   </tr>
   <tr>
-    <td><label for="post_msn">MSN</label></td>
-    <td><%= text_field "post", "msn", :size => 20, :class=>"text"%></td>
+    <td><label for="post_msn">GamerTag (Xbox360)</label></td>
+    <td><%= text_field "post", "gamertag", :size => 20, :class=>"text"%></td>
   </tr>
   <tr>
     <td><label for="post_msn">GoogleTalk</label></td>
     <td><%= text_field "post", "googletalk", :size => 20, :class=>"text"%></td>
   </tr>
   <tr>
-    <td><label for="post_msn">Yahoo IM</label></td>
-    <td><%= text_field "post", "yahoo_im", :size => 20, :class=>"text"%></td>
-  </tr>
-  <tr>
-    <td><label for="post_msn">Xfire</label></td>
-    <td><%= text_field "post", "xfire", :size => 20, :class=>"text"%></td>
-  </tr>
-  <tr>
     <td><label for="post_msn">IRC</label></td>
     <td><%= text_field "post", "irc", :size => 20, :class=>"text"%></td>
+  </tr>
+  <tr>
+    <td><label for="post_msn">MSN</label></td>
+    <td><%= text_field "post", "msn", :size => 20, :class=>"text"%></td>
+  </tr>
+  <tr>
+    <td><label for="post_msn">Origin</label></td>
+    <td><input type="text" name="post[pref_contact_origin]" size="20" class="text"
+               value="<%=@post.pref_contact_origin%>"/></td>
   </tr>
   <tr>
     <td><label for="post_homepage">Página personal</label></td>
     <td><%= text_field "post", "homepage", :size => 20, :class=>"text"%></td>
   </tr>
   <tr>
+    <td><label for="post_msn">PSN ID</label></td>
+    <td><input type="text" name="post[pref_contact_psn_id]" size="20" class="text"
+               value="<%=@post.pref_contact_psn_id%>"/></td>
+  </tr>
+  <tr>
+    <td><label for="post_msn">Steam</label></td>
+    <td><input type="text" name="post[pref_contact_steam]" size="20" class="text"
+               value="<%=@post.pref_contact_steam%>"/></td>
+  </tr>
+  <tr>
     <td><label for="post_msn">Wii Code</label></td>
     <td><%= text_field "post", "wii_code", :size => 20, :class=>"text"%></td>
   </tr>
   <tr>
-    <td><label for="post_msn">GamerTag (Xbox360)</label></td>
-    <td><%= text_field "post", "gamertag", :size => 20, :class=>"text"%></td>
+    <td><label for="post_msn">Xfire</label></td>
+    <td><%= text_field "post", "xfire", :size => 20, :class=>"text"%></td>
+  </tr>
+  <tr>
+    <td><label for="post_msn">Yahoo IM</label></td>
+    <td><%= text_field "post", "yahoo_im", :size => 20, :class=>"text"%></td>
   </tr>
   <tr>
     <th colspan="2" style="padding-top: 30px;">Hardware</th>

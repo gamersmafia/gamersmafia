@@ -265,28 +265,16 @@ dat = Stats.user_contents_by_portal(@curuser)
 
 <%mftext('Contacto', :grid => 5, :glast => true) do %>
   <table>
-<% if @curuser.homepage != '' then %>
-    <tr class="<%=oddclass%>">
-      <td class="w100">Página web</td>
-      <td><% if @curuser.homepage%><%=link_to show_url(@curuser.homepage), @curuser.homepage%><% end -%></td>
-    </tr>
-<% end -%>
 <% if @curuser.email_public? then %>
     <tr class="<%=oddclass%>">
       <td class="w100">Email</td>
       <td><%=hide_email(@curuser.email)%></td>
     </tr>
 <% end -%>
-<% if @curuser.msn.to_s != '' then %>
+<% if @curuser.gamertag.to_s != '' then %>
     <tr class="<%=oddclass%>">
-      <td class="w100">MSN</td>
-      <td><%=hide_email(@curuser.msn)%></td>
-    </tr>
-<% end -%>
-<% if @curuser.yahoo_im.to_s != '' then %>
-    <tr class="<%=oddclass%>">
-      <td class="w100">Yahoo IM</td>
-      <td><%=@curuser.yahoo_im%></td>
+      <td class="w100">GamerTag</td>
+      <td><%=@curuser.gamertag%></td>
     </tr>
 <% end -%>
 <% if @curuser.googletalk.to_s != '' then %>
@@ -301,10 +289,34 @@ dat = Stats.user_contents_by_portal(@curuser)
       <td><%=@curuser.irc%></td>
     </tr>
 <% end -%>
-<% if @curuser.xfire.to_s != '' then %>
+<% if @curuser.msn.to_s != '' then %>
     <tr class="<%=oddclass%>">
-      <td class="w100">Xfire</td>
-      <td><%=@curuser.xfire%></td>
+      <td class="w100">MSN</td>
+      <td><%=hide_email(@curuser.msn)%></td>
+    </tr>
+<% end -%>
+<% if @curuser.pref_contact_origin.to_s != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">Origin</td>
+      <td><%=@curuser.pref_contact_origin%></td>
+    </tr>
+<% end -%>
+<% if @curuser.homepage != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">Página web</td>
+      <td><% if @curuser.homepage%><%=link_to show_url(@curuser.homepage), @curuser.homepage%><% end -%></td>
+    </tr>
+<% end -%>
+<% if @curuser.pref_contact_psn_id.to_s != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">PSN ID</td>
+      <td><%=@curuser.pref_contact_psn_id%></td>
+    </tr>
+<% end -%>
+<% if @curuser.pref_contact_steam.to_s != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">Steam</td>
+      <td><%=@curuser.pref_contact_steam%></td>
     </tr>
 <% end -%>
 <% if @curuser.wii_code.to_s.strip != '' then %>
@@ -313,10 +325,16 @@ dat = Stats.user_contents_by_portal(@curuser)
       <td><%=wii_code(@curuser.wii_code)%></td>
     </tr>
 <% end -%>
-<% if @curuser.gamertag.to_s != '' then %>
+<% if @curuser.xfire.to_s != '' then %>
     <tr class="<%=oddclass%>">
-      <td class="w100">GamerTag</td>
-      <td><%=@curuser.gamertag%></td>
+      <td class="w100">Xfire</td>
+      <td><%=@curuser.xfire%></td>
+    </tr>
+<% end -%>
+<% if @curuser.yahoo_im.to_s != '' then %>
+    <tr class="<%=oddclass%>">
+      <td class="w100">Yahoo IM</td>
+      <td><%=@curuser.yahoo_im%></td>
     </tr>
 <% end -%>
   </table>

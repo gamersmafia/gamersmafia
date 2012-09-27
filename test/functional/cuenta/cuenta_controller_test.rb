@@ -671,13 +671,17 @@ class Cuenta::CuentaControllerTest < ActionController::TestCase
     last = u.profile_last_updated_on
     assert_nil last
     pref_options = {
-            :pref_hw_heatsink => "heatsink",
-            :pref_hw_sdd => "sdd",
-            :pref_hw_powersupply => "powersupply",
+            :pref_contact_origin => "origin",
+            :pref_contact_psn_id => "psn_id",
+            :pref_contact_steam => "steam",
             :pref_hw_case => "case",
-            :pref_hw_speakers => "speakers",
-            :pref_hw_mousepad => "mousepad",
+            :pref_hw_heatsink => "heatsink",
             :pref_hw_keyboard => "keyboard",
+            :pref_hw_mousepad => "mousepad",
+            :pref_hw_powersupply => "powersupply",
+            :pref_hw_speakers => "speakers",
+            :pref_hw_ssd => "ssd",
+
     }
 
     post :update_profile, {

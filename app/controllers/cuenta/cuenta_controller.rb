@@ -375,6 +375,9 @@ class Cuenta::CuentaController < ApplicationController
     @newuser.lastname = strip_tags(params[:post][:lastname])
     @newuser.msn = strip_tags(params[:post][:msn])
     @newuser.photo = params[:user][:photo] if params[:user][:photo]
+    @newuser.pref_contact_origin = strip_tags(params[:post][:pref_contact_origin])
+    @newuser.pref_contact_psn_id = strip_tags(params[:post][:pref_contact_psn_id])
+    @newuser.pref_contact_steam = strip_tags(params[:post][:pref_contact_steam])
     @newuser.pref_hw_case = strip_tags(params[:post][:pref_hw_case])
     @newuser.pref_hw_heatsink = strip_tags(params[:post][:pref_hw_heatsink])
     @newuser.pref_hw_keyboard = strip_tags(params[:post][:pref_hw_keyboard])

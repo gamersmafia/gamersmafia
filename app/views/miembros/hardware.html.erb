@@ -53,6 +53,12 @@
       <td><%=@curuser.hw_hdd%></td>
     </tr>
 <% end -%>
+<% if !@curuser.pref_hw_ssd.to_s.empty? then %>
+    <tr class="<%=oddclass%>">
+      <td>SSD</td>
+      <td><%=@curuser.pref_hw_ssd%></td>
+    </tr>
+<% end -%>
 <% if !@curuser.pref_hw_powersupply.to_s.empty? then %>
     <tr class="<%=oddclass%>">
       <td>F. Alimentacion</td>
