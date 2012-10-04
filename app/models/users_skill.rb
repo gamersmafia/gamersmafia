@@ -90,9 +90,43 @@ class UsersSkill < ActiveRecord::Base
         bd.update_boss(bd.underboss) if bd && bd.underboss
       end
 
-      Message.create(:title => "Permiso de #{format_scope} eliminado", :message => "Ya no tienes permisos de #{format_scope}", :user_id_from => nagato.id, :user_id_to => self.user_id) if bd
-    else
-      Message.create(:title => "Recibido permiso de #{format_scope}", :message => "Acabas de recibir permisos de #{format_scope}", :user_id_from => nagato.id, :user_id_to => self.user_id)
+      if bd
+        Message.create(
+            :title => "Permiso de #{format_scope} eliminado",
+            :message => "Ya no tienes permisos de #{format_scope}",
+            :user_id_from => nagato.id,
+            :user_id_to => self.user_id)
+
+      elsif self.role == 'Boss' || self.role == 'Underboss'
+        Message.create(
+            :title => "Recibido permiso de #{format_scope}",
+            :message => "Acabas de recibir permisos de #{format_scope}."+
+                        " Si tienes alguna duda sobre "+
+                        "cómo administrar la facción, puedes "+
+                        "echarle un vistazo al tutorial "+
+                        "[url=/tutoriales/show/1611]cómo administrar tu facción[/url].",
+            :user_id_from => nagato.id,
+            :user_id_to => self.user_id)
+
+      elsif self.role == 'Don' || self.role == 'ManoDerecha'
+        Message.create(
+            :title => "Recibido permiso de #{format_scope}",
+            :message => "Acabas de recibir permisos de #{format_scope}."+
+                        " Si tienes alguna duda sobre "+
+                        "cómo administrar el distrito, puedes "+
+                        "echarle un vistazo al tutorial "+
+                       "[url=/tutoriales/show/1609]cómo administrar tu distrito[/url].",
+            :user_id_from => nagato.id,
+            :user_id_to => self.user_id)
+
+      else
+        Message.create(
+            :title => "Recibido permiso de #{format_scope}",
+            :message => "Acabas de recibir permisos de #{format_scope}",
+            :user_id_from => nagato.id,
+            :user_id_to => self.user_id)
+
+      end
     end
 
     self.user.update_is_staff
