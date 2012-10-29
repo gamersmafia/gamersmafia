@@ -114,9 +114,9 @@ class UsersEmblem < ActiveRecord::Base
           :name => "Guía Galáctico",
           :description => (
               "#{T_COMMENT_VALORATIONS_RECEIVED_VALORATIONS_3} valoraciones de" +
-              "informativo recibidas por #{T_COMMENT_VALORATIONS_RECEIVED_COMMENTS_3}" +
-              "comentarios y #{T_COMMENT_VALORATIONS_RECEIVED_COMMENTS_3}" +
-              "usuarios diferentes."),
+              " informativo recibidas por #{T_COMMENT_VALORATIONS_RECEIVED_COMMENTS_3}" +
+              " comentarios y #{T_COMMENT_VALORATIONS_RECEIVED_COMMENTS_3}" +
+              " usuarios diferentes."),
       },
 
       "comments_valorations_received_profundo_1" => {
