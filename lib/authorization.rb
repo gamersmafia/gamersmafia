@@ -65,7 +65,13 @@ module Authorization
   end
 
   def self.can_comment_on_decision?(user, decision)
-    self.can_vote_on_decision?(user, decision)
+    if user.id == decision.context[:initiating_user_id]
+      true
+    elsif user.has_skill?(Decision::DECISION_TYPE_CLASS_SKILLS.fetch(decision.decision_type_class))
+      true
+    else
+      false
+    end
   end
 
   def self.decision_type_class_available_for_user(user)
