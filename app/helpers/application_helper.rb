@@ -912,7 +912,7 @@ type: 'bhs'}))
 					CKEDITOR.replace( '#{field_name}', {
 height: '#{opts[:height]}',
 width: '#{opts[:width]}',
-skin: 'v2'
+skin: 'kama'
 }
  );
 				//]]>
