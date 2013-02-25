@@ -16,7 +16,7 @@ end %>
 	<% created_selects += 1
  end -%>
 
-<%(3-created_selects).times do |time| %>
+<%(6-created_selects).times do |time| %>
 	<%=render :partial => '/shared/root_term_select', :locals => { :index => created_selects + 1, :selterm => nil } %>
 <%
 created_selects += 1
@@ -44,7 +44,7 @@ end
 
 
 
-<%(3-created_selects).times do |time| %>
+<%(6-created_selects).times do |time| %>
 	<%=render :partial => '/shared/category_term_select', :locals => { :index => created_selects + 1, :content_type => acts_as_content.class.name, :selterm => nil} %>
 <%
 created_selects += 1
@@ -54,26 +54,24 @@ end -%>
 <% if (Cms::CATEGORIES_TERMS_CONTENTS + Cms::ROOT_TERMS_CONTENTS).include?(acts_as_content.class.name) then %>
 <script type="text/javascript">
 	hidden = 0;
-	if ($('#categories_terms_root2').val() == '') {
-		$('#categories_terms_root2').hide();
-		hidden = 1;
-	}
-		
-	if ($('#categories_terms_root3').val() == '') {
-		$('#categories_terms_root3').hide();
-		hidden = 1;
-	}
+  for(var i=2; i<=6; i++){
+	  if ($('#categories_terms_root'+i).val() == '') {
+		  $('#categories_terms_root'+i).hide();
+		  hidden = 1;
+	  }
+  }
 
 Gm.Slnc.hide('categories_terms_root_more');
-	
-	if (hidden == 1) {	
+
+	if (hidden == 1) {
 		Gm.Slnc.show('categories_terms_root_more');
 		}
-		
+
 function show_all_categories_terms_contents() {
-	$('#categories_terms_root2').show();
-	$('#categories_terms_root3').show();
-	
+	for(var i=2; i<=6; i++){
+    $('#categories_terms_root'+i).show();
+  }
+
 		Gm.Slnc.hide('categories_terms_root_more');
 		return false;
 }
