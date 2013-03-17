@@ -48,9 +48,12 @@ class DescargasController < InformacionController
         :session_id => session[:session_id],
         :user_id => (user_is_authed ? @user.id : nil),
     })
-    # TODO PERF no borrar las caches con tanta gracia, ¿no?
-    CacheObserver.expire_fragment("/common/descargas/index/downloads_#{@download.main_category.id}/page_*") # TODO MUY HEAVY, no podemos hacer que cada descarga suponga borrar todas las caches de índices
-    CacheObserver.expire_fragment("/common/descargas/index/most_downloaded_#{@download.main_category.root_id}")
+    if @download.main_category
+      CacheObserver.expire_fragment("/common/descargas/index/downloads_#{@download.main_category.id}/page_*") # TODO MUY HEAVY, no podemos hacer que cada descarga suponga borrar todas las caches de índices
+      CacheObserver.expire_fragment("/common/descargas/index/most_downloaded_#{@download.main_category.root_id}")
+    else
+      Rails.logger.warn("Download #{@download} has no category!")
+    end
     if params[:r]
         #if Cms::URL_REGEXP_FULL =~ params[:r] #DownloadMirror.find_by_url(URI::unescape(params[:r]))
           @download_link = params[:r]

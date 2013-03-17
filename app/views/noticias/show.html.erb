@@ -3,7 +3,7 @@
 <%end -%>
 
 <% content_support(:content => @news.unique_content) do %>
-  <% if @news.is_public? then %>
+  <% if @news.is_public? && @news.main_category then %>
     <%=render :partial => '/shared/content_summary', :locals => { :content => @news }%>
     <%=mfcontents_basic("Últimas noticias",
                         @news.main_category.news, [:published, {:order => 'created_on desc', :limit => 10}],

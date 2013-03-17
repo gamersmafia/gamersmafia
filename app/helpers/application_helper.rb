@@ -94,6 +94,8 @@ module ApplicationHelper
     "platform" => "&#xe03d;",
     "game" => "&#xe03e;",
     "topic" => "&#xe03f;",
+    # TODO(slnc): crear un icono específico para anuncios de reclutamiento.
+    "recruitmentad" => "&#xe03f;",
     "emblem-legendary" => "&#xe040;",
     "emblem-rare" => "&#xe041;",
     "emblem-special" => "&#xe042;",
@@ -1311,10 +1313,14 @@ skin: 'kama'
             out2 << "<div class=\"day-separator secondary-block\">#{print_tstamp(cur_day, 'date')}</div>"
           end
 
+          main_category_name = ''
+          if item.main_category
+            main_category_name = item.main_category.root.name
+          end
           out2<< <<-END
-        <div class=\"mfcontents-summaries-item #{oddclass}\">
+        <div classo\"mfcontents-summaries-item #{oddclass}\">
         <h2><a class=\"content\" href=\"#{gmurl(item)}\">#{item.title}</a></h2>
-        <div class="infoinline">por #{link_to item.user.login, "#{gmurl(item.user)}", :class => 'nav' } | #{item.main_category.root.name} | #{print_tstamp(item.created_on, 'time')} | #{gm_icon("comment", "small")} <a title="Leer los comentarios de esta noticia" class="content" href="/noticias/show/#{item.id}#comments">#{item.cache_comments_count}</a></div>
+        <div class="infoinline">por #{link_to item.user.login, "#{gmurl(item.user)}", :class => 'nav' } | #{main_category_name} | #{print_tstamp(item.created_on, 'time')} | #{gm_icon("comment", "small")} <a title="Leer los comentarios de esta noticia" class="content" href="/noticias/show/#{item.id}#comments">#{item.cache_comments_count}</a></div>
           <div class="xdescription">#{auto_link_raw(smilelize(item.description))}</div>
         </div>
           END
