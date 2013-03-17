@@ -12,12 +12,9 @@ Gamersmafia::Application.routes.draw do
 
   get "decision_comments/create"
 
-  # get "decisiones/:id", :controller => :decisions, :action => :show
-
   resources :decisions, :path => "decisiones" do
-    # get 'decisions/:id', :action => :show
     member do
-      post 'decide'
+      post 'make_decision'
     end
     get "decisions/ranking/:id", :action => :ranking
     resources :decision_comments do

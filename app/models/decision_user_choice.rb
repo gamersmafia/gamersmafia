@@ -6,7 +6,7 @@ class DecisionUserChoice < ActiveRecord::Base
 
   before_create :populate_probability_right
   after_save :touch_decision
-  after_save :try_to_decide
+  after_save :try_to_make_decision
   scope :recent,
         :conditions => "decision_user_choices.created_on >= now() - '6 months'::interval"
 
@@ -46,8 +46,8 @@ class DecisionUserChoice < ActiveRecord::Base
         self.user, self.decision.decision_type_class)
   end
 
-  def try_to_decide
-    self.decision.try_to_decide
+  def try_to_make_decision
+    self.decision.try_to_make_decision
   end
 
   def touch_decision

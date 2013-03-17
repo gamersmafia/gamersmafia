@@ -24,10 +24,10 @@ class DecisionTest < ActiveSupport::TestCase
     Decision.first.binary?
   end
 
-  test "try_to_decide" do
+  test "try_to_make_decision" do
     decision = Decision.find(6)
     assert_difference("Term.count") do
-      decision.try_to_decide
+      decision.try_to_make_decision
     end
     assert_equal Decision::DECIDED, decision.state
     assert_equal 7, decision.final_decision_choice_id

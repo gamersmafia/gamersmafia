@@ -18,7 +18,7 @@ class DecisionsControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "decide if initiating_user_id" do
+  test "make_decision if initiating_user_id" do
     User.db_query("DELETE FROM decision_user_choices")
 
     d6 = Decision.find(6)
@@ -30,14 +30,14 @@ class DecisionsControllerTest < ActionController::TestCase
 
     sym_login u5.id
     assert_raises(AccessDenied) do
-      post :decide, {
+      post :make_decision, {
         :id => Decision.first.id,
         :final_decision_choice => winner.id,
       }
     end
   end
 
-  test "decide" do
+  test "make_decision" do
     User.db_query("DELETE FROM decision_user_choices")
     give_skill(2, "CreateEntity")
     d6 = Decision.find(6)
@@ -48,7 +48,7 @@ class DecisionsControllerTest < ActionController::TestCase
 
     sym_login u2.id
     winner = d6.decision_choices.last
-    post :decide, {
+    post :make_decision, {
       :id => Decision.first.id,
       :final_decision_choice => winner.id,
     }

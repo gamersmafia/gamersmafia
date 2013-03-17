@@ -24,7 +24,7 @@
     <% if user_is_authed && Authorization.can_comment_on_decision?(@user, decision) %>
       <form method="post" action="<%=decision_decision_comments_url(decision)%>"
         data-remote="true" data-remote-on-success-update=".decision-comments">
-      <textarea style="width: 20rem;" name="comment"></textarea>
+      <textarea style="width: 35rem;" name="comment"></textarea>
       <br />
       <input type="submit" class="button" value="Comentar sobre la decisión" />
     </form>

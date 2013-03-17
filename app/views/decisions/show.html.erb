@@ -3,7 +3,7 @@
 </div>
 
 <% if controller.request.xhr? %>
-  <div class="facebox-content">
+  <div class="facebox-content page-level-content">
 <% end -%>
 
 <div class="decision-context"><%=decision_context(@decision)%></div>
@@ -26,7 +26,7 @@
 <% if @decision.state == Decision::PENDING %>
   <% if user_is_authed && @user.id != @decision.context[:initiating_user_id] %>
 <div class="decision-choices choice-type-<%=@decision.choice_type_name%> <%="hidden" if current_choice%>">
-  <form method="post" action="<%=decide_decision_path(@decide)%>"
+  <form method="post" action="/decisiones/<%=@decision.id%>/make_decision"
     data-remote="true" data-decision-id="<%=@decision.id%>"
     data-remote-on-success-update=".decision-comments">
   <input type="hidden" name="final_decision_choice" />
