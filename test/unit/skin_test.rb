@@ -16,4 +16,9 @@ class SkinTest < ActiveSupport::TestCase
     assert_equal 'skinguay', defskin.hid
     assert_equal 1, defskin.id
   end
+
+  test "create skin should work" do
+    myskin = Skin.new(:name => "mi skin", :user_id => 1)
+    assert myskin.save, myskin.errors.full_messages_html
+  end
 end

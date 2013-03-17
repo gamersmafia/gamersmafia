@@ -13,6 +13,8 @@ class Skin < ActiveRecord::Base
   scope :only_public, :conditions => "is_public = 't'", :order => 'lower(name)'
 
   validates_uniqueness_of :name
+  validates_presence_of :user_id
+  validates_presence_of :name
   belongs_to :user
 
   APPEND=0
