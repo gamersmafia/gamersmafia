@@ -1,5 +1,5 @@
-<% bets = Content.content_type_name("Bet").published.recent.of_interest_to(
-      @user).find(:all, :order => "created_on")
+<% bets = Content.content_type_name("Bet").published.recent.find(
+    :all, :order => "created_on")
       bets.delete_if {|b| b.real_content.closes_on < Time.now} %>
   <%mflist("Apuestas abiertas", bets) do |bet| %>
     <div class="secondary f_milli centered"><%=link_to bet.real_content.title, gmurl(bet)%></div>

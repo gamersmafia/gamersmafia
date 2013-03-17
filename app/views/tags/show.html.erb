@@ -1,3 +1,4 @@
+<%cache("/common/tags/#{@tag.id % 1000}/#{Time.now.strftime("%Y-%W")}/#{@tag.code}") do %>
 <%content_main do %>
 <div class="tag-page-header f_giga" style="background-image: url('/<%=@tag.header_image%>'); ">
   <div><%=@tag.name%></div>
@@ -86,6 +87,7 @@
             :blast => true)%>
             <br />
   <% end -%>
+<% end -%>
 <% end -%>
 
 <%generic_support do%>

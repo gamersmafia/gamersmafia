@@ -29,7 +29,9 @@ class HomeController < ApplicationController
 
   def tetris
     @home_mode = "tetris"
-    render :action => "tetris"
+    Rails.logger.warn("Tetris home requested but temporarily disabled.")
+    # render :action => "tetris"
+    render :action => "stream"
   end
 
   def stream

@@ -4,6 +4,9 @@ class RespuestasController < InformacionController
   allowed_portals [:gm, :faction, :bazar, :bazar_district]
 
   def index
+    # TODO(slnc): temporalmente deshabilita índice por horribles problemas de
+    # carga. https://github.com/gamersmafia/gamersmafia/issues/473
+    raise ActiveRecord::RecordNotFound
     @categories = portal.categories(Question)
     if @categories.size == 1
       @category = @categories[0]
