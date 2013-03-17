@@ -5,7 +5,7 @@ module AppR
   def self.ondisk_git_version_full
     all_tags = `git --git-dir=#{Rails.root}/.git --work-tree=#{Rails.root} tag | grep release`.strip.split("\n")
     if all_tags.size == 0
-      last_tag = `git --git-dir=#{Rails.root}/.git --work-tree=#{Rails.root} log production --no-merges --pretty=format:"%h" | head -n 1`.strip
+      last_tag = `git --git-dir=#{Rails.root}/.git --work-tree=#{Rails.root} log master --no-merges --pretty=format:"%h" | head -n 1`.strip
     else
       last_tag = all_tags.sort.last
     end
