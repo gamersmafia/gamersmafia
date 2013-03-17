@@ -142,6 +142,14 @@ li {
   line-height: 1rem;
 }
 
+b, strong {
+  font-weight: bold;
+}
+
+i, em {
+  font-style: italic;
+}
+
 /*
 h1 { font-size: 1.55em; letter-spacing: 0.09em; word-spacing: 0.09em}
 h2 { font-size: 1.45em; letter-spacing: 0.09em; }

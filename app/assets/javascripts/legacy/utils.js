@@ -149,7 +149,7 @@ function check_comments_controls(
     }
 
     if (comments[key][0] > user_last_visited_on && comments[key][1] != user_id) {
-      comment_div.addClass('unread-item');
+      comment_div.find('.comment-header').addClass('unread-item');
       // hacemos scroll excepto que sea primera pag y primer comment
       if ((!first_time_content) && !scroll_to_comment) {
         scroll_to_comment = $('#comment' + key);
