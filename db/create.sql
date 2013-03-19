@@ -2837,7 +2837,9 @@ CREATE TABLE users_preferences (
     id integer NOT NULL,
     user_id integer NOT NULL,
     name character varying NOT NULL,
-    value character varying
+    value character varying,
+    created_on timestamp without time zone DEFAULT now() NOT NULL,
+    updated_on timestamp without time zone DEFAULT now() NOT NULL
 );
 CREATE SEQUENCE users_preferences_id_seq
     START WITH 1
