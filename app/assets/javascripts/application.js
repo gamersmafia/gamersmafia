@@ -79,7 +79,13 @@ $(document).ready(function() {
   });
 
   $('.open-popup-on-click').unbind('click').click(function() {
-    $('#' + $(this).data('popup-id')).toggleClass('hidden');
+    $('#'+$(this).data('popup-id')).toggleClass('hidden');
+    $('body').click(HideAllPopups);
     return false;
   });
+
+  function HideAllPopups() {
+    $('.popup').addClass('hidden');
+    $('body').unbind('click', HideAllPopups);
+  }
 });
