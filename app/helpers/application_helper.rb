@@ -912,7 +912,7 @@ type: 'bhs'}))
   def wysiwyg(field_name, opts={})
     opts[:value] ||= ''
     opts[:height] ||= '400px'
-    opts[:width] ||= '550px'
+    opts[:width] ||= '98%'
 
 
     load_javascript_lib('ckeditor')
