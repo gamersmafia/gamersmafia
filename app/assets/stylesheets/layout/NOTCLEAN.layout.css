@@ -308,6 +308,7 @@ textarea {
 }
 
 .pcent-bar .bar {
+  margin-bottom: 12px;
   height: 0.4rem;
 }
 

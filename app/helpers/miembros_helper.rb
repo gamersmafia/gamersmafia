@@ -83,12 +83,12 @@ module MiembrosHelper
       points = (user.karma_points.to_f / 1000).to_s
       formatted = "#{points.gsub(".", ",").ljust(5, "0")}"
     elsif user.karma_points < 1000000
-      formatted = "#{((user.karma_points.to_f / 1000) * 10).to_i.to_f / 10}k"
+      formatted = "#{((user.karma_points.to_f / 1000) * 10).to_i.to_f / 10}K"
     else
       formatted = "#{((user.karma_points.to_f / 1000000) * 10).to_i.to_f / 10}M"
     end
 
-    "<div class=\"karma\" title=\"#{user.karma_points} puntos de karma.\">#{formatted}K</div>"
+    "<div class=\"karma\" title=\"#{user.karma_points} puntos de karma.\">#{formatted}</div>"
   end
 
   def draw_comments_bar_sm(user, refobj)
