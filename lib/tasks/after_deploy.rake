@@ -43,7 +43,7 @@ namespace :gm do
     n = News.create(
         :title => title,
         :description => html_log,
-        :user_id => 1,
+        :user_id => App.webmaster_user_id,
         :state => Cms::DRAFT)
     Term.single_toplevel(:slug => 'gmversion').link(n.unique_content)
     Term.single_toplevel(:slug => 'gm').link(n.unique_content)

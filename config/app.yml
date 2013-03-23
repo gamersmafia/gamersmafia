@@ -43,7 +43,7 @@ common: &common
   system_mail_password: megustanlasgalletas
   system_mail_user: nagatodev@gamersmafia.com
   webmaster_email: unnamed@gamersmafia.dev
-  webmaster_user_id: 1
+  webmaster_user_id: 41793
   weekly_internal_report_recipient: alerts@gamersmafia.com
 
 # Basic roles.
