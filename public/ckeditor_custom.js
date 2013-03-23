@@ -1,19 +1,5 @@
 CKEDITOR.config.customConfig = '';
-CKEDITOR.config.toolbar = 'Full';
-CKEDITOR.config.toolbar_Full =
-[
-    ['Source','-','Preview','Maximize'],
-    ['Cut','Copy','Paste','PasteText','PasteFromWord'],
-    ['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-    '/',
-    ['Bold','Italic','Strike'],
-    ['NumberedList','BulletedList','-','Blockquote'],
-    ['JustifyLeft','JustifyCenter','JustifyRight'],
-    ['Link','Unlink','Anchor'],
-    ['Image','Table','HorizontalRule','SpecialChar'],
-    ['Styles','Format'],
-];
-
+// The toolbar configuration is in application_helper.rb
 CKEDITOR.config.filebrowserImageBrowseUrl = '/cuenta/imagenes';
 CKEDITOR.config.filebrowserImageUploadUrl = '/cuenta/imagenes';
 CKEDITOR.config.filebrowserWindowWidth = '640';

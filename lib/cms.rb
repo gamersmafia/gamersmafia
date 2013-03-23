@@ -265,7 +265,7 @@ module Cms
     if (!File.exists?("#{Rails.root}/public/ckeditor") ||
         File.mtime(custom_js) > File.mtime(all_js))
       Rails.logger.warn("Updating #{all_js}..")
-      system("tar xfz \"#{Rails.root}/public/ckeditor_3.0.1.tar.gz\" -C public")
+      system("tar xfz \"#{Rails.root}/public/ckeditor_4.0.2.tar.gz\" -C public")
       system("cat \"#{Rails.root}/public/ckeditor/lang/es.js\" >> \"#{all_js}\"")
       system("cat \"#{custom_js}\" >> \"#{all_js}\"")
     end
