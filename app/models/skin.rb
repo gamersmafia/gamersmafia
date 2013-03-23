@@ -158,6 +158,6 @@ class Skin < ActiveRecord::Base
 
   def used_by_users_count
     UsersPreference.count(
-        :conditions => "name = 'skin' AND value = '#{self.id}'")
+        :conditions => "name = 'skin' AND value = '#{YAML::dump(self.id)}'")
   end
 end

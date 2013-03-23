@@ -63,4 +63,18 @@ color: red;
     assert_not_nil re =~ css_sample1
     assert_equal css_sample_without_opt, css_sample1.gsub(re, '')
   end
+
+  test "skin_not_used_should_return_count_0" do
+    s1 = Skin.find(1)
+    assert_equal s1.used_by_users_count, 0
+  end
+
+  test "skin_used_shouldnt_return_count_0" do
+    s1 = Skin.find(1)
+    u1 = User.find(1)
+    u2 = User.find(2)
+    u1.pref_skin = s1.id
+    u2.pref_skin = s1.id
+    assert_equal s1.used_by_users_count, 2
+  end
 end
