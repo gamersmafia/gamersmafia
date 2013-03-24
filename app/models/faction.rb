@@ -129,7 +129,7 @@ class Faction < ActiveRecord::Base
           :sender_user_id => Ias.mrcheater.id,
           :description => (
               "Peligro: Golpe de estado inminente. Han pasado muchos días sin"+
-              " generarse karma en #{self.name}). Si no se genera karma en la"+
+              " generarse karma en #{self.name}. Si no se genera karma en la"+
               " próxima semana perderás el control de la facción."),
           :type_id => Notification::COUP_DETAT_INMINENT,
       })
