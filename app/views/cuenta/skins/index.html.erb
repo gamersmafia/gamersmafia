@@ -11,11 +11,11 @@ Nombre: <input type="text" class="text" name="skin[name]" /><br />
 <table>
 <%@user.skins.find(:all, :order => 'lower(name)').each do |skin| %>
 <tr class="<%=oddclass%>">
-    <td><a href="/cuenta/skins/edit/<%=skin.id%>"><%=skin.name%></a></td>
+    <td><%=skin.name%></td>
+    <td><a href="/cuenta/skins/edit/<%=skin.id%>">Editar</a></td>
     <td><% if skin.is_public? then %><strong>Pública</strong> (<a href="/cuenta/skins/make_private?id=<%=skin.id%>">Hacer privada</a>)
 	<% else %><strong>Privada</strong> (<a href="/cuenta/skins/make_public?id=<%=skin.id%>">Hacer pública</a>)<% end -%></td>
     <td><strong><a href="/cuenta/skins/activate?skin=<%=skin.id%>">Ponérmela</a></strong></td>
-    <td class="infoinline f_milli"><a href="/<%=skin.file%>">Descargar</a></td>
     <td class="infoinline f_milli"><a href="/cuenta/skins/destroy/<%=skin.id%>" onclick="return confirm('¿Estás seguro?');">Borrar</a></td>
 </tr>
 <% end -%>
@@ -29,21 +29,20 @@ Nombre: <input type="text" class="text" name="skin[name]" /><br />
     <th></th>
     <th>Autor</th>
     <th></th>
-    <th></th>
+    <th>Actualizada</th>
 </tr>
 <tr class="<%=oddclass%>">
     <td><em>Skin por defecto</em></td>
-	<td><strong><a href="/cuenta/skins/activate?skin=-1">Ponérmela</a></strong></td>
-    <td class="infoinline"><%=user_link(User.find(1))%></td>
-    <td class="infoinline"><a href="/skins/default.zip">Descargar</a></td>
+    <td><strong><a href="/cuenta/skins/activate?skin=-1">Seleccionar</a></strong></td>
+    <td class="infoinline secondary"><%=user_link(User.find(1))%></td>
 </tr>
 	<%Skin.only_public.each do |skin| %>
 <tr class="<%=oddclass%>">
     <td><%=skin.name%></td>
-    <td><strong><a href="/cuenta/skins/activate?skin=<%=skin.id%>">Ponérmela</a></strong></td>
-	<td class="infoinline"><%=user_link(skin.user)%></td>
-    <td class="infoinline"><a href="/<%=skin.file%>">Descargar</a></td>
+    <td><strong><a href="/cuenta/skins/activate?skin=<%=skin.id%>">Seleccionar</a></strong></td>
+    <td class="infoinline secondary"><%=user_link(skin.user)%></td>
     <td class="w50 infoinline" title="Usuarios que usan esta skin"><%=gm_icon("user", "small")%> <%=skin.used_by_users_count%></td>
+    <td class="w125 infoinline timestamp"><%=print_tstamp(skin.updated_on)%></td>
 </tr>
 <% end -%>
 </table>

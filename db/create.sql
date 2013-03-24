@@ -2397,7 +2397,9 @@ CREATE TABLE skins (
     is_public boolean DEFAULT false NOT NULL,
     file character varying,
     version integer DEFAULT 0 NOT NULL,
-    skin_variables text
+    skin_variables text,
+    created_on timestamp without time zone DEFAULT now() NOT NULL,
+    updated_on timestamp without time zone DEFAULT now() NOT NULL
 );
 CREATE TABLE skins_files (
     id integer NOT NULL,
