@@ -20,7 +20,7 @@ module Authorization
   end
 
   def self.can_admin_competition?(u, competition)
-    competition.user_is_admin(u.id) || u.has_skill_cached?("Webmaster")
+    competition.user_is_admin(u.id) || u.has_any_skill?(%w(Capo Webmaster))
   end
 
   def self.can_admin_toplevel_terms?(u)
@@ -126,14 +126,14 @@ module Authorization
   end
 
   def self.can_edit_ad_slot?(user, ads_slot)
-  (user.has_skill_cached?("Webmaster") ||
+  (user.has_any_skill?(%w(Capo Webmaster)) ||
    user.users_skills.count(
        :conditions => "role = 'Advertiser' AND
                        role_data = '#{ads_slot.advertiser_id}'") > 0)
   end
 
   def self.can_edit_ads_directly?(user)
-    user.has_skill_cached?("Webmaster")
+    user.has_any_skill?(%w(Capo Webmaster))
   end
 
   # Can any of the user provided fields be modified? (title, summary, etc)
