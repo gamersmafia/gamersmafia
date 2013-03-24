@@ -43,7 +43,7 @@ class Game < ActiveRecord::Base
         end
       else  # no
         description =  (
-            "Tu solicitud para crear el tag '#{decision.context[:tag_name]}'" +
+            "Tu solicitud para crear el juego '#{decision.context[:tag_name]}'" +
             " ha sido rechazada. <a href=\"/decisiones/#{decision.id}\">Más" +
             " información</a>.")
       end

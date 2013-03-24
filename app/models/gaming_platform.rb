@@ -92,4 +92,42 @@ class GamingPlatform < ActiveRecord::Base
       Portal.find_by_code(self.slug).nil? && !Portal::UNALLOWED_CODES.include?(slug)
     end
   end
+
+  def self.final_decision_made(decision)
+    case decision.decision_type_class
+    when "CreateGamingPlatform"
+      user = User.find(decision.context[:initiating_user_id] || Ias.jabba.id)
+      if decision.final_decision_choice.name == Decision::BINARY_YES
+        gaming_platform = GamingPlatform.create(decision.context[:gaming_platform])
+        if gaming_platform.new_record?
+          description = (
+              "Tu solicitud para crear la plataforma <strong>#{game.name}</strong>
+              ha sido aceptada pero han ocurrido los siguientes errores al
+              intentar crear la plataforma: #{game.errors.full_messages_html}. Por
+              favor contacta con <a href=\"/miembros/draco351\">el webmaster</a>.
+              <br /><br />
+              Muchas gracias y disculpa por las molestias.")
+        else
+          description = (
+              "¡Enhorabuena! Tu <a href=\"/decisiones/#{decision.id}\">solicitud</a>
+              para crear la plataforma <strong>#{gaming_platform.name}</strong> ha sido
+              aceptada.")
+        end
+      else  # no
+        description =  (
+            "Tu solicitud para crear la plataforma '#{decision.context[:tag_name]}'" +
+            " ha sido rechazada. <a href=\"/decisiones/#{decision.id}\">Más" +
+            " información</a>.")
+      end
+      user.notifications.create({
+          :sender_user_id => Ias.mrman.id,
+          :type_id => Notification::DECISION_RESULT,
+          :description => description,
+      })
+
+    else
+      raise ("final decision made on unknown type" +
+             " (#{decision.decision_type_class})")
+    end
+  end
 end

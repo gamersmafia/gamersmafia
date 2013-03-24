@@ -26,6 +26,9 @@ module DecisionsHelper
     when "CreateGame"
       out.append(self.render_create_game_context(decision))
 
+    when "CreateGamingPlatform"
+      out.append(self.render_create_gaming_platform_context(decision))
+
     when "CreateTag"
       out.append(self.render_create_tag_context(decision))
 
@@ -90,6 +93,13 @@ module DecisionsHelper
         :render_to_string,
         :partial => "/games/decision_context",
         :locals => {:game => decision.context.fetch(:game)}).force_encoding("utf-8")
+  end
+
+  def render_create_gaming_platform_context(decision)
+    controller.send(
+        :render_to_string,
+        :partial => "/games/gaming_platform_decision_context",
+        :locals => {:gaming_platform => decision.context.fetch(:gaming_platform)}).force_encoding("utf-8")
   end
 
   def render_create_tag_context(decision)

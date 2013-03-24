@@ -1,0 +1,13 @@
+<h1>Nueva plataforma </h1>
+
+<%= form_tag({:action => 'create_platform'}, :multipart => true )%>
+<%= error_messages_for @gaming_platform %>
+
+<!--[form:gaming_platform]-->
+<p><label for="gaming_platform_name">Nombre</label><br/>
+<%= text_field 'gaming_platform', 'name', :class => 'text'  %></p>
+
+<!--[eoform:gaming_platform]-->
+
+  <%= submit_tag "Crear" %>
+</form>

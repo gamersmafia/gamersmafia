@@ -41,11 +41,33 @@ class GamesController < ApplicationController
       })
 
       flash[:notice] = (
-          "Solicitud para crear el juego <strong>#{@game.name}</strong> creado
+          "Solicitud para crear el juego <strong>#{@game.name}</strong> creada
           correctamente.")
       redirect_to :action => 'index'
     else
       render :action => 'new'
+    end
+  end
+
+  def create_gaming_platform
+    require_authorization(:can_create_entities?)
+    params[:gaming_platform][:user_id] = @user.id
+    @gaming_platform = GamingPlatform.new(params[:gaming_platform])
+    if @gaming_platform.valid?
+      decision = Decision.create({
+        :decision_type_class => "CreateGamingPlatform",
+        :context => {
+          :initiating_user_id => @user.id,
+          :gaming_platform => params[:gaming_platform],
+        },
+      })
+
+      flash[:notice] = (
+          "Solicitud para crear la plataforma
+          <strong>#{@gaming_platform.name}</strong> creada correctamente.")
+      redirect_to :action => 'index'
+    else
+      render :action => 'nueva_plataforma'
     end
   end
 
@@ -128,5 +150,10 @@ class GamesController < ApplicationController
                       "#{@game.errors.full_messages_html}"
       render :action => 'edit'
     end
+  end
+
+  def nueva_plataforma
+    @title = "Nueva plataforma"
+    @gaming_platform = GamingPlatform.new
   end
 end

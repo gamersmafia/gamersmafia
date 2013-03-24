@@ -53,6 +53,8 @@ Gamersmafia::Application.routes.draw do
   end
 
   get "juegos/p/:platform_code", :controller => :games, :action => :index
+  get "juegos/nueva_plataforma", :controller => :games, :action => :nueva_plataforma
+  post "juegos/create_platform", :controller => :games, :action => :create_gaming_platform
   resources :games, {:path => "juegos" ,
                      :path_names => {:new => "nuevo", :edit => "editar"}} do
     member do

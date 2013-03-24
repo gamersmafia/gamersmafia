@@ -33,6 +33,7 @@ class Decision < ActiveRecord::Base
 
   DECISION_TYPE_CLASS_SKILLS = {
     "CreateGame" => "CreateEntity",
+    "CreateGamingPlatform" => "CreateEntity",
     "CreateTag" => "CreateEntity",
     "PublishBet" => "ContentModerationQueue",
     "PublishColumn" => "ContentModerationQueue",
@@ -53,6 +54,7 @@ class Decision < ActiveRecord::Base
 
   DECISION_TYPE_CHOICES = {
     "CreateGame" => BINARY,
+    "CreateGamingPlatform" => BINARY,
     "CreateTag" => BINARY,
     "PublishBet" => BINARY,
     "PublishColumn" => BINARY,
@@ -71,6 +73,7 @@ class Decision < ActiveRecord::Base
 
   MIN_USER_CHOICES = {
     "CreateGame" => 3,
+    "CreateGamingPlatform" => 3,
     "CreateTag" => 3,
     "PublishBet" => 3,
     "PublishColumn" => 3,
@@ -89,6 +92,7 @@ class Decision < ActiveRecord::Base
 
   MAX_USER_CHOICES = {
     "CreateGame" => 20,
+    "CreateGamingPlatform" => 20,
     "CreateTag" => 20,
     "PublishBet" => 20,
     "PublishColumn" => 20,
@@ -233,6 +237,9 @@ class Decision < ActiveRecord::Base
 
     when "CreateGame"
       "<strong>#{self.context.fetch(:game)[:name]}</strong>"
+
+    when "CreateGamingPlatform"
+      "<strong>#{self.context.fetch(:gaming_platform)[:name]}</strong>"
 
     when "PublishBet"
       "<strong>#{self.context.fetch(:content_name)}</strong>"
@@ -386,6 +393,9 @@ class Decision < ActiveRecord::Base
 
     when "CreateTag"
       Term.final_decision_made(self)
+
+    when "CreateGamingPlatform"
+      GamingPlatform.final_decision_made(self)
 
     when "CreateGame"
       Game.final_decision_made(self)

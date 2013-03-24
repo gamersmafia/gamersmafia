@@ -15,6 +15,7 @@ module Translation
     'ContentsTag' => 'Tag',
     'CreateEntity' => 'Crear entidad',
     'CreateGame' => 'Crear juego',
+    'CreateGamingPlatform' => 'Crear plataforma',
     'CreateTag' => 'Crear tag',
     'DeleteContents' => 'Borrar contenidos',
     'Download' => 'Descarga',

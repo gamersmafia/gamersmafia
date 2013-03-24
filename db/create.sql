@@ -1637,7 +1637,10 @@ CREATE TABLE gaming_platforms (
     id integer NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    has_faction boolean DEFAULT false NOT NULL
+    has_faction boolean DEFAULT false NOT NULL,
+    user_id integer,
+    created_on timestamp without time zone DEFAULT now() NOT NULL,
+    updated_on timestamp without time zone DEFAULT now() NOT NULL
 );
 CREATE TABLE gaming_platforms_users (
     user_id integer NOT NULL,
@@ -4025,6 +4028,8 @@ ALTER TABLE ONLY games
     ADD CONSTRAINT games_gaming_platform_id_fkey FOREIGN KEY (gaming_platform_id) REFERENCES gaming_platforms(id);
 ALTER TABLE ONLY games
     ADD CONSTRAINT games_publisher_id_fkey FOREIGN KEY (publisher_id) REFERENCES terms(id);
+ALTER TABLE ONLY gaming_platforms
+    ADD CONSTRAINT gaming_platforms_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
 ALTER TABLE ONLY groups_messages
     ADD CONSTRAINT groups_messages_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES groups_messages(id) MATCH FULL;
 ALTER TABLE ONLY groups_messages
