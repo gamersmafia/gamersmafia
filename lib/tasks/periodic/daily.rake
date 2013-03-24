@@ -46,6 +46,7 @@ namespace :gm do
     UsersSkill.give_karma_skills
     UserEmblemObserver::Emblems.daily_checks
     Decision.delay.update_pending_decisions_indicators
+    SentEmail.delay.remove_old_sent_emails
 
     # We only rebuild the model every 3 days because of the load it adds to the
     # server.
