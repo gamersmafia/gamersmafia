@@ -402,6 +402,14 @@ class NotificationEmail < ActionMailer::Base
     setup(user, vars)
   end
 
+  def watchdog_alerts(user, vars)
+    vars.merge!({
+        :actions => [],
+        :title => "Se han generado #{vars[:alerts].size} alertas"})
+
+    setup(user, vars)
+  end
+
   def too_many_delayed_jobs(user, vars)
     vars.merge!({
         :actions => [],
