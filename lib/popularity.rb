@@ -7,17 +7,17 @@ module Popularity
 
   def self.update_ranking_users
     lista = {}
-    #User.db_query("CREATE TEMP table tmp_users_ranking_pos AS SELECT id, cache_popularity, rank() over (order by cache_popularity desc) from users where cache_popularity is not null order by rank() over (order by cache_popularity desc) asc limit 10;
 
-#")
-
-    User.db_query("SELECT id,
-                          coalesce((select sum(popularity)
-                                      from stats.users_daily_stats
-                                     where created_on >= now() - '1 week'::interval
-                                       AND user_id = users.id), 0) as popularity
-                     FROM users
-                    WHERE state IN (#{User::STATES_CAN_LOGIN.join(',')})").each do |dbr|
+    # We look at 3 weeks because karma is generated with 2 weeks difference.
+    User.db_query(
+      "SELECT id,
+              coalesce(
+                (SELECT sum(popularity)
+                   FROM stats.users_daily_stats
+                  WHERE created_on >= now() - '3 weeks'::interval
+                    AND user_id = users.id), 0) as popularity
+         FROM users
+        WHERE state IN (#{User::STATES_CAN_LOGIN.join(',')})").each do |dbr|
       lista[dbr['popularity'].to_i] ||= []
       lista[dbr['popularity'].to_i] << dbr['id'].to_i
     end
@@ -27,7 +27,11 @@ module Popularity
     lista.keys.sort.reverse.each do |k|
       # en caso de empate los ids menores (mas antiguos) tienen preferencia
       lista[k].sort.each do |uid|
-        User.db_query("UPDATE users SET cache_popularity = #{k}, ranking_popularity_pos = #{pos} WHERE id = #{uid}")
+        User.db_query(
+            "UPDATE users
+             SET cache_popularity = #{k},
+                 ranking_popularity_pos = #{pos}
+           WHERE id = #{uid}")
         real_pos += 1
       end
       pos = real_pos
@@ -39,7 +43,7 @@ module Popularity
     User.db_query("SELECT id,
                           coalesce((select sum(popularity)
                                       from stats.clans_daily_stats
-                                     where created_on >= now() - '1 week'::interval
+                                     where created_on >= now() - '3 week'::interval
                                        AND clan_id = clans.id), 0) as popularity
                      FROM clans
                     WHERE deleted='f'").each do |dbr|
