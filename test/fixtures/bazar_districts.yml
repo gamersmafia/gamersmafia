@@ -1,3 +1,8 @@
+unnamed_district:
+  id: 0
+  name: Unnammed
+  slug: unnamed
+
 bd1:
   id: 1
   name: Anime
