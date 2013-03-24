@@ -119,6 +119,12 @@ class Skin < ActiveRecord::Base
     end
   end
 
+  def self.rebuild_all
+    Skin.find_each do |skin|
+      skin.save
+    end
+  end
+
   def complete_skin_variables
     self.update_attribute('skin_variables', {}) if self.skin_variables.nil?
 

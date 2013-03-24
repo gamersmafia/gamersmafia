@@ -3,6 +3,9 @@ namespace :gm do
   desc "Tasks to be executed after deploying"
   task :after_deploy => :environment do
     `bundle exec rake db:migrate`
+    # After launching a new release custom skins' .css files disappear from
+    # app/assets/stylesheets. This will recreate them.
+    Skin.rebuild_all
     `bundle exec rake assets:precompile`
     `./script/delayed_job restart`
     Cms.uncompress_ckeditor_if_necessary
