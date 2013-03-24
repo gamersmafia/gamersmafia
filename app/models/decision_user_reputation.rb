@@ -53,29 +53,28 @@ class DecisionUserReputation < ActiveRecord::Base
           self.decision_type_class],
         :include => :decision)
 
-    g = right_choices
-    b = total_choices - g
-    # a = penalty for mistakes, [0, +inf), 0: no mistakes, no penalties, 100%
-    a = (b**2).to_f / [g, 1].max
-    # good decisions weighted by historical trend
-    w_g = (g * (1 - a)).to_f
-    w_b = b * a
-    p_g = w_g.to_f / [w_g + w_b, 1].max
-    # Rails.logger.warn(
-    #     "g: #{g}, b: #{b}, a: #{a}, w_g: #{w_g}, w_b: #{w_b}, p_g: #{p_g}")
+    # The weight of a user's decision is a weighted probability that the user is
+    # right. However instead of just counting good/bad decisions we give more
+    # weight to failures than to successes. For every mistake the user has to do
+    # 3 right choices before regaining his original weight.
+    num_good = right_choices
+    num_bad = total_choices - right_choices
+    w_good = 1.0
+    w_bad = 3.0
+    prob_g = (num_good * w_good) / [num_good * w_good + num_bad * w_bad, 1].max
 
     # We now have a probability of a user being right given the weighted ratio
     # of good and bad. However for users with too few choices we still don't
     # have enough info and therefore we put an artificial burden on the ratio.
     if total_choices < MIN_CHOICES_FOR_100
-      p_g *= (total_choices.to_f / MIN_CHOICES_FOR_100)
-      # Rails.logger.warn("new p_g: #{p_g}")
+      prob_g *= (total_choices.to_f / MIN_CHOICES_FOR_100)
     end
 
-    # We give the webmaster 100% probability of being right to seed the system
-    p_g = 1.0 if user.has_skill_cached?("Webmaster")
+    # We give the webmaster and capos 100% probability of being right to seed
+    # the system.
+    prob_g = 1.0 if user.has_any_skill?(%w(Capo Webmaster))
 
-    self.update_attribute(:probability_right, p_g)
+    self.update_attribute(:probability_right, prob_g)
     self.update_attribute(:all_time_right_choices,
                           self.get_all_time_right_choices)
   end
