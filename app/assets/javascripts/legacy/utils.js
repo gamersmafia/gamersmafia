@@ -155,6 +155,7 @@ function check_comments_controls(
         scroll_to_comment = $('#comment' + key);
       }
     }
+
     cur_is_first = false;
 
     if ((comments[key][1] == user_id &&
@@ -176,12 +177,7 @@ function check_comments_controls(
 
   if (do_autoscroll == '1' && scroll_to_comment && !first_time_content) {
     $(document).ready(function() {
-      $(window).scrollTo(scroll_to_comment, 750, {
-        easing : 'swing',
-        queue : true,
-        axis : 'y',
-        offset : -60
-      });
+      $("body, html").animate({scrollTop: scroll_to_comment.offset().top});
     });
   }
 }
