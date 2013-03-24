@@ -2,6 +2,7 @@
 outstanding_clan = OutstandingClan.current(controller.portal.id)
 if outstanding_clan then
 u = outstanding_clan.clan
+mftext('Clan destacado') do %>
 %>
 <div class="homebox" style="overflow: hidden; height: 1%;">
   <div id="home-outstanding-clan" class="subheader f_deca first"><div><span>Clan del día</span></div></div>
@@ -9,5 +10,6 @@ u = outstanding_clan.clan
   <strong><a href="/clanes/clan/<%=u.id%>"><%=u.name%></a></strong>
   </div>
 </div>
+<% end -%>
 <% end -%>
 <% end %><%# cache-%>

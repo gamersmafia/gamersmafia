@@ -2,6 +2,7 @@
 outstanding_user = OutstandingUser.current(controller.portal.id)
 if outstanding_user then
 u = outstanding_user.user
+mftext('Usuario destacado') do %>
 %>
 <div class="homebox">
   <div id="home-outstanding" class="subheader f_deca first"><div><span>Usuario del día</span></div></div>
@@ -17,5 +18,6 @@ u = outstanding_user.user
     </tr>
   </table>
   </div>
+<% end -%>
 <% end -%>
 <% end %><%# cache -%>

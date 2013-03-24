@@ -166,11 +166,9 @@ for topic in @last_topics
       </div>
 <% end -%>
 
-<%mftext('Destacados') do %>
 <%= render :partial => '/home/outstanding_entity', :locals => { :outstanding_entity_cls => OutstandingUser } %>
 
 <%= render :partial => '/home/outstanding_entity', :locals => { :outstanding_entity_cls => OutstandingClan } %>
-<% end -%>
 
 </div>
 </div>
