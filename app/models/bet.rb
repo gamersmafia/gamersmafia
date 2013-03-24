@@ -231,6 +231,10 @@ class Bet < ActiveRecord::Base
     self.tie
   end
 
+  def can_be_resolved?
+    !self.completed? && (Time.now > self.closes_on)
+  end
+
   def earnings(user)
     # Returns the amount a user got back from a bet including what he bet.
     db_query("SELECT net_ammount

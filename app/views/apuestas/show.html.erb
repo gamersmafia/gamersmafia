@@ -84,9 +84,16 @@ for option in @bet.bets_options.find(:all, :order => 'lower(name) asc')
 <% content_support(:content => @bet.unique_content) do %>
 <% if @bet.is_public? then %>
   <% if @bet.can_be_reopened? && user_is_authed && Authorization.can_edit_content?(@user, @bet) then %>
-  <%mftext('Cambiar Resultado') do %>
-    <div class="centered"><a href="/apuestas/cambiar_resultado/<%=@bet.id%>" class="confirm-click">Cambiar resultado</a></div>
-  <% end -%>
+    <%mftext('Cambiar Resultado') do %>
+      <div class="centered"><a href="/apuestas/cambiar_resultado/<%=@bet.id%>"
+          class="confirm-click">Cambiar resultado</a></div>
+  <% end %>
+  <% if user_is_authed && Authorization.can_edit_content?(@user, @bet) &&
+    @bet.can_be_resolved? then %>
+    <%mftext('Resolver Apuesta') do %>
+      <div class="centered"><a href="/apuestas/resolve/<%=@bet.id%>"
+          class="confirm-click">Resolver apuesta</a></div>
+  <% end %>
 <% end -%>
 
 <%=bet_open_message(@bet)%>
@@ -107,4 +114,4 @@ if other_bets.size > 0 then %>
 <% end %><%# cache-%>
 <% end -%>
 <% end -%>
-
+<% end %>

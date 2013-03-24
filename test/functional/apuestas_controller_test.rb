@@ -98,6 +98,55 @@ class ApuestasControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should_initialize_not_closed_bet" do
+    test_should_create_with_options
+    @b.closes_on = 1.week.since
+    @b.cancelled = false
+    @b.forfeit = false
+    @b.tie = false
+    @b.winning_bets_option_id = nil
+    assert_not_nil @b.closes_on
+    assert_equal @b.cancelled, false
+    assert_equal @b.forfeit, false
+    assert_equal @b.tie, false
+    assert_equal @b.winning_bets_option_id, nil
+  end
+
+  test "should_not_resolve_if_not_closed" do
+    test_should_initialize_not_closed_bet
+    assert !@b.can_be_resolved?
+  end
+
+  test "should_resolve_if_closed" do
+    test_should_initialize_not_closed_bet
+    @b.closes_on = 1.day.ago
+    assert @b.can_be_resolved?
+  end
+
+  test "should_not_resolve_if_cancelled" do
+    test_should_initialize_not_closed_bet
+    @b.cancelled = true
+    assert !@b.can_be_resolved?
+  end
+
+  test "should_not_resolve_if_forfeit" do
+    test_should_initialize_not_closed_bet
+    @b.forfeit = true
+    assert !@b.can_be_resolved?
+  end
+
+  test "should_not_resolve_if_tie" do
+    test_should_initialize_not_closed_bet
+    @b.tie = true
+    assert !@b.can_be_resolved?
+  end
+
+  test "should_not_resolve_if_winning_bets_option_id_not_nil" do
+    test_should_initialize_not_closed_bet
+    @b.winning_bets_option_id = 23
+    assert !@b.can_be_resolved?
+  end
+
   test "cambiar_resultado_should_work" do
     test_complete_should_work
     post :cambiar_resultado, :id => @b.id
