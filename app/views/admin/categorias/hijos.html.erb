@@ -40,7 +40,7 @@
   </table>
 <% end -%>
 
-<% if @user.has_skill?("Capo") && @term.can_be_destroyed? then %>
+<% if @user.has_skill_cached?("Capo") && @term.can_be_destroyed? then %>
 	<%mftext('Borrar categoría de primer nivel') do %>
 	<form method="post" action="/admin/categorias/destroy/<%=@term.id%>">
 		<input type="submit" class="button confirm-click" value="Borrar" />

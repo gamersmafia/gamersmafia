@@ -7,7 +7,7 @@ class UserTest < ActiveSupport::TestCase
     u = User.find(1)
     skills = %w(Moderator Webmaster)
     skills.each do |skill|
-      assert u.has_skill?(skill)
+      assert u.has_skill_cached?(skill)
     end
     assert u.has_any_skill?(skills)
   end
@@ -249,13 +249,13 @@ class UserTest < ActiveSupport::TestCase
   test "has_skill_no_skill" do
     u1 = User.find(1)
     u1.users_skills.clear
-    assert !u1.has_skill?("Bank")
+    assert !u1.has_skill_cached?("Bank")
   end
 
   test "has_skill_skill" do
     u1 = User.find(1)
     u1.users_skills.create(:role => "Bank")
-    assert u1.has_skill?("Bank")
+    assert u1.has_skill_cached?("Bank")
   end
 
   test "remaining_rating_slots" do

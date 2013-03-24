@@ -73,7 +73,7 @@ class DecisionUserReputation < ActiveRecord::Base
     end
 
     # We give the webmaster 100% probability of being right to seed the system
-    p_g = 1.0 if user.has_skill?("Webmaster")
+    p_g = 1.0 if user.has_skill_cached?("Webmaster")
 
     self.update_attribute(:probability_right, p_g)
     self.update_attribute(:all_time_right_choices,

@@ -29,10 +29,10 @@ module Staff
   end
 
   def self.can_deny_staff_candidate(user, staff_position, staff_candidate)
-    staff_position.state == StaffPosition::ELECT && user.has_skill?("Webmaster")
+    staff_position.state == StaffPosition::ELECT && user.has_skill_cached?("Webmaster")
   end
 
   def self.can_confirm_staff_position_winners(user, staff_position)
-    staff_position.state == StaffPosition::ELECT && user.has_skill?("Webmaster")
+    staff_position.state == StaffPosition::ELECT && user.has_skill_cached?("Webmaster")
   end
 end

@@ -925,7 +925,7 @@ module Cms
       end
     end
 
-    if u.has_skill?("BazarManager")
+    if u.has_skill_cached?("BazarManager")
       Term.find(:all, :conditions => 'id = root_id AND bazar_district_id IS NOT NULL').each do |t|
         terms[:bazar_districts] << t
       end

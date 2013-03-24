@@ -16,7 +16,7 @@
 <% end -%>
 </table>
 <% end -%>
-<% if @user.has_skill?("Capo") then %>
+<% if @user.has_skill_cached?("Capo") then %>
 <%mftext('Crear nuevo distrito') do %>
 <form method="post" action="/admin/bazar_districts/create">
 	Nombre: <input type="text" name="bazar_district[name]" /><br />

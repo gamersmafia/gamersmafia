@@ -41,7 +41,7 @@ module Users
     def require_skill(skill_name)
       # TODO(slnc): migrate these calls to lib/authorization.rb
       @no_ads = true
-      raise AccessDenied if !(user_is_authed && (@user.has_skill?(skill_name)))
+      raise AccessDenied if !(user_is_authed && (@user.has_skill_cached?(skill_name)))
     end
 
     def require_authorization(permission)
@@ -73,7 +73,7 @@ module Users
     end
 
     def require_auth_admins
-      raise AccessDenied unless (@user && @user.has_skill?("Webmaster"))
+      raise AccessDenied unless (@user && @user.has_skill_cached?("Webmaster"))
     end
 
     def logout_forcibly

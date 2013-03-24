@@ -65,7 +65,7 @@
 <% end -%>
 </table>
 
-<% if @user.has_skill?("Capo") then %>
+<% if @user.has_skill_cached?("Capo") then %>
 <% if @br.confirming_user_id.nil? then %>
 <% if @user.id != @br.user_id then %>
 <br />

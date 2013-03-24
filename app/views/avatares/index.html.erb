@@ -1,5 +1,5 @@
 <%mftext('Avatares de facción') do %>
-<a href="/avatares/factions_avatars_overview">Overview</a> | <a href="/avatares/list?mode=faction">Todos</a><% if @user.has_skill?("Capo") then %>| <a href="/avatares/new">Nuevo</a><% end -%><br />
+<a href="/avatares/factions_avatars_overview">Overview</a> | <a href="/avatares/list?mode=faction">Todos</a><% if @user.has_skill_cached?("Capo") then %>| <a href="/avatares/new">Nuevo</a><% end -%><br />
 <%= render :partial => 'latest_avatars', :locals => { :avatars => Avatar.find(:all, :conditions => 'faction_id is not null', :order => 'created_on DESC', :limit => 10) }%>
 <% end -%>
 

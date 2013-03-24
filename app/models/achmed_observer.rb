@@ -21,7 +21,7 @@ class AchmedObserver < ActiveRecord::Observer
     reporter = alert.reporter
     case alert.type_id
       when Alert::TYPES[:general_comment_report]
-        if reporter.has_skill?("Capo")
+        if reporter.has_skill_cached?("Capo")
           self.moderate_comment(reporter, alert)
         end
 

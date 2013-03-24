@@ -1,26 +1,26 @@
 # This module determines what actions can different users or clans take.
 module Authorization
-  # TODO(slnc): migrar todas las llamadas restantes a .has_skill? a que usen
+  # TODO(slnc): migrar todas las llamadas restantes a .has_skill_cached? a que usen
   # este sistema.
 
   def self.can_access_bank?(user)
-    user.has_skill?("Bank")
+    user.has_skill_cached?("Bank")
   end
 
   def self.can_access_experiments?(user)
-    user.has_skill?("Webmaster")
+    user.has_skill_cached?("Webmaster")
   end
 
   def self.can_access_gmshop?(user)
-    user.has_skill?("GmShop")
+    user.has_skill_cached?("GmShop")
   end
 
   def self.can_access_moderation_queue?(user)
-    user.has_skill?("ContentModerationQueue")
+    user.has_skill_cached?("ContentModerationQueue")
   end
 
   def self.can_admin_competition?(u, competition)
-    competition.user_is_admin(u.id) || u.has_skill?("Webmaster")
+    competition.user_is_admin(u.id) || u.has_skill_cached?("Webmaster")
   end
 
   def self.can_admin_toplevel_terms?(u)
@@ -45,11 +45,11 @@ module Authorization
   end
 
   def self.can_admin_bazar_districts?(user)
-    user.has_skill?("BazarManager")
+    user.has_skill_cached?("BazarManager")
   end
 
   def self.can_antiflood_users?(user)
-    user.has_skill?("Antiflood")
+    user.has_skill_cached?("Antiflood")
   end
 
   def self.can_admin_tags?(user)
@@ -57,20 +57,26 @@ module Authorization
   end
 
   def self.can_bulk_upload?(u)
-    u.has_skill?("BulkUpload")
+    u.has_skill_cached?("BulkUpload")
   end
 
   def self.can_bypass_publish_decision?(user, content)
-    user.has_skill?("EditContents")
+    user.has_skill_cached?("EditContents")
   end
 
   def self.can_comment_on_decision?(user, decision)
-    self.can_vote_on_decision?(user, decision)
+    if user.id == decision.context[:initiating_user_id]
+      true
+    elsif user.has_skill?(Decision::DECISION_TYPE_CLASS_SKILLS.fetch(decision.decision_type_class))
+      true
+    else
+      false
+    end
   end
 
   def self.decision_type_class_available_for_user(user)
     Decision::DECISION_TYPE_CLASS_SKILLS.collect {|type_class, role|
-      user.has_skill?(role) ? type_class : nil
+      user.has_skill_cached?(role) ? type_class : nil
     }.compact
   end
 
@@ -85,7 +91,7 @@ module Authorization
       return false if user.id == decision.context[:initiating_user_id]
     end
 
-    user.has_skill?(
+    user.has_skill_cached?(
         Decision::DECISION_TYPE_CLASS_SKILLS.fetch(decision.decision_type_class))
   end
 
@@ -94,7 +100,7 @@ module Authorization
   end
 
   def self.can_create_profile_signatures?(user)
-    user.has_skill?("ProfileSignatures")
+    user.has_skill_cached?("ProfileSignatures")
   end
 
   def self.can_create_term?(u, term, taxonomy)
@@ -116,18 +122,18 @@ module Authorization
   end
 
   def self.can_delete_contents?(user)
-    user.has_skill?("DeleteContents")
+    user.has_skill_cached?("DeleteContents")
   end
 
   def self.can_edit_ad_slot?(user, ads_slot)
-  (user.has_skill?("Webmaster") ||
+  (user.has_skill_cached?("Webmaster") ||
    user.users_skills.count(
        :conditions => "role = 'Advertiser' AND
                        role_data = '#{ads_slot.advertiser_id}'") > 0)
   end
 
   def self.can_edit_ads_directly?(user)
-    user.has_skill?("Webmaster")
+    user.has_skill_cached?("Webmaster")
   end
 
   # Can any of the user provided fields be modified? (title, summary, etc)
@@ -178,15 +184,15 @@ module Authorization
   end
 
   def self.can_edit_faction?(user, faction)
-    user.has_skill?("Webmaster") || faction.is_bigboss?(user)
+    user.has_skill_cached?("Webmaster") || faction.is_bigboss?(user)
   end
 
   def self.can_edit_faq?(user)
-    user.has_skill?("EditFaq")
+    user.has_skill_cached?("EditFaq")
   end
 
   def self.can_edit_term?(u, term, taxonomy)
-    return true if u.has_skill?("Capo") || u.has_skill?("Webmaster")
+    return true if u.has_skill_cached?("Capo") || u.has_skill_cached?("Webmaster")
     return false if term.id == term.root_id
 
     if term.game_id
@@ -221,39 +227,39 @@ module Authorization
   end
 
   def self.can_moderate_comment?(user, comment)
-    user.has_skill?("Capo")
+    user.has_skill_cached?("Capo")
   end
 
   def self.can_modify_pending_content?(user)
-    user.has_skill?("EditContents")
+    user.has_skill_cached?("EditContents")
   end
 
   def self.can_rate_comments_down?(user)
-    user.has_skill?("RateCommentsDown")
+    user.has_skill_cached?("RateCommentsDown")
   end
 
   def self.can_rate_comments_up?(user)
-    user.has_skill?("RateCommentsUp")
+    user.has_skill_cached?("RateCommentsUp")
   end
 
   def self.can_recover_content?(user, content)
-    user.has_skill?("DeleteContents")
+    user.has_skill_cached?("DeleteContents")
   end
 
   def self.can_report_comments?(user)
-    user.has_skill?("ReportComments")
+    user.has_skill_cached?("ReportComments")
   end
 
   def self.can_report_contents?(user)
-    user.has_skill?("ReportContents")
+    user.has_skill_cached?("ReportContents")
   end
 
   def self.can_report_users?(user)
-    user.has_skill?("ReportUsers")
+    user.has_skill_cached?("ReportUsers")
   end
 
   def self.can_see_netiquette_violations?(user)
-    user.has_skill?("Capo")
+    user.has_skill_cached?("Capo")
   end
 
   def self.can_set_best_answer(user, content)
@@ -262,22 +268,22 @@ module Authorization
   end
 
   def self.can_tag_contents?(user)
-    user.has_skill?("TagContents")
+    user.has_skill_cached?("TagContents")
   end
 
   def self.can_create_entities?(user)
-    user.has_skill?("CreateEntity")
+    user.has_skill_cached?("CreateEntity")
   end
 
   def self.gets_less_ads?(user)
-    user.has_skill?("LessAds")
+    user.has_skill_cached?("LessAds")
   end
 
   def self.is_advertiser?(user)
-    user.has_skill?("Advertiser")
+    user.has_skill_cached?("Advertiser")
   end
 
   def self.is_faction_staff?(u, faction)
-    (faction.is_big_boss?(u) || faction.is_editor?(u) || u.has_skill?("Capo"))
+    (faction.is_big_boss?(u) || faction.is_editor?(u) || u.has_skill_cached?("Capo"))
   end
 end

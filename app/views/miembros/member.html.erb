@@ -458,7 +458,7 @@ if prev_nicks.size > 0 then %>
   <%=member_state('zombie')%> <strong>Ningún</strong> usuario con la misma ip.
   <% end %>
 
-  <% if @user.has_skill?("Capo") %>
+  <% if @user.has_skill_cached?("Capo") %>
   <div class="centered-link">
   Antiflood: <select name="antiflood_level" id="antiflood_level" onchange="document.location = '/admin/usuarios/set_antiflood_level?user_id=<%=@curuser.id%>&antiflood_level='+this.value;">
           <option value="-1">Sin límite</option>
@@ -482,7 +482,7 @@ if prev_nicks.size > 0 then %>
     <div id="report-users<%=@curuser.id%>" class="centered-link"><a href="" title="Reportar el perfil de este usuario por violación del código de conducta" onclick="return report_user(<%=@curuser.id%>);">Reportar</a></div>
   <% end -%>
 
-    <% if @curuser.hstate != User::ST_BANNED && @user.has_skill?("Capo")
+    <% if @curuser.hstate != User::ST_BANNED && @user.has_skill_cached?("Capo")
       bp = BanRequest.find(:first, :conditions => ['banned_user_id = ?', @curuser.id], :order => 'created_on DESC')
       if bp && bp.confirming_user_id.nil?  %>
       <div class="centered-link"><strong><a href="/admin/usuarios/confirmar_ban_request?id=<%=bp.id%>">Proceso de ban en marcha</a></strong></div>

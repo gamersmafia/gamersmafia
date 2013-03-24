@@ -112,7 +112,7 @@ friends = @user.friends_online %>
         </div>
       <% end -%>
 
-      <% if user_is_authed && @user.has_skill?("Advertiser") %>
+      <% if user_is_authed && @user.has_skill_cached?("Advertiser") %>
       <div class="sections-list2">
         <header>Anunciante</header>
           <ul>

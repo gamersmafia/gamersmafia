@@ -8,7 +8,7 @@
   <% for chatline in Chatline.latest %>
   <li id="chatline<%=chatline.id%>" class="<%=oddclass%>" style="clear: left; margin-top: 0px; margin-bottom: 0px;">
     <div class="avatar" style="float: left; margin-right: 3px;"><img style="border: 1px solid black; width: 32px; height: 32px;" src="<%=ASSET_URL%>/cache/thumbnails/f/32x32<%=chatline.user.show_avatar%>" /></div>
-    <div style="float: right; margin-right: 5px;" class="infoinline"><% if user_is_authed and @user.has_skill?("Capo") then %>
+    <div style="float: right; margin-right: 5px;" class="infoinline"><% if user_is_authed and @user.has_skill_cached?("Capo") then %>
       <%=link_to(
           'x',
           :update => 'bigchat',

@@ -124,7 +124,7 @@ module MiembrosHelper
   def karma_skills_percentages(user)
     out = []
     UsersSkill::KARMA_SKILLS.each do |name, karma|
-      if user.has_skill?(name)
+      if user.has_skill_cached?(name)
         pcent = 1.0
       elsif user.karma_points >= karma
         pcent = 0.99

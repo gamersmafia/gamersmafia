@@ -188,9 +188,9 @@ class Alert < ActiveRecord::Base
     # TODO capo y bazar_manager falta
     total = 0
 
-    total += ccount(:open, :domain => :capo) if u.has_skill?("Capo")
-    total += ccount(:open, :domain => :bazar_manager) if u.has_skill?("BazarManager")
-    total += ccount(:open, :domain => :gladiador) if u.has_skill?("Gladiator")
+    total += ccount(:open, :domain => :capo) if u.has_skill_cached?("Capo")
+    total += ccount(:open, :domain => :bazar_manager) if u.has_skill_cached?("BazarManager")
+    total += ccount(:open, :domain => :gladiador) if u.has_skill_cached?("Gladiator")
     total += ccount(:open, :domain => :webmaster) if u.id == 1
 
     valid_roles = USERS_SKILLS_2_DOMAINS.keys.collect { |k| "'#{k}'" }
@@ -369,21 +369,21 @@ class Alert < ActiveRecord::Base
   def self.scopes(domain, u)
     case domain
       when :bazar_district_bigboss
-      if u.has_skill?("BazarManager")
+      if u.has_skill_cached?("BazarManager")
         BazarDistrict.find(:all, :order => 'lower(name)')
       else
         [BazarDistrict.find_by_bigboss(u)].compact
       end
 
       when :faction_bigboss
-      if u.has_skill?("Capo")
+      if u.has_skill_cached?("Capo")
         Faction.find(:all, :order => 'lower(name)')
       else
         [Faction.find_by_bigboss(u)].compact
       end
 
       when :moderator
-      if u.has_skill?("Capo")
+      if u.has_skill_cached?("Capo")
         Faction.find(:all, :order => 'lower(name)')
       else
         # en las que tenga moderator
@@ -392,7 +392,7 @@ class Alert < ActiveRecord::Base
       end
 
       when :editor
-      if u.has_skill?("Capo")
+      if u.has_skill_cached?("Capo")
         Faction.find(:all, :order => 'lower(name)').collect { |f| EditorScope.new(f.id, nil) }
       else
         # todas en las que sea boss
@@ -407,21 +407,21 @@ class Alert < ActiveRecord::Base
       end
 
       when :sicario
-      if u.has_skill?("BazarManager")
+      if u.has_skill_cached?("BazarManager")
         BazarDistrict.find(:all, :order => 'lower(name)')
       else
         [BazarDistrict.find_by_bigboss(u)].compact + BazarDistrict.find_by_sicario(u)
       end
 
       when :competition_admin
-      if u.has_skill?("Gladiator")
+      if u.has_skill_cached?("Gladiator")
         Competition.find(:all, :conditions => 'deleted = \'f\'', :order => 'lower(name)')
       else
         Competition.find_by_admin(u)
       end
 
       when :competition_supervisor
-      if u.has_skill?("Gladiator")
+      if u.has_skill_cached?("Gladiator")
         Competition.find(:all, :conditions => 'deleted = \'f\'', :order => 'lower(name)')
       else
         Competition.find_by_admin(u) + Competition.find_by_supervisor(u)

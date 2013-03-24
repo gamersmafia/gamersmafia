@@ -17,7 +17,7 @@
 
 	<optgroup label="Especiales"></optgroup>
 	<%Term.with_taxonomy("Homepage").find(:all, :conditions => 'id = root_id', :order => 'lower(name)').each do |t|
-    next unless t.name == 'Gamersmafia' || @user.has_skill?("Capo") %>
+    next unless t.name == 'Gamersmafia' || @user.has_skill_cached?("Capo") %>
 	<option <%='selected="selected"' if selterm && selterm.id == t.id%> value="<%=t.id%>"><%=t.name%></option>
 	<% end -%>
 </select>

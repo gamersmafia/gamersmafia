@@ -1,6 +1,6 @@
 <% content_main do %>
   <% if @competition.user_is_admin(@user.id) then %>
-    <% if @user.has_skill?("Capo") then %>
+    <% if @user.has_skill_cached?("Capo") then %>
   <div class="bad-block"><strong>Acciones temporales para pruebas (SOLO LO VEMOS LOS SUPERADMINS)</strong><br />
   <ul>
     <li><form method="post" action="/cuenta/competiciones/hack/add_participants">

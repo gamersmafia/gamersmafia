@@ -14,3 +14,17 @@ one:
       1 => 0.76,
     },
   }.to_yaml.inspect%>
+
+two:
+  id: 7
+  decision_type_class: PublishNews
+  choice_type_id: 0
+  created_on: '2012-11-05 01:29:36.061395'
+  updated_on: '2012-11-05 02:43:40.131704'
+  state: 0
+  min_user_choices: 3
+  context: <%={
+    :content_id => 53422,
+    :content_name => 'Contenido de prueba',
+    :initiating_user_id => 5,
+  }.to_yaml.inspect%>

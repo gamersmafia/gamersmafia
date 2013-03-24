@@ -9,10 +9,10 @@ class AlertasController < ApplicationController
   def submenu_items
     its = []
     # TODO permisos
-    its << ['Webmaster', '/alertas/webmaster'] if @user.has_skill?("Webmaster")
-    its << ['Capo', '/alertas/capo'] if @user.has_skill?("Capo")
-    its << ['Alcalde', '/alertas/bazar_manager'] if @user.has_skill?("BazarManager")
-    its << ['Gladiador', '/alertas/gladiador'] if @user.has_skill?("Gladiator")
+    its << ['Webmaster', '/alertas/webmaster'] if @user.has_skill_cached?("Webmaster")
+    its << ['Capo', '/alertas/capo'] if @user.has_skill_cached?("Capo")
+    its << ['Alcalde', '/alertas/bazar_manager'] if @user.has_skill_cached?("BazarManager")
+    its << ['Gladiador', '/alertas/gladiador'] if @user.has_skill_cached?("Gladiator")
     its << ['Boss', '/alertas/faction_bigboss'] if @user.is_faction_leader?
     its << ['Don', '/alertas/bazar_district_bigboss'] if @user.is_district_leader?
     its << ['Moderador', '/alertas/moderator'] if @user.is_moderator?
@@ -25,13 +25,13 @@ class AlertasController < ApplicationController
 
   def index
     # por defecto mostramos la ficha de mayor rango
-    if @user.has_skill?("Webmaster")
+    if @user.has_skill_cached?("Webmaster")
       webmaster; render(:action => 'webmaster')
-    elsif @user.has_skill?("BazarManager")
+    elsif @user.has_skill_cached?("BazarManager")
       bazar_manager ; render(:action => 'bazar_manager')
-    elsif @user.has_skill?("Capo")
+    elsif @user.has_skill_cached?("Capo")
       capo ; render(:action => 'capo')
-    elsif @user.has_skill?("Gladiator")
+    elsif @user.has_skill_cached?("Gladiator")
       gladiador ; render(:action => 'gladiador')
     elsif @user.is_faction_leader?
       faction_bigboss ; render(:action => 'faction_bigboss')
@@ -83,19 +83,19 @@ class AlertasController < ApplicationController
   def webmaster
     @title = 'Webmaster'
     @domain = :webmaster
-    raise AccessDenied unless @user.has_skill?("Webmaster")
+    raise AccessDenied unless @user.has_skill_cached?("Webmaster")
   end
 
   def capo
     @title = 'Capo'
     @domain = :capo
-    raise AccessDenied unless @user.has_skill?("Capo")
+    raise AccessDenied unless @user.has_skill_cached?("Capo")
   end
 
   def bazar_manager
     @title = 'Alcalde'
     @domain = :bazar_manager
-    raise AccessDenied unless @user.has_skill?("BazarManager")
+    raise AccessDenied unless @user.has_skill_cached?("BazarManager")
   end
 
   def faction_bigboss
@@ -136,7 +136,7 @@ class AlertasController < ApplicationController
   def gladiador
     @title = 'Gladiador'
     @domain = :gladiador
-    raise AccessDenied unless @user.has_skill?("Gladiator")
+    raise AccessDenied unless @user.has_skill_cached?("Gladiator")
   end
 
   def competition_admin
@@ -200,13 +200,13 @@ class AlertasController < ApplicationController
   def require_can_edit_sle?(sle)
     case Alert.domain_from_type_id(sle.type_id)
       when :webmaster
-      raise AccessDenied unless @user.has_skill?("Webmaster")
+      raise AccessDenied unless @user.has_skill_cached?("Webmaster")
 
       when :capo
-      raise AccessDenied unless @user.has_skill?("Capo")
+      raise AccessDenied unless @user.has_skill_cached?("Capo")
 
       when :bazar_manager
-      raise AccessDenied unless @user.has_skill?("BazarManager")
+      raise AccessDenied unless @user.has_skill_cached?("BazarManager")
 
       when :faction_bigboss
       raise AccessDenied unless Faction.find(sle.scope).is_bigboss?(@user)
@@ -225,7 +225,7 @@ class AlertasController < ApplicationController
       raise AccessDenied unless BazarDistrict.find(sle.scope).is_sicario?(@user)
 
       when :gladiador
-      raise AccessDenied unless @user.has_skill?("Gladiator")
+      raise AccessDenied unless @user.has_skill_cached?("Gladiator")
 
       when :competition_admin
       raise AccessDenied unless Competition.find(sle.scope).is_admin?(@user)

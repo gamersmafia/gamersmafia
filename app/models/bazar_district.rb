@@ -164,7 +164,7 @@ class BazarDistrict < ActiveRecord::Base
   end
 
   def user_is_editor_of_content_type?(user, content_type)
-    user.has_skill?("BazarManager") || self.is_sicario?(user)
+    user.has_skill_cached?("BazarManager") || self.is_sicario?(user)
   end
 
   def user_is_banned?(user)
@@ -173,7 +173,7 @@ class BazarDistrict < ActiveRecord::Base
 
   def user_is_moderator(u)
     # si puede moderar comentarios, vamos
-    (u.has_skill?("BazarManager") ||
+    (u.has_skill_cached?("BazarManager") ||
      UsersSkill.count(
         :conditions => ["role IN ('#{ROLE_DON}',
                                   '#{ROLE_MANO_DERECHA}',
@@ -183,11 +183,11 @@ class BazarDistrict < ActiveRecord::Base
   end
 
   def is_sicario?(u)
-    u.has_skill?("BazarManager") || UsersSkill.count(:conditions => ["role IN ('Don', 'ManoDerecha', 'Sicario') AND role_data = ? AND user_id = ?", self.id.to_s, u.id]) > 0
+    u.has_skill_cached?("BazarManager") || UsersSkill.count(:conditions => ["role IN ('Don', 'ManoDerecha', 'Sicario') AND role_data = ? AND user_id = ?", self.id.to_s, u.id]) > 0
   end
 
   def is_bigboss?(u)
-    u.has_skill?("BazarManager") || UsersSkill.count(:conditions => ["role IN ('Don', 'ManoDerecha') AND role_data = ? AND user_id = ?", self.id.to_s, u.id]) > 0
+    u.has_skill_cached?("BazarManager") || UsersSkill.count(:conditions => ["role IN ('Don', 'ManoDerecha') AND role_data = ? AND user_id = ?", self.id.to_s, u.id]) > 0
   end
 
   def self.find_by_bigboss(u)

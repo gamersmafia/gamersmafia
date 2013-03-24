@@ -284,7 +284,7 @@ module ApplicationHelper
   def sawmode
     @sawmode ||= begin
       if user_is_authed then
-        if @user.has_skill?("Webmaster")
+        if @user.has_skill_cached?("Webmaster")
           sawmode = 'full'
         elsif Authorization.is_advertiser?(@user)
           sawmode = 'anunciante'

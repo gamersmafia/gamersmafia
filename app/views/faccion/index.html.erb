@@ -73,7 +73,7 @@
 <% end -%>
 <% end -%>
 
-<% if user_is_authed && @user.has_skill?("Capo") && @faction.created_on >= 2.weeks.ago then %>
+<% if user_is_authed && @user.has_skill_cached?("Capo") && @faction.created_on >= 2.weeks.ago then %>
 <% mftext("Administración") do%>
 <div class="sidething-spaced"><strong><a href="/facciones/borrar/<%=@faction.id%>" onclick="return confirm('¿Estás ABSOLUTAMENTE seguro de que hay que borrar esta facción?')">Borrar</a></strong></div>
 <% end -%>

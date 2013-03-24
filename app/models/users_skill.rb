@@ -124,7 +124,7 @@ class UsersSkill < ActiveRecord::Base
       user = User.find(user_id.to_i)
       self.karma_skills_in_range(
           user.last_karma_skill_points + 1, user.karma_points).each do |role|
-            user.users_skills.create(:role => role) if !user.has_skill?(role)
+            user.users_skills.create(:role => role) if !user.has_skill_cached?(role)
           end
       user.update_column(:last_karma_skill_points, user.karma_points)
     end

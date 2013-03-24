@@ -38,7 +38,7 @@ root_slugs<< this_root
 	<div class="clearl"></div>
 	</div>
 
-<% if user_is_authed && @user.has_skill?("TagContents") %>
+<% if user_is_authed && @user.has_skill_cached?("TagContents") %>
 <div id="tag-this-content">
   <div class="floatl"><%=gm_icon("tag-add")%></div>
 </div>

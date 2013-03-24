@@ -27,7 +27,7 @@
   </div>
 <%  end %>
 <%  end %>
-<% if user_is_authed && @user.has_skill?("Capo") then %>
+<% if user_is_authed && @user.has_skill_cached?("Capo") then %>
 <script type="text/javascript">$('div.delprofilesignature').removeClass('hidden');</script>
 <% end -%>
 <% end -%>
@@ -39,7 +39,7 @@
   my_ps = @curuser.profile_signatures.new if my_ps.nil?
   %>
   <% mftext("Di algo sobre #{@curuser.login}") do %>
-    <% if @user.has_skill?("ProfileSignatures") %>
+    <% if @user.has_skill_cached?("ProfileSignatures") %>
     <form method="post" action="<%=gmurl(@curuser)%>/update_signature">
       <textarea style="width: 225px; height: 200px;" name="profile_signature[signature]"><%=my_ps.signature%></textarea><br />
       <br />

@@ -695,7 +695,7 @@ class User < ActiveRecord::Base
   end
 
   def _no_cache_is_faction_leader?
-   (!self.faction_id.nil?) && (self.has_skill?("Capo") || self.users_skills.count(:conditions => "role IN ('Boss', 'Underboss')") > 0)
+   (!self.faction_id.nil?) && (self.has_skill_cached?("Capo") || self.users_skills.count(:conditions => "role IN ('Boss', 'Underboss')") > 0)
   end
 
   def is_faction_leader?
@@ -703,7 +703,7 @@ class User < ActiveRecord::Base
   end
 
   def is_district_leader?
-    self.has_skill?("BazarManager") ||
+    self.has_skill_cached?("BazarManager") ||
     UsersSkill.count(:conditions => ["role IN ('#{BazarDistrict::ROLE_DON}',
                                               '#{BazarDistrict::ROLE_MANO_DERECHA}')
                                      AND user_id = ?", self.id]) > 0
@@ -803,14 +803,18 @@ class User < ActiveRecord::Base
     end
   end
 
-  def has_skill?(skill)
+  def has_skill_cached?(skill)
     @cache_skills ||= Set.new(self.users_skills.find(:all).collect {|s| s.role})
     @cache_skills.include?(skill)
   end
 
+  def has_skill?(skill)
+    !self.users_skills.find(:first, :conditions => ['role = ?', skill]).nil?
+  end
+
   def has_any_skill?(skills)
     skills.each do |skill|
-      return true if self.has_skill?(skill)
+      return true if self.has_skill_cached?(skill)
     end
     false
   end
@@ -820,11 +824,11 @@ class User < ActiveRecord::Base
   end
 
   def is_bigboss?
-   (self.users_skills.count(:conditions => "role IN ('Boss', 'Underboss', 'Don', 'ManoDerecha')") > 0) || self.has_skill?("BazarManager") || self.has_skill?("Capo")
+   (self.users_skills.count(:conditions => "role IN ('Boss', 'Underboss', 'Don', 'ManoDerecha')") > 0) || self.has_skill_cached?("BazarManager") || self.has_skill_cached?("Capo")
   end
 
   def is_faction_editor?
-    is_faction_leader? || self.users_skills.count(:conditions => "role = 'Editor'") > 0 || has_skill?("Capo")
+    is_faction_leader? || self.users_skills.count(:conditions => "role = 'Editor'") > 0 || has_skill_cached?("Capo")
   end
 
   def is_editor?
@@ -846,11 +850,11 @@ class User < ActiveRecord::Base
   end
 
   def is_competition_admin?
-    has_skill?("Gladiator") || self.users_skills.count(:conditions => "role = 'CompetitionAdmin'") > 0
+    has_skill_cached?("Gladiator") || self.users_skills.count(:conditions => "role = 'CompetitionAdmin'") > 0
   end
 
   def is_competition_supervisor?
-    has_skill?("Gladiator") || is_competition_admin? || self.users_skills.count(:conditions => "role = 'CompetitionSupervisor'") > 0
+    has_skill_cached?("Gladiator") || is_competition_admin? || self.users_skills.count(:conditions => "role = 'CompetitionSupervisor'") > 0
   end
 
   def is_sicario?
@@ -888,7 +892,7 @@ class User < ActiveRecord::Base
   end
 
   def can_rate?(content)
-    return false if !self.has_skill?("RateContents")
+    return false if !self.has_skill_cached?("RateContents")
     if content.user_id == self.id || remaining_rating_slots == 0 || ContentRating.count(:conditions => ['content_id = ? and user_id = ?', content.unique_content.id, self.id]) > 0
       false
     else

@@ -320,7 +320,7 @@ class Admin::UsuariosControllerTest < ActionController::TestCase
     u3 = User.find(3)
     give_skill(2, "Capo")
     u2.reload
-    assert u2.has_skill?("Capo")
+    assert u2.has_skill_cached?("Capo")
 
     f1 = Faction.find(1)
     f1.update_underboss(u3)

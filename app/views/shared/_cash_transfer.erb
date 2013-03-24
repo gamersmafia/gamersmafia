@@ -9,7 +9,7 @@ function update_transfer_recipient(id) {
 }
 </script>
   <%mftext('Hacer transferencia') do %>
-    <% if @user.has_skill?("Bank") %>
+    <% if @user.has_skill_cached?("Bank") %>
   <form method="post" action="/cuenta/banco/confirmar_transferencia">
 
   <input type="hidden" name="sender_class" value="<%=sender.class.name%>" />
