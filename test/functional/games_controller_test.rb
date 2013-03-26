@@ -83,4 +83,22 @@ class GamesControllerTest < ActionController::TestCase
       assert_redirected_to '/juegos/1/edit'
     end
   end
+
+  test "create_gaming_platform unauthorized" do
+    assert_raises(AccessDenied) do
+      post :create_gaming_platform, {
+          :gaming_platform => { :name => "Una Plataforma" }
+      }
+    end
+  end
+
+  test "create_gaming_platform" do
+    sym_login 1
+    assert_count_increases(Decision) do
+      post :create_gaming_platform, {
+          :gaming_platform => { :name => "Una Plataforma" }
+      }
+      assert_redirected_to '/juegos'
+    end
+  end
 end
