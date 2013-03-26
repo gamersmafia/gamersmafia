@@ -180,8 +180,10 @@ module Routing
       request.env['HTTP_CLIENT_IP'] = request.env['REMOTE_ADDR']
     end
 
-    if [App.domain, 'kotoko', "arena.#{App.domain}"].include?(request.host)
+    if [App.domain, 'kotoko'].include?(request.host)
       @portal = GmPortal.new
+    elsif request.host == "arena.#{App.domain}"
+      @portal = ArenaPortal.new
     elsif request.host == "bazar.#{App.domain}"
       @portal = BazarPortal.new
     else

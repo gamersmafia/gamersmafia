@@ -52,7 +52,6 @@ class FactionsPortal < Portal
   end
 
   def home
-    raise "Deprecated"
     if self.juego_title == 'Plataforma'
         'facciones_platform'
     elsif self.factions_portal_home.to_s != ''

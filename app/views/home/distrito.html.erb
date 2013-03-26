@@ -5,6 +5,7 @@
 <%=mfcontents_basic("Generales",
     Proc.new { cat.top_level_category.find(:published, :content_type => 'News', :order => 'created_on desc', :limit => 10) },
     [],
+    :truncate_at => 36,
     :faction_favicon => true,
     :blast => true,
     :cache => "/#{controller.portal_code}/home/index/news2")%>
@@ -20,7 +21,7 @@
 	<%=mfcontents_basic("Tópics activos",
 					Proc.new { cat.top_level_category.find(:published, :content_type => 'Topic', :conditions => 'topics.closed is false', :order => 'updated_on desc', :limit => 10) },
 					[],
-					:faction_favicon => true, :blast => true, :cache => "/#{controller.portal_code}/home/index/topics2")%>
+					:truncate_at => 44, :faction_favicon => true, :blast => true, :cache => "/#{controller.portal_code}/home/index/topics2")%>
 	</div>
 
 	<%mftext('Foros activos', :grid => 4, :glast => true, :blast => true) do
@@ -67,7 +68,7 @@ next if controller.portal.send(it.downcase).nil?
 <% dafirst = true
 mfcontents_list(Cms::translate_content_name(it),
 					Proc.new { cat.top_level_category.find(:published, :content_type => it, :order => 'created_on desc', :limit => 3) },
-					:grid => grid_size, :glast => (it == classes.last)) do |o| %>
+					:truncate_at => 28, :grid => grid_size, :glast => (it == classes.last)) do |o| %>
 
 <%=content_category(o)%><a href="<%=gmurl(o)%>"><%=o.title%></a>
 <% if dafirst && o.home_image then %><div style="margin: 5px 0 10px 0;"><a href="<%=gmurl(o)%>"><%=fc_thumbnail(o.home_image, 'i', "#{thumb_width}x54", false)%></a></div><% end -%>
@@ -116,7 +117,7 @@ cache("/#{controller.portal_code}/home/index/potd20085_#{d.strftime('%Y%m%d')}")
 
 if @daily_img then %>
    	<%=render :partial => '/imagenes/image_thumbnail', :locals => {:image => @daily_img, :mode => 'i', :size => Cms::IMG_SIZE_GRID3}%>
-    <div class="more"><a class="f_milli" href="/imagenes/potds">Ver anteriores..</a></div>
+    <div class="more"><a href="/imagenes/potds">Ver anteriores..</a></div>
 <% end -%>
 <% end
 -%>

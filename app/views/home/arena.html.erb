@@ -1,0 +1,76 @@
+<div class="grid-11">
+<%=mfcontents_basic("Noticias",
+					Proc.new { controller.portal.coverage.find(:published, :order => 'created_on desc', :limit => 10) },
+					[],
+					:grid => 4, :blast => true, :faction_favicon => true, :cache => "/#{controller.portal_code}/home/index/coverages2")%>
+
+<%mftext('Últimos resultados', :has_submodules => true, :blast => true, :grid => 7, :glast => true) do %>
+
+<%mftext('GM', :grid => 4, :blast => true) do
+matches = CompetitionsMatch.find(:all, :conditions => "(#{Competition::COMPLETED_ON_SQL})", :limit => 7, :order => 'completed_on DESC')
+%>
+<%= render :partial => '/competiciones/matches_results', :locals =>  { :matches => matches }%>
+<% end -%>
+
+
+
+<% if nil then %>
+	<%mftext('Otras competiciones', :grid => 3, :glast => true) do %>
+	<% end -%>
+<% end -%>
+<% end -%>
+
+<div class="clearb"></div>
+
+<%=mfcontents_basic("Tópics",
+					Proc.new { Term.single_toplevel(:slug => 'arena').find(:published, :order => 'updated_on desc', :limit => 10) },
+					[],
+					:grid => 4, :faction_favicon => true, :cache => "/#{controller.portal_code}/home/index/topics2")%>
+
+<div class="grid-4"><%=render :partial => '/home/open_bets' %></div>
+
+<% cache("/#{controller.portal_code}/home/index/demos2") do %>
+<%mfcontents_list('Demos',
+					Proc.new { controller.portal.demo.find(:published, :order => 'demos.created_on desc', :limit => 5, :include => :event) },
+					{:faction_favicon => true, :grid => 3, :glast => true}) do |o| %>
+<%=content_category(o)%><a href="<%=gmurl(o)%>"><%=o.title%></a><br />
+<div class="infoinline"><% if o.event_id then %><a href="<%=gmurl(o.event)%>"><%=o.event.title%></a><% else %>&nbsp;<% end -%></div>
+<% end -%>
+<% end -%>
+</div>
+
+<div class="grid-4 glast">
+
+<%mftext('Ladders') do %>
+    <%=render :partial => '/competiciones/open_ladders' %>
+<% end -%>
+
+<%cache("/arena/home/index/ranking") do %>
+<%mftext('Ranking', :has_submodules => true) do
+[['Jugadores', Competition::USERS], ['Clanes', Competition::CLANS]].each do |ard| %>
+<%mftext(ard[0]) do
+	ladders = Ladder.find(:all, :conditions => "competitions.state > 1 and competitions.state < 4 and competitions_participants_type_id = #{ard[1]}", :order => '(select slug from games where id = competitions.game_id), lower(competitions.name)', :include => :game)
+%>
+	<table>
+		<% ladders.each do |ladder|
+winners = ladder.winners(1)
+next unless winners.size == 1 %>
+		<tr class="<=%oddclass%>">
+			<td class="w16"><%=faction_favicon(ladder.game.slug)%></td>
+			<td><a href="/competiciones/participante/<%=winners[0].id%>"><%=winners[0].name%></a><br /><div class="infoinline"><a href="/competiciones/show/<%=ladder.id%>"><%=ladder.name%></a></div></td>
+		</tr>
+		<% end -%>
+	</table>
+	<% end -%>
+<% end %><%# ard -%>
+<% end -%>
+<% end %><%# cache -%>
+
+<% cache("/#{controller.portal.code}/competiciones/index/inscripciones_abiertas2") do %>
+<%mflist('Inscripciones abiertas', controller.portal.competitions.find(:all, :conditions => 'type <> \'Ladder\' and state = 1')) do |competition| %>
+<%# TODO mostrar solo las que se deberían ver aquí %>
+      <li><%=competition.pro? ? '<div style="float: right; margin: 3px 3px 0 0;"><img class="competition-pro" src="/images/blank.gif" /></div>' : ''%><div style="float: right;" class="infoinline"><%=competition.kind_of?(League) ? 'liga' : 'torneo'%></div><%=faction_favicon(competition.game)%> <a href="/competiciones/show/<%=competition.id%>"><%=competition.name%></a></li>
+  <% end -%>
+<% end -%>
+
+</div>

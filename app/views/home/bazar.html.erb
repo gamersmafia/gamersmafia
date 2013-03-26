@@ -1,0 +1,113 @@
+<% cats = BazarDistrictPortal.find(:all, :order => 'lower(name)')
+cats1 = []
+cats2 = []
+cats.size.times do |i|
+  if i < cats.size / 2
+    cats1 << cats[i]
+    else
+    cats2 << cats[i]
+    end
+end
+%>
+
+<% [cats1, cats2].each do |catz| %>
+<div style="width: 33%; float: left;">
+<%catz.each do |portal|
+  cat = portal.categories(nil)[0] %>
+	<%mftext("<a style=\"text-decoration: underline;\" href=\"http://#{cat.code}.#{App.domain}\">#{cat.name}</a>", :has_submodules => true) do %>
+
+	<%cache("/common/noticias/_latest_by_cat2_#{cat.code}") do %>
+	<%=mfcontents_basic("<a style=\"color: #969696;\" href=\"http://#{cat.code}.#{App.domain}/noticias\">Noticias</a>",
+					Proc.new { News.in_term(cat).published.find(:all, :order => 'created_on desc', :limit => 5) },
+					[],
+					:faction_favicon => true, :blast => true)%>
+	<% end %><%# cache -%>
+
+
+	<% cache("/common/topics/_latest_by_cat2#{cat.code}") do %>
+	<%=mfcontents_basic("<a style=\"color: #969696;\" href=\"http://#{cat.code}.#{App.domain}/foros\">Tópics activos</a>",
+					Proc.new { Topic.in_term(cat).published.find(:all, :conditions => 'topics.closed is false', :order => 'updated_on desc', :limit => 5) },
+					[],
+					:faction_favicon => true, :blast => true)%>
+	<% end %><%# cache -%>
+
+	<%
+	if cat.image then
+	cache("/common/home/index/imagenes_#{cat.code}") do
+	mflist("<a style=\"color: #969696;\" href=\"http://#{cat.code}.#{App.domain}/imagenes\">Imágenes</a>",
+      Proc.new { Image.in_term(cat).published.find(:all, :order => 'created_on desc', :limit => 4) }, :class_container => 'mflist-row-images', :blast => true) do |im| %>
+		<%=link_to fc_thumbnail(im.file, 'i', Cms::IMG_SIZE_GRIDB1, false), gmurl(im)%>
+	<% end %>
+	<div class="clearl"></div>
+	<%
+	end %><%# cache %>
+	<% end -%>
+
+
+	<%=render :partial => '/home/bazar_articles2', :locals => { :bazar_district => cat } %>
+
+<% if cat.question then %>
+<% mfcontents_list("<a style=\"color: #969696;\" href=\"http://#{cat.code}.#{App.domain}/preguntas\">Preguntas</a>",
+				   Proc.new { Question.in_term(cat).published.find(
+             :all,
+             :conditions => "answered_on IS NULL AND created_on > now() -" +
+                            " '7 days'::interval",
+             :order => 'COALESCE(ammount, 0) desc, created_on DESC', :limit => 5)}
+				   ) do |o| %>
+<a href="<%=gmurl(o)%>"><%=content_category(o)%><%=o.title%></a>
+<% end -%>
+<% end %><%# if -%>
+
+	<% if cat.download then %>
+	<%=mfcontents_basic("<a style=\"color: #969696;\" href=\"http://#{cat.code}.#{App.domain}/noticias\">Descargas</a>",
+					Proc.new { Download.in_term(cat).published.find(:all, :order => 'created_on DESC', :limit => 5) },
+					[],
+					:faction_favicon => true, :cache => "/common/home/index/downloads3#{cat.code}", :blast => true) %>
+	<% end -%>
+
+	<%
+if cat.bet then
+mfcontents_table("<a style=\"color: #969696;\" href=\"http://#{cat.code}.#{App.domain}/apuestas\">Apuestas</a>",
+				   Proc.new { Bet.in_term(cat).published.find(:all, :conditions => "#{Bet::OPEN_BETS_SQL}") },
+				   :grid => 4) do |o| %>
+<td class="<%=oddclass%>"><a href="<%=gmurl(o)%>"><%=content_category(o)%><%=o.title%></a><br />
+<div class="infoinline" style="float: left;"><%=format_interval(o.closes_on.to_i - Time.now.to_i, 'horas', true)%></div>
+<div class="infoinline" style="float: right;"><%=o.total_ammount.to_i%> <%=gmd11%></div>
+</td>
+<% end
+end -%>
+<% end %><%# mftext -%>
+<% end %><%# catz -%>
+</div>
+<% end -%>
+
+<div class="grid-3 glast">
+
+<%mftext('Galerías', :has_submodules => true) do %>
+	<%=render :partial => 'daily_joy' %>
+
+	<%mftext('xD') do %>
+		<%=render :partial => '/imagenes/pick_from_gallery', :locals => { :term_id => Term.single_toplevel(:slug => 'bazar').children.find(:first, :conditions => 'name = \'xD\' And taxonomy = \'ImagesCategory\'').id}%>
+	<% end -%>
+
+
+	<%mftext('Wallpapers') do %>
+		<%=render :partial => '/imagenes/pick_from_gallery', :locals => { :term_id => Term.single_toplevel(:slug => 'bazar').children.find(:first, :conditions => 'name = \'Fondos de Escritorio - Wallpapers\' And taxonomy = \'ImagesCategory\'').id}%>
+	<% end -%>
+<% end -%>
+
+<% cache('/common/home/index/curiosidades2') do %>
+<%
+is_first = true
+mfcontents_list("Curiosidades", Proc.new { Funthing.published.find(:all, :order => 'created_on DESC LIMIT 10') }, :bottom => '<div class="more"><a title="Ver más curiosidades" href="/curiosidades">Más curiosidades &raquo;</a></div>') do |ft|
+thumb = ft.thumbnail %>
+	<% if is_first && thumb then %>
+	<div class="centered" style="margin-bottom: 2px;"><a href="<%=gmurl(ft)%>"><img src="<%=thumb%>" /></a><br /></div>
+	<% end -%>
+	<a href="<%=gmurl(ft)%>"><%=content_category(ft)%> <%=truncate(ft.title, 17, '..')%></a>
+<% is_first = false
+end
+end -%>
+</div>
+
+<div class="clearb"></div>

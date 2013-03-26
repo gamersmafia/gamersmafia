@@ -1,0 +1,213 @@
+<%mftext('En tu red', :grid => 6, :id => 'en-tu-red') do %>
+<% if !user_is_authed then %>
+<p><strong><a href="/cuenta/alta">Regístrate</a></strong> para acceder a esta funcionalidad.</p>
+<% else %>
+<ul>
+<%
+cur_date = nil
+is_first = true
+@user.users_newsfeeds.find(:all, :order => 'created_on DESC', :limit => 28).each do |unf|
+if cur_date.nil? && unf.created_on >= Time.now.beginning_of_day
+cur_date = Time.now.beginning_of_day
+cur_str = 'Hoy'
+output_date = true
+end
+if cur_date.nil? || (cur_date && cur_date.strftime('%Y%m%d') > unf.created_on.strftime('%Y%m%d'))
+cur_date = unf.created_on
+cur_str = cur_date.strftime('%d %b %Y')
+output_date = true
+end
+
+if output_date then %>
+<li class="en-tu-red-date <%='first' if is_first%>"><%=cur_str%></li>
+<% output_date = false
+is_first = false
+end
+%>
+<li class="<%=oddclass%>"><%=unf.summary%></li>
+<% end -%>
+</ul>
+<% end -%>
+<% end -%>
+
+<div class="grid-9 glast blast">
+<%mftext('Reclutamiento', :grid => 9, :has_submodules => true, :glast => true, :id => 'comunidad-reclutamiento') do %>
+	<div class="grid-6">
+	<% cache('/home/comunidad/recruitment_ads_clans') do %>
+	<% mflist("Buscan jugadores", Proc.new { RecruitmentAd.find(:all, :conditions => 'clan_id IS NOT NULL AND deleted = \'f\'', :order => 'created_on desc', :limit => 4) }, :class => 'lh16', :grid => 3) do |ra| %>
+		<%=faction_favicon(ra.game)%> <a href="<%=gmurl(ra)%>"><%=ra.title%></a>
+	<% end %><%# mflist-%>
+	<% end %><%# cache-%>
+
+	<% cache('/home/comunidad/recruitment_ads_users') do %>
+	<% mflist("Buscan clan", Proc.new { RecruitmentAd.find(:all, :conditions => 'clan_id IS NULL AND deleted = \'f\'', :order => 'created_on desc', :limit => 4) }, :class => 'lh16', :grid => 3, :glast => true) do |ra| %>
+		<%=faction_favicon(ra.game)%> <a href="<%=gmurl(ra)%>"><%=ra.title%></a>
+	<% end %><%# mflist-%>
+	<% end %><%# cache -%>
+
+	<div class="clearb"></div>
+
+	<%mftext('Buscar anuncios', :grid => 6, :glast => true, :blast => true) do %>
+	<form method="get" action="/reclutamiento" style="margin: 0; padding: 0;">
+	<input type="hidden" name="search" value="1">
+	<table>
+		<tr>
+			<td>Juego</td>
+			<td><select name="game_id">
+				<option value=""></option>
+				<%Game.find(:all, :order => 'lower(name)').each do |game| %>
+					<option <%="selected=\"selected\"" if user_is_authed && @user.faction_id && @user.faction.code == game.slug %>value="<%=game.id%>"><%=game.name%></option>
+				<% end -%>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Tipo</td>
+			<td><select name="type">
+					<option <%='selected="selected" ' if params[:type] == 'searching_clan' %> value="searching_clan">Clanes reclutando</option>
+					<option <%='selected="selected" ' if params[:type] == 'searching_users' %> value="searching_users">Gamers buscando clan</option>
+				</select></td>
+		</tr>
+		<tr>
+			<td>Skills</td>
+			<td><label><input type="checkbox" name="levels[]" value="low" > low</label> <label><input type="checkbox" name="levels[]" value="med" > med</label> <label><input type="checkbox" name="levels[]" value="high" > high</label></td>
+		</tr>
+	</table>
+	<div class="right"><input type="submit" class="button" value="Buscar" /></div>
+	</form>
+	<% end -%>
+	</div>
+
+
+	<% cache("/home/comunidad/clans_movements") do %>
+	<% mflist("Movimientos", Proc.new { ClansMovement.find(:all, :order => 'created_on DESC', :limit => 8)}, :grid => 3, :glast => true, :blast => true) do |cm| %>
+		<%=user_link(cm.user)%> <%=ClansMovement.translate_direction(cm.direction)%> <a href="<%=gmurl(cm.clan)%>"><%=cm.clan.tag%></a>
+	<% end %><%# mflist-%>
+	<% end %><%# cache -%>
+	<% end -%>
+
+<%mftext('Hacer amigos', :grid => 9, :has_submodules => true, :glast => true) do %>
+	<%mftext('Aleatorio', :grid => 2) do
+	us = User.random_with_photo(:exclude_user_id => (user_is_authed ? @user.id : nil))
+    if us.size > 0 then %>
+      <%=comunidad_user_with_photo(us[0])%>
+    <% end -%>
+	<% end -%>
+
+	<% if user_is_authed then
+		us = User.random_same_city(@user, :limit => 1)
+		if us.size > 0 then %>
+		  <%mftext('De tu ciudad', :grid => 2) do %><%=comunidad_user_with_photo(us[0]) %><% end -%>
+	 <% end %><%# if us -%>
+	 <% else%>
+	 <p><strong><a href="/cuenta/alta">Regístrate</a></strong> para recibir recomendaciones de amigos.</p>
+	<% end %><%# user_is_authed -%>
+
+	<% if user_is_authed then %>
+	<%	poss = User.possible_friends_of(@user, :limit => 3)
+	  if poss.size > 0 then
+	mftext('Puede que conozcas a', :grid => 5, :glast => true, :blast => true) do %>
+	<script type="text/javascript">
+		function friend_rec(frid, y) {
+			$.get('/cuenta/amigos/mark_fr_' + (y == 1 ? 'good' : 'bad')+ '?id=' + frid)
+			$("#fr" + frid).addClass('hidden');
+			return false;
+		}
+	</script>
+	<table>
+		<% poss.each do |po| %>
+		<tr id="fr<%=po.id%>" class="<%=oddclass%>">
+			<td style="width: 37px;"><img src="/cache/thumbnails/f/32x32/<%=po.recommended_user.show_photo%>" /></td>
+			<td><div class="infoinline" style="float: right;"><a href="" onclick="return friend_rec(<%=po.id%>, 1);">Es mi amigo</a> | <a href="" onclick="return friend_rec(<%=po.id%>, 0);">X</a>
+			</div>
+				<%=user_link(po.recommended_user)%><br />
+			<div class="infoinline"><%=h po.reason%></div></td>
+		</tr>
+		<% end -%>
+	</table>
+
+	<% end %><%# mftext -%>
+	<% end %><%# if -%>
+	<% end -%>
+<% end -%>
+
+<div class="clearb"></div>
+
+
+
+<%mftext('Los + hot de la semana', :grid => 4, :has_submodules => true) do %>
+	<%mftext('Mafios@s', :grid => 4, :glast => true) do %>
+	<%cache("/common/home/comunidad/hot_users#{30.minutes.since.strftime('%Y-%m-%d')}") do %>
+	<table>
+		<% User.can_login.find(:all, :order => 'ranking_popularity_pos', :limit => 3).each do |user| %>
+			<tr class="<%=oddclass%>" style="vertical-align: top; height: 36px">
+				<td style="width: 37px;"><div class="photo"><a href="<%=gmurl(user)%>"><img src="/cache/thumbnails/i/32x32/<%=user.show_photo%>" /></a></div></td>
+				<td><strong><a href="<%=gmurl(user)%>"><%=user.login%></a></strong><br />
+				<span class="infoinline"><strong><%=user.cache_popularity%></strong> visitas</span></td>
+			</tr>
+		<% end -%>
+	</table>
+	<% end %><%# cache -%>
+	<% end -%>
+
+	<%mftext('Clanes', :grid => 4, :glast => true, :blast => true) do %>
+	<%cache("/common/home/comunidad/hot_clans#{Time.now.strftime('%Y-%m-%d')}") do %>
+	<table>
+		<% Clan.find(:all, :order => 'ranking_popularity_pos', :limit => 3).each do |clan| %>
+			<tr class="<%=oddclass%>" style="vertical-align: top; height: 36px">
+				<td style="width: 37px;"><div class="photo"><a href="<%=gmurl(clan)%>"><img src="/cache/thumbnails/i/32x32/<%=clan.show_logo%>" /></a></div></td>
+				<td><strong><a href="<%=gmurl(clan)%>"><%=clan.name%></a></strong><br />
+				<span class="infoinline"><strong><%=clan.cache_popularity%></strong> visitas</span></td>
+			</tr>
+		<% end -%>
+	</table>
+	<% end -%>
+	<% end -%>
+<% end -%>
+
+
+<%mftext('Blogs', :grid => 5, :glast => true) do %>
+	<%=render :partial => '/blogs/ultimas'%>
+<% end -%>
+</div>
+
+<div class="clearb"></div>
+
+<%mftext('Cumplen años hoy', :grid => 3) do %>
+  <table>
+<%  cache("/common/miembros/_rightside/birthdays_#{Time.now.strftime('%Y%m%d')}") do %>
+      <% User.can_login.birthday_today.find(:all, :conditions => "state <> #{User::ST_ZOMBIE}", :order => 'lower(login)').each do |u|
+		 next if u.age < 5 || u.age > 100 %>
+      <tr class="<%=oddclass%>">
+        <td><%=user_link(u)%><br /> <span class="infoinline"><strong><%=u.age%></strong> años</span></td>
+		<td class="right"><img src="/cache/thumbnails/f/32x32/<%=u.show_photo%>" /></td>
+      </tr>
+      <% end -%>
+    <% end -%>
+  </table>
+<% end -%>
+
+<%mftext('Perfiles actualizados', :grid => 3) do %>
+  <table>
+<%# cache("/common/miembros/_rightside/birthdays_#{Time.now.strftime('%Y%m%d')}") do %>
+      <% User.can_login.find(:all, :conditions => "profile_last_updated_on is not null", :order => 'profile_last_updated_on DESC', :limit => 5).each do |u| %>
+      <tr class="<%=oddclass%>">
+        <td><strong><%=user_link(u)%></strong><br /> <span class="infoinline"><%=print_tstamp(u.profile_last_updated_on, 'intelligent')%></span></td>
+		<td class="right"><img src="/cache/thumbnails/f/32x32/<%=u.show_photo%>" /></td>
+      </tr>
+      <% end -%>
+    <%# end -%>
+  </table>
+<% end -%>
+
+<%mftext('Últimas firmas', :grid => 3) do %>
+<table>
+	<%ProfileSignature.find(:all, :order => 'id DESC', :limit => 5).each do |ps| %>
+	<tr class="<%=oddclass%>">
+		<td style="height: 32px;"><a href="<%=gmurl(ps.user)%>/firmas"><%=ps.signer%> a <%=ps.user%></a></td>
+	</tr>
+	<% end -%>
+</table>
+<% end -%>
+
+<div class="clearb"></div>

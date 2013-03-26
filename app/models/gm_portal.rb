@@ -34,7 +34,7 @@ class GmPortal
   end
 
   def home
-    'gm'
+    'tetris'
   end
 
   def skin_id
