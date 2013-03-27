@@ -548,7 +548,7 @@ class Comment < ActiveRecord::Base
     # TODO(slnc): this doesn't work with all logins, we need to restrict and
     # upgrade logins to remove unsupported chars (OLD_LOGIN_REGEXP).
     clean_references = self.comment.downcase.scan(
-        Regexp.new("@#{User::LOGIN_REGEXP}")).flatten
+        Regexp.new("\s@#{User::LOGIN_REGEXP}")).flatten
 
     referenced_names = (dirty_references + clean_references).uniq.sort
     entity_info = {}

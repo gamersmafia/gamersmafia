@@ -37,7 +37,7 @@ module Formatting
             '<abbr class="fullquote-opener" title="Ver comentario original" data-quote="\\1">#\\1</abbr>')
       .gsub(/(\[(\/*)(b|i)\])/i, '<\\2\\3>')
       .gsub(/(\[~(#{User::OLD_LOGIN_REGEXP_NOT_FULL})\])/, '<a href="/miembros/\\2">\\2</a>')
-      .gsub(Regexp.new("@#{User::LOGIN_REGEXP}"), '<span class="user-login"><a href="/miembros/\\1">\\1</a></span>')
+      .gsub(Regexp.new("\s@#{User::LOGIN_REGEXP}"), '&nbsp;<span class="user-login"><a href="/miembros/\\1">\\1</a></span>')
       .gsub(/\[flag=([a-z]+)\]/i, '<img class="icon" src="/images/flags/\\1.gif" />')
       .gsub(/\[img\](#{SIMPLE_URL_REGEXP})\[\/img\]/i, '<img src="\\1" />')
       .gsub(/\[url=(#{SIMPLE_URL_REGEXP})\](#{interword_regexp_strict})\[\/url\]/i, '<a href="\\1">\\2</a>')

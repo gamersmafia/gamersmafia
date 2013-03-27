@@ -171,11 +171,16 @@ class FormattingTest < ActiveSupport::TestCase
     assert_equal t_formatized, Formatting.format_bbcode(t)
   end
 
-  test "formatize user login" do
-    expected = (
-        "<p><span class=\"user-login\"><a href=\"/miembros/nagato\">nagato</a>" +
+  test "formatize user login if there is a space before" do
+    expected_with_space = (
+        "<p>&nbsp;<span class=\"user-login\"><a href=\"/miembros/nagato\">nagato</a>" +
         "</span></p>")
-    assert_equal expected, Formatting.format_bbcode("@nagato")
+    expected_without_space = ("<p>@nagato</p>")
+    expected_with_emails = (
+        "<p><a href=\"mailto:email@gmail.com\">email@gmail.com</a></p>")
+    assert_equal expected_with_space, Formatting.format_bbcode(" @nagato")
+    assert_equal expected_without_space, Formatting.format_bbcode("@nagato")
+    assert_equal expected_with_emails, Formatting.format_bbcode("email@gmail.com")
   end
 
   test "formatize spoiler" do
