@@ -4,13 +4,6 @@ class SiteController < ApplicationController
   CONTACT_MAGIC = 982579815691299191
   VALID_TOPIC = /^[0-9]+\/[a-z1-9&.=]+$/
 
-  def ideas
-    @title = 'Ideas'
-    if params[:topic] && VALID_TOPIC =~ params[:topic]
-      @topic = params[:topic]
-    end
-  end
-
   def banners
     @title = 'Banners de Gamersmafia'
   end
