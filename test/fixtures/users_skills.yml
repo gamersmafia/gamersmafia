@@ -141,14 +141,164 @@ superadmin_tag_contents:
   user_id: 5
   role: CreateEntity
 
-<% i = 28 %>
-<% UsersSkill::VALID_SKILLS.each do |skill| %>
-
-unnamed_<%=skill%>:
-  id: <%=i.to_i%>
+unnamed_advertiser:
+  id: 28
   user_id: 63
-  role: <%=skill.to_s%>
+  role: Advertiser
+  role_data: 1
 
-<% i += 1 %>
-<% end %>
+unnamed_antiflood:
+  id: 29
+  user_id: 63
+  role: Antiflood
 
+unnamed_bank:
+  id: 30
+  user_id: 63
+  role: Bank
+
+unnamed_bazarmanager:
+  id: 31
+  user_id: 63
+  role: BazarManager
+
+unnamed_boss:
+  id: 32
+  user_id: 63
+  role: Boss
+  role_data: 1
+
+unnamed_bot:
+  id: 33
+  user_id: 63
+  role: Bot
+
+unnamed_bulkupload:
+  id: 34
+  user_id: 63
+  role: BulkUpload
+
+unnamed_capo:
+  id: 35
+  user_id: 63
+  role: Capo
+
+unnamed_competitionadmin:
+  id: 36
+  user_id: 63
+  role: CompetitionAdmin
+  role_data: 1
+
+unnamed_competitionsupervisor:
+  id: 37
+  user_id: 63
+  role: CompetitionSupervisor
+  role_data: 1
+
+unnamed_contentmoderationqueue:
+  id: 38
+  user_id: 63
+  role: ContentModerationQueue
+
+unnamed_createentity:
+  id: 39
+  user_id: 63
+  role: CreateEntity
+
+unnamed_deletecontents:
+  id: 40
+  user_id: 63
+  role: DeleteContents
+
+unnamed_don:
+  id: 41
+  user_id: 63
+  role: Don
+  role_data: 1
+
+unnamed_editcontents:
+  id: 42
+  user_id: 63
+  role: EditContents
+
+unnamed_editfaq:
+  id: 43
+  user_id: 63
+  role: EditFaq
+
+unnamed_editor:
+  id: 44
+  user_id: 63
+  role: Editor
+  role_data: "--- \n:faction_id: \"1\"\n:content_type_id: \"1\"\n"
+
+unnamed_gladiator:
+  id: 45
+  user_id: 63
+  role: Gladiator
+
+unnamed_gmshop:
+  id: 46
+  user_id: 63
+  role: GmShop
+
+unnamed_lessads:
+  id: 49
+  user_id: 63
+  role: LessAds
+
+unnamed_massmoderatecontents:
+  id: 51
+  user_id: 63
+  role: MassModerateContents
+
+unnamed_moderator:
+  id: 52
+  user_id: 63
+  role: Moderator
+  role_data: 1
+
+unnamed_profilesignatures:
+  id: 53
+  user_id: 63
+  role: ProfileSignatures
+
+unnamed_ratecommentsdown:
+  id: 54
+  user_id: 63
+  role: RateCommentsDown
+
+unnamed_ratecommentsup:
+  id: 55
+  user_id: 63
+  role: RateCommentsUp
+
+unnamed_ratecontents:
+  id: 56
+  user_id: 63
+  role: RateContents
+
+unnamed_reportcomments:
+  id: 57
+  user_id: 63
+  role: ReportComments
+
+unnamed_reportcontents:
+  id: 58
+  user_id: 63
+  role: ReportContents
+
+unnamed_reportusers:
+  id: 59
+  user_id: 63
+  role: ReportUsers
+
+unnamed_tagcontents:
+  id: 61
+  user_id: 63
+  role: TagContents
+
+unnamed_webmaster:
+  id: 63
+  user_id: 63
+  role: Webmaster

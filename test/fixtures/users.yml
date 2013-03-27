@@ -344,3 +344,4 @@ unnamed:
   ipaddr: 127.0.0.4
   enable_competition_indicator: false
   enable_profile_signatures: false
+  faction_id: 1

@@ -1,20 +1,4 @@
 <% require 'yaml'%>
-unnamed_league:
-  id: 0
-  name: liga_unnamed
-  type: League
-  game_id: 1
-  state: 0
-  competitions_participants_type_id: 1
-  forced_maps: false
-  scoring_mode: 0
-  pro: false
-  cash: 0
-  timetable_for_matches: 0
-  invitational: false
-  competitions_types_options: <%=YAML.dump(HashWithIndifferentAccess.new)%>
-  timetable_options: <%=YAML.dump(HashWithIndifferentAccess.new)%>
-
 liga:
   id: 1
   name: liga_1
