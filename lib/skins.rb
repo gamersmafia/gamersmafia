@@ -60,7 +60,7 @@ module Skins
     end
 
     File.open(Skin::FAVICONS_CSS_FILENAME, 'w') {|f| f.write(css_out)}
-    sprite.quantize.write("#{Rails.root}/public/storage/gs.png")
+    sprite.quantize.write("#{Rails.root}/app/assets/gs.png")
   end
 
   def self.convert_strings_to_attribute_wrappers(attributes, options)
