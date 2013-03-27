@@ -5,7 +5,7 @@ module ApplicationHelper
   ANALYTICS_SNIPPET = <<-END
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-130555-1']);
+  _gaq.push(['_setAccount', 'UA-38976302-1']);
   _gaq.push(['_setDomainName', '.gamersmafia.com']);
   _gaq.push(['_trackPageview']);
   %custom%
