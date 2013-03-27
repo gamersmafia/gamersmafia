@@ -42,9 +42,9 @@ class Faction < ActiveRecord::Base
   after_save :update_related_portal
 
   validates_format_of :code,
-      :with => /^[a-z0-9]{1,7}$/,
-      :message => ("Caracteres inválidos: solo se permiten números y letras y" +
-                   " longitud máxima de 7 caracteres")
+      :with => /^[a-z0-9]{1,15}$/,
+      :message => ("Caracteres inválidos: solo se permiten números, letras y" +
+                   " longitud máxima de 15 caracteres")
   validates_format_of :name,
       :with => /^[a-z0-9':[:space:]-]{1,36}$/i,
       :message => ("Caracteres inválidos: solo se permiten números, letras y" +
