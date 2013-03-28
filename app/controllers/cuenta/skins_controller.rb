@@ -55,6 +55,7 @@ class Cuenta::SkinsController < ApplicationController
       skin_variables[color_name] = params["skin"]["skin_variables"][color_name]
     end
     @skin.update_attribute('skin_variables', skin_variables)
+    @skin.update_attribute(:updated_on, Time.now)
     flash[:notice] = "Skin #{@skin.name} actualizada correctamente"
     redirect_to "/cuenta/skins/edit/#{@skin.id}"
   end
