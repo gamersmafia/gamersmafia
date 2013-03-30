@@ -9,7 +9,7 @@ al menos 500M de RAM asignados.
 2. Conecta a tu nueva máquina virtual como usuario "unnamed" y copia y pega las
 siguientes 4 líneas en una terminal:
 
-  wget https://raw.github.com/gamersmafia/gamersmafia/production/script/bootstrap_gm.sh
+  wget https://raw.github.com/gamersmafia/gamersmafia/master/script/bootstrap_gm.sh
   chmod u+x bootstrap_gm.sh
   ./bootstrap_gm.sh
   source ~/.bashrc
