@@ -91,22 +91,22 @@ class Decision < ActiveRecord::Base
   }
 
   MAX_USER_CHOICES = {
-    "CreateGame" => 20,
-    "CreateGamingPlatform" => 20,
-    "CreateTag" => 20,
-    "PublishBet" => 20,
-    "PublishColumn" => 20,
-    "PublishCoverage" => 20,
-    "PublishDemo" => 20,
-    "PublishDownload" => 20,
-    "PublishEvent" => 20,
-    "PublishFunthing" => 20,
-    "PublishImage" => 20,
-    "PublishInterview" => 20,
-    "PublishNews" => 20,
-    "PublishPoll" => 20,
-    "PublishReview" => 20,
-    "PublishTutorial" => 20,
+    "CreateGame" => 15,
+    "CreateGamingPlatform" => 15,
+    "CreateTag" => 15,
+    "PublishBet" => 15,
+    "PublishColumn" => 15,
+    "PublishCoverage" => 15,
+    "PublishDemo" => 15,
+    "PublishDownload" => 15,
+    "PublishEvent" => 15,
+    "PublishFunthing" => 15,
+    "PublishImage" => 15,
+    "PublishInterview" => 15,
+    "PublishNews" => 15,
+    "PublishPoll" => 15,
+    "PublishReview" => 15,
+    "PublishTutorial" => 15,
   }
 
   # Don't change this without also changing the names in the bd
