@@ -113,7 +113,7 @@ class Game < ActiveRecord::Base
   end
 
   def img_file
-    "#{self.select(:icon)"
+    "#{self.select(:icon)}"
   end
 
   # TODO tb a plataformas
