@@ -1,0 +1,32 @@
+<% generic_support do %>
+  <div class="subheader first"><div>Edición</div></div>
+  <%= link_to 'Nuevo juego', :action => 'new' %>
+<% end -%>
+
+<% content_main do %>
+  <%mftext('Juegos') do %>
+
+<%= render :partial => 'shared/pager2', :locals => {:collection => @games, :pos => 'top'} %>
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Abreviatura</th>
+    <th class="w50">Modos de juego</th>
+    <th class="w50">Versiones</th>
+    <th class="w50">Mapas</th>
+  </tr>
+
+<% for game in @games %>
+  <tr class="<%=oddclass%>">
+    <td><%= link_to game.name, :action => 'edit', :id => game %></td>
+    <td><%=game.code%></td>
+    <td><%=game.games_modes.count%></td>
+    <td><%=game.games_versions.count%></td>
+    <td><%=game.games_maps.count%></td>
+  </tr>
+<% end %>
+</table>
+
+<%= render :partial => 'shared/pager2', :locals => {:collection => @games, :pos => 'bottom'} %>
+<% end -%>
+<% end -%>
