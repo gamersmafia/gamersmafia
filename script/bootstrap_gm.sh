@@ -19,6 +19,7 @@ GM_CURRENT="/srv/www/gamersmafia/current"
 GM_APACHE_CONFIG="${GM_CURRENT}/config/apache.morpheus.conf"
 GIT_REPOSITORY="git://github.com/gamersmafia/gamersmafia.git"
 MATCHIT_URL="http://www.vim.org/scripts/download_script.php?src_id=8196"
+CTRLP_URL="https://github.com/kien/ctrlp.vim/archive/master.zip"
 PACKAGES_TO_INSTALL="
 apache2
 apache2-mpm-prefork
@@ -46,6 +47,7 @@ postgresql-client
 rpl
 redis-server
 ruby1.9.1-full
+tmux
 vim-nox
 zip
 "
@@ -67,6 +69,8 @@ DownloadMiscConfigFiles() {
   wget -O ~/.gitconfig ${BOOTSTRAP_GITHUB_URL}/.gitconfig
   wget -O ~/.bashrc_gm ${BOOTSTRAP_GITHUB_URL}/.bashrc
   wget -O ~/.vim/matchit.zip ${MATCHIT_URL} && cd ~/.vim && unzip matchit.zip && cd
+  wget -O ~/.vim/ctrlp.zip ${CTRLP_URL} && cd ~/.vim && unzip ctrlp.zip && cd
+  wget -O ~/.tmux.conf ${BOOTSTRAP_GITHUB_URL}/.tmux.conf
   echo -e "\nsource ~/.bashrc_gm" >> ~/.bashrc
 }
 
