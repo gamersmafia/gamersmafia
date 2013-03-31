@@ -94,6 +94,11 @@ class Game < ActiveRecord::Base
 
   def update_img_file
     if @temp_file and @filename != ''
+      base_dir = "#{File.dirname(self.img_file)}"
+      if not File.exists?(base_dir)
+        FileUtils.mkdir_p(base_dir)
+      end
+
       File.open(self.img_file, "wb+") do |f|
         f.write(@temp_file.read)
       end

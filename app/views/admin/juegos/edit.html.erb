@@ -1,0 +1,49 @@
+<div style="width: 50%; float: left;">
+<%mftext('Editar juego') do %>
+
+<%= form_tag({:action => 'update', :id => @game}, :multipart => true )%>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Guardar' %>
+</form>
+<% end -%>
+</div>
+
+<div style="width: 50%; float: left;">
+<%mftext('Modos de juego') do %>
+<table>
+	<% @game.games_modes.find(:all, :order => 'lower(name) ASC').each do |gm| %>
+	<tr class="<%=oddclass%>">
+		<td><%=gm.name%></td>
+		<td class="w100"><%=gm.entity_type == Game::ENTITY_USER ? '1 vs 1' : 'clan vs clan' %></td>
+		<td class="w25"><a href="/admin/juegos/destroy_games_mode/<%=gm.id%>" onclick="return confirm('¿Estás seguro?');">Borrar</a></td>
+	</tr>
+	<% end -%>
+</table>
+<br />
+<form method="post" action="/admin/juegos/create_games_mode">
+	<input type="hidden" name="games_mode[game_id]" value="<%=@game.id%>" />
+	Nombre:  <input type="text" class="text"  name="games_mode[name]" /> <br />
+	Participantes por equipo: <select name="games_mode[entity_type]">
+		<option value="<%=Game::ENTITY_USER%>">Un jugador</option>
+		<option value="<%=Game::ENTITY_CLAN%>">Más de un jugador</option>
+	</select><br />
+	<input type="submit" class="button" value="Crear" />
+</form>
+<% end -%>
+
+<%mftext('Versiones') do %>
+<table>
+	<% @game.games_versions.find(:all, :order => 'lower(version) ASC').each do |gv| %>
+	<tr class="<%=oddclass%>">
+		<td><%=gv.version%></td>
+		<td class="w25"><a href="/admin/juegos/destroy_games_version/<%=gv.id%>" onclick="return confirm('¿Estás seguro?');">Borrar</a></td>
+	</tr>
+	<% end -%>
+</table>
+<br />
+<form method="post" action="/admin/juegos/create_games_version">
+	<input type="hidden" name="games_version[game_id]" value="<%=@game.id%>" />
+	<input type="text" class="text"  name="games_version[version]" /> <input type="submit" class="button" value="Crear" />
+</form>
+<% end -%>
+</div>
