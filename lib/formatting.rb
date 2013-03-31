@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'rinku'
+require 'iconv'
 
 module Formatting
   SIMPLE_URL_REGEXP = /[a-zA-Z0-9_.:?#&%-\/]+/
@@ -239,6 +240,9 @@ module Formatting
 
   def self.git_log_to_html(git_log)
     out = []
+    if Encoding.compatible?(git_log, "a".force_encoding("iso8859-1"))
+      git_log = Iconv.conv 'UTF-8', 'iso8859-1', git_log
+    end
     git_log.gsub(/^commit /, "COMMIT_STARTcommit").split("COMMIT_STARTcommit").each do |commit|
       next if commit.empty?
       commit_lines = commit.split("\n")
