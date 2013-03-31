@@ -50,7 +50,7 @@ class FactionTest < ActiveSupport::TestCase
 
   test "create_should_create_alert" do
     assert_count_increases(Alert) do
-      f = Faction.new({:code => 'oo', :name => "Oinoiroko"})
+      f = Faction.new({:code => "oo-1", :name => "Oinoiroko 1"})
       assert f.save, f.errors.full_messages_html
     end
   end
