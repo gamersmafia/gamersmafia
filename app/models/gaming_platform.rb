@@ -6,6 +6,7 @@ class GamingPlatform < ActiveRecord::Base
   has_many :terms
   has_slug
   before_save :check_slug_doesnt_belong_to_portal
+  after_save :check_if_icon_updated
 
   def code
     self.slug
@@ -129,5 +130,12 @@ class GamingPlatform < ActiveRecord::Base
       raise ("final decision made on unknown type" +
              " (#{decision.decision_type_class})")
     end
+  end
+
+  def check_if_icon_updated
+    if self.icon_changed?
+      Skins.delay.update_portal_favicons
+    end
+    true
   end
 end
