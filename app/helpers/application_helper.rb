@@ -1628,4 +1628,16 @@ attachColorPicker(document.getElementById('#{id}-hue-input'));
     out.append("</div>")
     out.join("\n")
   end
+
+  def category_tag_browser_fragment_key(category)
+    out = "/#{controller.portal.code}/common/"
+    if category
+      out << "category/#{category.id}"
+    else
+      out << "root"
+    end
+
+    out << Time.now.strftime("%Y%W")
+    out
+  end
 end

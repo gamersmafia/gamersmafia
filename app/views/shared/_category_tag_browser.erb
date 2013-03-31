@@ -1,4 +1,6 @@
-<% mftable('Contenidos con tags', Term.contents_tags.in_category(category).find(:all, :order => 'name')) do |t| %>
+<%cache(category_tag_browser_fragment_key(category)) do%>
+<% mftable('Contenidos con tags', Term.contents_tags.with_contents.in_category(category).find(:all, :order => 'name', :limit => 50)) do |t| %>
 <td><a href="/tags/<%=t.slug%>"><%=t.name%></a></td>
 <td class="right"><%=t.contents_tagged_count%></td>
+<% end -%>
 <% end -%>
