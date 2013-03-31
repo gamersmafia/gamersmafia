@@ -12,6 +12,8 @@ class Game < ActiveRecord::Base
   has_slug
   can_have_faction
 
+  file_column :icon
+
   after_save :update_img_file
   after_save :update_slug_in_other_places_if_changed
 
@@ -111,7 +113,7 @@ class Game < ActiveRecord::Base
   end
 
   def img_file
-    "#{Rails.root}/public/storage/games/#{self.slug}.gif"
+    "#{self.select(:icon)"
   end
 
   # TODO tb a plataformas

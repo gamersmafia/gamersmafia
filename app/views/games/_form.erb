@@ -14,7 +14,7 @@
 <%= select("game", "publisher_id", Term.with_taxonomy("GamePublisher").all.collect{|p| [ p.name, p.id ]}, {:include_blank => true}) %>
 
 <p><label for="game_file">Archivo .GIF en blanco y negro de 16x16</label><br/>
-<img src="<%=ASSET_URL%>/storage/games/<%=@game.slug%>.gif" />
+<%= image_tag url_for_file_column("game", "icon") %>
 <%= file_field 'game', 'file' %></p>
 
 <p><label for="game_gidu">¿Tiene GUID?</label><br/>
