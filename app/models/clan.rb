@@ -385,8 +385,8 @@ class Clan < ActiveRecord::Base
 
 
   validates_format_of :tag,
-      :with => /^[a-z0-9<>¿\?[:space:]|\]\[\(\):;^\.,_¡!\/&%"\+\-]{1,7}$/i,
-      :message => ("El tag tiene más de 7 caracteres o bien tiene caracteres" +
+      :with => /^[a-z0-9<>¿\?[:space:]|\]\[\(\):;^\.,_¡!\/&%"\+\-]{1,15}$/i,
+      :message => ("El tag tiene más de 15 caracteres o bien tiene caracteres" +
                    " ilegales")
 
   validates_format_of :irc_server,
