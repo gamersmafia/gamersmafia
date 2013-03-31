@@ -3,9 +3,6 @@ require 'test_helper'
 
 class SoldFactionTest < ActiveSupport::TestCase
 
-  test "_can_buy_faction_if_never_bought_before" do
-  end
-
   def buy_a_faction
     u = User.find(1)
     p = Product.find_by_name('Facción')
@@ -14,7 +11,8 @@ class SoldFactionTest < ActiveSupport::TestCase
     game = self.create_a_game
     assert_count_increases(Faction) do
       receipt.use({
-          :game_id => game.id,
+        :faction_type => "Game",
+        :game_id => game.id,
       })
     end
     assert receipt.used?
@@ -32,6 +30,7 @@ class SoldFactionTest < ActiveSupport::TestCase
     game = self.create_a_game
     assert_count_increases(Faction) do
       receipt.use({
+        :faction_type => "Game",
         :game_id => game.id,
       }) end
     assert receipt.used?

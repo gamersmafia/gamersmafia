@@ -2,10 +2,16 @@
 require 'test_helper'
 
 class GamingPlatformTest < ActiveSupport::TestCase
+  test "should_create_if_everything_ok" do
+    self.create_platform
+
+    assert_not_nil GamingPlatform.find_by_name(@platform.name)
+    assert_not_nil GamingPlatform.find_by_slug(@platform.slug)
+  end
+
   test "create_term" do
-    @platform = GamingPlatform.new(:name => 'foo', :slug => 'bar')
-    assert @platform.save
-    @platform.create_contents_categories
+    self.create_platform
+
     t = Term.find(
         :first,
         :conditions => ['gaming_platform_id = ? AND parent_id IS NULL', @platform.id])
@@ -14,15 +20,9 @@ class GamingPlatformTest < ActiveSupport::TestCase
     assert_equal @platform.slug, t.slug
   end
 
-  test "should_create_if_everything_ok" do
-    self.create_platform
-    assert_not_nil GamingPlatform.find_by_name('Worms')
-    assert_not_nil GamingPlatform.find_by_slug('w')
-  end
-
   test "should_create_contents_categories_if_everything_ok" do
     self.create_platform
-    @platform.create_contents_categories
+
     root_term = Term.single_toplevel(:gaming_platform_id => @platform.id)
     assert_not_nil root_term
     Organizations::DEFAULT_CONTENTS_CATEGORIES.each do |c|
@@ -31,6 +31,16 @@ class GamingPlatformTest < ActiveSupport::TestCase
           "Couldn't find a child of #{root_term} with taxonomy=#{c[0]} and" +
           " name #{c[1]}")
     end
+  end
+
+  test "should_create_portal_if_everything_ok" do
+    self.create_platform
+    @platform.create_faction
+    p = Portal.find(:first, :conditions => ['name = ? and code = ?', @platform.name, @platform.slug])
+    f = Faction.find(:first, :conditions => ['name = ? and code = ?', @platform.name, @platform.slug])
+    assert_not_nil p
+    assert_equal 1, p.factions.size
+    assert_equal p.factions[0].id, f.id
   end
 
   protected
