@@ -52,7 +52,7 @@ module Watchdog
     a = `top -n2`
     matches = /load average: ([0-9.]+), ([0-9.]+), ([0-9.]+)/.match(a)
     if matches.nil?
-      raise "Unable to retrieve load average information from top."
+      raise "Unable to retrieve load average information from top (#{a[0..100]})."
     end
 
     # We retrieve the sequence of load times from the first line of top. Eg:

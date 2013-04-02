@@ -1576,7 +1576,8 @@ CREATE TABLE games (
     has_faction boolean DEFAULT false NOT NULL,
     gaming_platform_id integer NOT NULL,
     release_date character varying,
-    publisher_id integer
+    publisher_id integer,
+    icon character varying
 );
 SET default_with_oids = false;
 CREATE TABLE games_gaming_platforms (
