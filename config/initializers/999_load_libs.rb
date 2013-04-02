@@ -4,6 +4,8 @@
    slnc_file_column
    slnc_file_column_helper
    has_hid
+   has_slug
+   can_have_faction
    ruby_mixings
    acts_as_categorizable
    acts_as_content

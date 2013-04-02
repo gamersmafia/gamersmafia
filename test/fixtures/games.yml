@@ -6,6 +6,7 @@ first_game:
   guid_format: ^([0-9]{10})$
   user_id: 1
   gaming_platform_id: 1
+  has_faction: true
 
 second:
   id: 2
@@ -14,6 +15,7 @@ second:
   has_guids: false
   user_id: 2
   gaming_platform_id: 1
+  has_faction: true
 
 third:
   id: 3
@@ -22,3 +24,4 @@ third:
   has_guids: false
   user_id: 3
   gaming_platform_id: 1
+  has_faction: true

@@ -72,7 +72,7 @@ class GameTest < ActiveSupport::TestCase
 
   test "should_create_portal_if_everything_ok" do
     test_should_create_if_everything_ok
-    @g.create_contents_categories
+    @g.create_faction
     p = Portal.find(:first, :conditions => ['name = ? and code = ?', @g.name, @g.slug])
     f = Faction.find(:first, :conditions => ['name = ? and code = ?', @g.name, @g.slug])
     assert_not_nil p

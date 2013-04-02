@@ -630,11 +630,10 @@ Request information:
 
     if Authorization.can_admin_all_items?(@user)
       items<< ['Avatares', '/avatares']
-      # items<< ['Canales GMTV', '/admin/canales']
       items<< ['Clanes', '/admin/clanes']
       items<< ['Competiciones', '/admin/competiciones']
       items<< ['Facciones', '/admin/facciones']
-      # items<< ['Grupos', '/admin/grupos']
+      items<< ['Juegos', '/admin/juegos']
       items<< ['IP Bans', '/admin/ip_bans']
       items<< ['IPs Duplicadas', '/admin/usuarios/ipsduplicadas']
       items<< ['Mapas', '/admin/mapas_juegos']

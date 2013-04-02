@@ -1,6 +1,4 @@
 # -*- encoding : utf-8 -*-
-require 'has_slug'
-
 class Term < ActiveRecord::Base
   VALID_TAXONOMIES = %w(
       BazarDistrict

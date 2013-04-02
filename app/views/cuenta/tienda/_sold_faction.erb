@@ -1,3 +1,10 @@
+<select id="faction_type_selector" name="faction_type">
+  <option value="Game">Juego</option>
+  <option value="GamingPlatform">Plataforma</option>
+</select>
+<br />
+<br />
+<div class="refered-instance-selector" id="refered-instance-game">
 Juego:
 <select name="game_id">
   <option></option>
@@ -5,3 +12,22 @@ Juego:
   <option value="<%=game.id%>"><%=game.name%></option>
   <% end -%>
 </select>
+</div>
+
+<div class="refered-instance-selector hidden" id="refered-instance-gaming-platform">
+Plataforma:
+<select name="gaming_platform_id">
+  <option></option>
+  <%GamingPlatform.without_faction.find(:all, :order => 'LOWER(name)').each do |game|%>
+  <option value="<%=game.id%>"><%=game.name%></option>
+  <% end -%>
+</select>
+</div>
+
+<script type="text/javascript">
+  $('#faction_type_selector').change(function() {
+      var faction_type = $(this).val();
+      $('#refered-instance-game').toggleClass('hidden');
+      $('#refered-instance-gaming-platform').toggleClass('hidden');
+  });
+</script>

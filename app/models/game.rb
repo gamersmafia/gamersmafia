@@ -1,6 +1,4 @@
 # -*- encoding : utf-8 -*-
-require 'has_slug'
-
 class Game < ActiveRecord::Base
   has_many :games_maps
   has_many :games_modes
@@ -12,6 +10,7 @@ class Game < ActiveRecord::Base
   has_many :terms, :dependent => :destroy
 
   has_slug
+  can_have_faction
 
   after_save :update_img_file
   after_save :update_slug_in_other_places_if_changed
@@ -20,8 +19,6 @@ class Game < ActiveRecord::Base
   validates_uniqueness_of :name, :scope => :gaming_platform_id
   validates_presence_of :gaming_platform_id
   validates_presence_of :user_id
-
-  scope :without_faction, :conditions => "has_faction = 'f'"
 
   ENTITY_USER = 0
   ENTITY_CLAN = 1
@@ -77,48 +74,6 @@ class Game < ActiveRecord::Base
     guid =~ Regexp.compile(self.guid_format)
   end
 
-  def create_contents_categories
-    f = Faction.find_by_name(self.name)
-    if f.nil? then
-      f = Faction.new(:name => self.name, :code => self.slug)
-      if !f.save
-        raise "Error creating faction: #{f.errors.full_messages_html}"
-      end
-    end
-
-    slug = self.slug
-    while Portal.find_by_code(slug) || Portal::UNALLOWED_CODES.include?(slug)
-      slug += '1'
-    end
-
-    portal = Portal.create(:name => self.name, :code => slug)
-    portal.factions<< f
-
-    # El orden es importante
-    root_term = Term.find(
-        :first, :conditions => ["game_id = ? and taxonomy = 'Game'", self.id])
-    if root_term.nil?
-      root_term = Term.create({
-          :game_id => self.id,
-          :name => self.name,
-          :slug => self.slug,
-          :taxonomy => "Game",
-      })
-      if root_term.new_record?
-        raise "Term isn't created #{root_term.errors.full_messages_html}"
-      end
-    end
-
-    Organizations::DEFAULT_CONTENTS_CATEGORIES.each do |c|
-      if root_term.children.find(
-          :first, :conditions => ["name = ? AND taxonomy = ?", c[1], c[0]]).nil?
-        root_term.children.create(:name => c[1], :taxonomy => c[0])
-      end
-    end
-
-    self.update_attribute(:has_faction, true)
-  end
-
   def file=(incoming_file)
     @temp_file = incoming_file
     @filename = incoming_file.original_filename if incoming_file.to_s != ''
@@ -139,6 +94,11 @@ class Game < ActiveRecord::Base
 
   def update_img_file
     if @temp_file and @filename != ''
+      base_dir = "#{File.dirname(self.img_file)}"
+      if not File.exists?(base_dir)
+        FileUtils.mkdir_p(base_dir)
+      end
+
       File.open(self.img_file, "wb+") do |f|
         f.write(@temp_file.read)
       end

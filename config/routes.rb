@@ -85,6 +85,7 @@ Gamersmafia::Application.routes.draw do
   match 'admin/clanes/(:action)(/:id)' => 'admin/clanes'
   match 'admin/facciones(/:action)' => 'admin/facciones'
   match 'admin/plataformas(/:action)' => 'admin/plataformas'
+  match 'admin/juegos(/:action)' => 'admin/juegos'
   match 'admin/categorias/create' => 'admin/categorias#create'
   match 'admin/categorias/term/:id' => 'admin/categorias#root'
   match 'admin/categorias/term/:id/contenidos/:content_type' => 'admin/categorias#contenidos'

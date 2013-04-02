@@ -1,0 +1,21 @@
+<%= error_messages_for @game %>
+
+<!--[form:game]-->
+<p><label for="game_name">Nombre</label><br/>
+<%= text_field 'game', 'name', :class => 'text'  %></p>
+
+<p><label for="game_slug">Abreviatura</label><br/>
+<%= text_field 'game', 'slug', :class => 'text'  %></p>
+
+<p><label for="game_file">Archivo .GIF en blanco y negro de 16x16</label><br/>
+<img src="<%=ASSET_URL%>/storage/games/<%=@game.code%>.gif" />
+<%= file_field 'game', 'file' %></p>
+
+<p><label>¿Tiene GUID?</label><br/>
+<%= check_box 'game', 'has_guids'  %></p>
+
+<p><label>Formato de GUID</label><br/>
+<%= text_field 'game', 'guid_format', :class => 'text'  %></p>
+
+<!--[eoform:game]-->
+
