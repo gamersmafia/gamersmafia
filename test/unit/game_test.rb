@@ -79,4 +79,10 @@ class GameTest < ActiveSupport::TestCase
     assert_equal 1, p.factions.size
     assert_equal p.factions[0].id, f.id
   end
+
+  test "update_portal_favicons_should_be_executed" do
+    g = Game.first
+    Skins.expects(:update_portal_favicons)
+    g.save
+  end
 end

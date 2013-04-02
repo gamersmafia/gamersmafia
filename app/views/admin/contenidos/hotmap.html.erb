@@ -13,7 +13,7 @@
 Faction.find(:all, :order => 'lower(name) asc').each do |f|
 %>
 <tr>
-  <td><img class="icon16" src="<%=ASSET_URL%>/storage/games/<%=f.code%>.gif" /></td>
+  <td><img class="icon16" src="<%=url_for_file_column("faction", "icon")%>" /></td>
 <%
 
   Cms::CONTENTS_WITH_CATEGORIES.each do |cls_name|

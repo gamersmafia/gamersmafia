@@ -28,7 +28,7 @@ class Skin < ActiveRecord::Base
   CGEN_CSS_END = '/* COLOR GEN END - DO NOT REMOVE */'
   DEFAULT_SKINS_IDS  = {'default' => -1, 'arena' => -2, 'bazar' => -3}
   FAVICONS_CSS_FILENAME = (
-      "#{Rails.root}/public/skins/_core/css/games_sprites.css")
+      "#{Rails.root}/app/assets/stylesheets/games_sprites.css")
 
   SKINS_DIR = "#{Rails.root}/public/storage/skins"
 

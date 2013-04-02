@@ -16,7 +16,7 @@
   <tr class="<%=oddclass%>">
       <td><a href="http://<%=p.code%>.<%=App.domain%>"><%=p.name%></a></th>
       <td><% for f in p.factions %>
-        <img class="icon" src="<%=ASSET_URL%>/storage/games/<%=f.code%>.gif" title="<%=f.name%>" />
+        <img class="icon" src="<%= url_for_file_column("factionsportal", "icon") %>" title="<%=f.name%>" />
         <% end -%></th>
     </tr>
   <% end %>
