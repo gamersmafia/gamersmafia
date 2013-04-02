@@ -7,6 +7,8 @@ class GamingPlatform < ActiveRecord::Base
   can_have_faction
   before_save :check_slug_doesnt_belong_to_portal
   after_create :create_contents_categories
+  after_save :check_if_icon_updated
+  file_column :icon
 
   def code
     self.slug
@@ -67,7 +69,7 @@ class GamingPlatform < ActiveRecord::Base
   end
 
   def img_file
-    "#{Rails.root}/public/storage/games/#{self.slug}.gif"
+    "#{self.select(:icon)}"
   end
 
   def check_slug_doesnt_belong_to_portal
@@ -116,5 +118,12 @@ class GamingPlatform < ActiveRecord::Base
       raise ("final decision made on unknown type" +
              " (#{decision.decision_type_class})")
     end
+  end
+
+  def check_if_icon_updated
+    if self.icon_changed?
+      Skins.delay.update_portal_favicons
+    end
+    true
   end
 end

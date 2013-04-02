@@ -7,6 +7,35 @@ CREATE SCHEMA archive;
 CREATE SCHEMA stats;
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+SET search_path = public, pg_catalog;
+CREATE FUNCTION _final_median(anyarray) RETURNS double precision
+    LANGUAGE sql IMMUTABLE
+    AS $_$ 
+  WITH q AS
+  (
+     SELECT val
+     FROM unnest($1) val
+     WHERE VAL IS NOT NULL
+     ORDER BY 1
+  ),
+  cnt AS
+  (
+    SELECT COUNT(*) AS c FROM q
+  )
+  SELECT AVG(val)::float8
+  FROM 
+  (
+    SELECT val FROM q
+    LIMIT  2 - MOD((SELECT c FROM cnt), 2)
+    OFFSET GREATEST(CEIL((SELECT c FROM cnt) / 2.0) - 1,0)  
+  ) q2;
+$_$;
+CREATE AGGREGATE median(anyelement) (
+    SFUNC = array_append,
+    STYPE = anyarray,
+    INITCOND = '{}',
+    FINALFUNC = _final_median
+);
 SET search_path = archive, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
@@ -589,7 +618,8 @@ CREATE TABLE comments (
     random_v numeric DEFAULT random(),
     state smallint DEFAULT 0 NOT NULL,
     moderation_reason smallint,
-    karma_points integer
+    karma_points integer,
+    comment_unformatized text
 );
 CREATE SEQUENCE comments_id_seq
     START WITH 1
@@ -1394,15 +1424,8 @@ ALTER SEQUENCE factions_links_id_seq OWNED BY factions_links.id;
 CREATE TABLE factions_portals (
     faction_id integer NOT NULL,
     portal_id integer NOT NULL,
-    id integer NOT NULL
+    id integer
 );
-CREATE SEQUENCE factions_portals_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-ALTER SEQUENCE factions_portals_id_seq OWNED BY factions_portals.id;
 SET default_with_oids = true;
 CREATE TABLE faq_categories (
     id integer NOT NULL,
@@ -1553,7 +1576,7 @@ CREATE TABLE gamersmafiageist_codes (
     user_id integer NOT NULL,
     created_on timestamp without time zone DEFAULT now() NOT NULL,
     code character varying,
-    survey_edition_date date NOT NULL
+    survey_edition_date character varying NOT NULL
 );
 CREATE SEQUENCE gamersmafiageist_codes_id_seq
     START WITH 1
@@ -1641,7 +1664,8 @@ CREATE TABLE gaming_platforms (
     has_faction boolean DEFAULT false NOT NULL,
     user_id integer,
     created_on timestamp without time zone DEFAULT now() NOT NULL,
-    updated_on timestamp without time zone DEFAULT now() NOT NULL
+    updated_on timestamp without time zone DEFAULT now() NOT NULL,
+    icon character varying
 );
 CREATE TABLE gaming_platforms_users (
     user_id integer NOT NULL,
@@ -1731,6 +1755,104 @@ CREATE SEQUENCE groups_messages_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE groups_messages_id_seq OWNED BY groups_messages.id;
+CREATE TABLE ias (
+    id integer,
+    login character varying(80),
+    password character varying(40),
+    validkey character varying(40),
+    email character varying(100),
+    newemail character varying(100),
+    ipaddr character varying(15),
+    created_on timestamp without time zone,
+    updated_at timestamp without time zone,
+    firstname character varying,
+    lastname character varying,
+    image bytea,
+    lastseen_on timestamp without time zone,
+    faction_id integer,
+    faction_last_changed_on timestamp without time zone,
+    avatar_id integer,
+    city character varying,
+    homepage character varying,
+    sex smallint,
+    msn character varying,
+    icq character varying,
+    birthday date,
+    cache_karma_points integer,
+    irc character varying,
+    country_id integer,
+    photo character varying,
+    hw_mouse character varying,
+    hw_processor character varying,
+    hw_motherboard character varying,
+    hw_ram character varying,
+    hw_hdd character varying,
+    hw_graphiccard character varying,
+    hw_soundcard character varying,
+    hw_headphones character varying,
+    hw_monitor character varying,
+    hw_connection character varying,
+    description text,
+    is_superadmin boolean,
+    comments_count integer,
+    referer_user_id integer,
+    cache_faith_points integer,
+    notifications_global boolean,
+    notifications_newmessages boolean,
+    notifications_newregistrations boolean,
+    notifications_trackerupdates boolean,
+    xfire character varying,
+    cache_unread_messages integer,
+    resurrected_by_user_id integer,
+    resurrection_started_on timestamp without time zone,
+    using_tracker boolean,
+    secret character(32),
+    cash numeric(14,2),
+    lastcommented_on timestamp without time zone,
+    global_bans integer,
+    last_clan_id integer,
+    antiflood_level smallint,
+    last_competition_id integer,
+    competition_roster character varying,
+    enable_competition_indicator boolean,
+    is_hq boolean,
+    enable_profile_signatures boolean,
+    profile_signatures_count integer,
+    wii_code character(16),
+    email_public boolean,
+    gamertag character varying,
+    googletalk character varying,
+    yahoo_im character varying,
+    notifications_newprofilesignature boolean,
+    tracker_autodelete_old_contents boolean,
+    comment_adds_to_tracker_enabled boolean,
+    cache_remaining_rating_slots integer,
+    has_seen_tour boolean,
+    is_bot boolean,
+    admin_permissions character varying,
+    state smallint,
+    cache_is_faction_leader boolean,
+    profile_last_updated_on timestamp without time zone,
+    visitor_id character varying,
+    comments_valorations_type_id integer,
+    comments_valorations_strength numeric(10,2),
+    enable_comments_sig boolean,
+    comments_sig character varying,
+    comment_show_sigs boolean,
+    has_new_friend_requests boolean,
+    default_portal character varying,
+    emblems_mask character varying,
+    random_id double precision,
+    is_staff boolean,
+    pending_slog integer,
+    ranking_karma_pos integer,
+    ranking_faith_pos integer,
+    ranking_popularity_pos integer,
+    cache_popularity integer,
+    login_is_ne_unfriendly boolean,
+    cache_valorations_weights_on_self_comments numeric,
+    default_comments_valorations_weight double precision
+);
 CREATE TABLE images (
     id integer NOT NULL,
     description character varying,
@@ -2447,20 +2569,6 @@ CREATE SEQUENCE sold_products_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE sold_products_id_seq OWNED BY sold_products.id;
-CREATE TABLE staff_candidate_votes (
-    id integer NOT NULL,
-    user_id integer NOT NULL,
-    created_on timestamp without time zone DEFAULT now() NOT NULL,
-    staff_candidate_id integer NOT NULL,
-    staff_position_id integer NOT NULL
-);
-CREATE SEQUENCE staff_candidate_votes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-ALTER SEQUENCE staff_candidate_votes_id_seq OWNED BY staff_candidate_votes.id;
 CREATE TABLE staff_candidates (
     id integer NOT NULL,
     staff_position_id integer NOT NULL,
@@ -2482,6 +2590,19 @@ CREATE SEQUENCE staff_candidates_id_seq
     NO MAXVALUE
     CACHE 1;
 ALTER SEQUENCE staff_candidates_id_seq OWNED BY staff_candidates.id;
+CREATE TABLE staff_canditate_votes (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    created_on timestamp without time zone DEFAULT now() NOT NULL,
+    staff_candidate_id integer NOT NULL
+);
+CREATE SEQUENCE staff_canditate_votes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER SEQUENCE staff_canditate_votes_id_seq OWNED BY staff_canditate_votes.id;
 CREATE TABLE staff_positions (
     id integer NOT NULL,
     staff_type_id integer NOT NULL,
@@ -2574,6 +2695,14 @@ CREATE TABLE treated_visitors (
     visitor_id character varying NOT NULL,
     treatment integer NOT NULL,
     user_id integer
+);
+CREATE TABLE tterms (
+    id integer,
+    name character varying,
+    slug character varying,
+    taxonomy character varying,
+    parent_id integer,
+    root_id integer
 );
 CREATE TABLE tutorials (
     id integer NOT NULL,
@@ -3178,7 +3307,6 @@ ALTER TABLE ONLY factions_capos ALTER COLUMN id SET DEFAULT nextval('factions_ca
 ALTER TABLE ONLY factions_editors ALTER COLUMN id SET DEFAULT nextval('factions_editors_id_seq'::regclass);
 ALTER TABLE ONLY factions_headers ALTER COLUMN id SET DEFAULT nextval('factions_headers_id_seq'::regclass);
 ALTER TABLE ONLY factions_links ALTER COLUMN id SET DEFAULT nextval('factions_links_id_seq'::regclass);
-ALTER TABLE ONLY factions_portals ALTER COLUMN id SET DEFAULT nextval('factions_portals_id_seq'::regclass);
 ALTER TABLE ONLY faq_categories ALTER COLUMN id SET DEFAULT nextval('faq_categories_id_seq'::regclass);
 ALTER TABLE ONLY faq_entries ALTER COLUMN id SET DEFAULT nextval('faq_entries_id_seq'::regclass);
 ALTER TABLE ONLY friends_recommendations ALTER COLUMN id SET DEFAULT nextval('friends_recommendations_id_seq'::regclass);
@@ -3230,8 +3358,8 @@ ALTER TABLE ONLY silenced_emails ALTER COLUMN id SET DEFAULT nextval('silenced_e
 ALTER TABLE ONLY skins ALTER COLUMN id SET DEFAULT nextval('skins_id_seq'::regclass);
 ALTER TABLE ONLY skins_files ALTER COLUMN id SET DEFAULT nextval('skins_files_id_seq'::regclass);
 ALTER TABLE ONLY sold_products ALTER COLUMN id SET DEFAULT nextval('sold_products_id_seq'::regclass);
-ALTER TABLE ONLY staff_candidate_votes ALTER COLUMN id SET DEFAULT nextval('staff_candidate_votes_id_seq'::regclass);
 ALTER TABLE ONLY staff_candidates ALTER COLUMN id SET DEFAULT nextval('staff_candidates_id_seq'::regclass);
+ALTER TABLE ONLY staff_canditate_votes ALTER COLUMN id SET DEFAULT nextval('staff_canditate_votes_id_seq'::regclass);
 ALTER TABLE ONLY staff_positions ALTER COLUMN id SET DEFAULT nextval('staff_positions_id_seq'::regclass);
 ALTER TABLE ONLY staff_types ALTER COLUMN id SET DEFAULT nextval('staff_types_id_seq'::regclass);
 ALTER TABLE ONLY terms ALTER COLUMN id SET DEFAULT nextval('terms_id_seq'::regclass);
@@ -3452,6 +3580,8 @@ ALTER TABLE ONLY coverages
     ADD CONSTRAINT events_news_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY events_users
+    ADD CONSTRAINT events_users_pkey PRIMARY KEY (event_id, user_id);
 ALTER TABLE ONLY factions_banned_users
     ADD CONSTRAINT factions_banned_users_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY factions
@@ -3500,6 +3630,8 @@ ALTER TABLE ONLY gamersmafiageist_codes
     ADD CONSTRAINT gamersmafiageist_codes_code_key UNIQUE (code);
 ALTER TABLE ONLY gamersmafiageist_codes
     ADD CONSTRAINT gamersmafiageist_codes_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY games
+    ADD CONSTRAINT games_code_unique UNIQUE (slug);
 ALTER TABLE ONLY games_maps
     ADD CONSTRAINT games_maps_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY games_modes
@@ -3622,10 +3754,10 @@ ALTER TABLE ONLY alerts
     ADD CONSTRAINT slog_entries_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY sold_products
     ADD CONSTRAINT sold_products_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY staff_candidate_votes
-    ADD CONSTRAINT staff_candidate_votes_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY staff_candidates
     ADD CONSTRAINT staff_candidates_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY staff_canditate_votes
+    ADD CONSTRAINT staff_canditate_votes_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY staff_positions
     ADD CONSTRAINT staff_positions_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY staff_types
@@ -3635,7 +3767,11 @@ ALTER TABLE ONLY staff_types
 ALTER TABLE ONLY terms
     ADD CONSTRAINT terms_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY tracker_items
+    ADD CONSTRAINT tracker_items_pkey UNIQUE (id);
+ALTER TABLE ONLY tracker_items
     ADD CONSTRAINT tracker_items_pkey1 PRIMARY KEY (id);
+ALTER TABLE ONLY training_questions
+    ADD CONSTRAINT training_questions_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY treated_visitors
     ADD CONSTRAINT treated_visitors_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY tutorials_categories
@@ -3747,6 +3883,7 @@ CREATE INDEX contents_is_public ON contents USING btree (is_public);
 CREATE INDEX contents_is_public_and_game_id ON contents USING btree (is_public, game_id);
 CREATE UNIQUE INDEX contents_locks_uniq ON contents_locks USING btree (content_id);
 CREATE UNIQUE INDEX contents_recommendations_content_id_sender_user_id_receiver_use ON contents_recommendations USING btree (content_id, sender_user_id, receiver_user_id);
+CREATE INDEX contents_recommendations_created_on ON contents_recommendations USING btree (created_on);
 CREATE INDEX contents_recommendations_receiver_user_id_marked_as_bad ON contents_recommendations USING btree (receiver_user_id, marked_as_bad);
 CREATE INDEX contents_recommendations_seen_on_content_id_receiver_user_id ON contents_recommendations USING btree (content_id, receiver_user_id);
 CREATE INDEX contents_recommendations_sender_user_id ON contents_recommendations USING btree (sender_user_id);
@@ -3796,6 +3933,7 @@ CREATE INDEX friends_recommendations_user_id_undecided ON friends_recommendation
 CREATE UNIQUE INDEX friends_users_uniq ON friendships USING btree (sender_user_id, receiver_user_id);
 CREATE INDEX funthings_state ON funthings USING btree (state);
 CREATE UNIQUE INDEX funthings_title_uniq ON funthings USING btree (title);
+CREATE INDEX gamersmafiageist_codes_user_edition ON gamersmafiageist_codes USING btree (user_id, survey_edition_date);
 CREATE INDEX games_gaming_platform ON games USING btree (gaming_platform_id);
 CREATE INDEX games_has_competitions ON games USING btree (has_competitions);
 CREATE INDEX games_has_demos ON games USING btree (has_demos);
@@ -3979,6 +4117,8 @@ ALTER TABLE ONLY decision_user_reputations
     ADD CONSTRAINT decision_user_reputations_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL ON DELETE CASCADE;
 ALTER TABLE ONLY decisions
     ADD CONSTRAINT decisions_final_decision_choice_id_fkey FOREIGN KEY (final_decision_choice_id) REFERENCES decision_choices(id) ON DELETE SET NULL;
+ALTER TABLE ONLY decisions
+    ADD CONSTRAINT decisions_final_fk FOREIGN KEY (final_decision_choice_id) REFERENCES decision_choices(id) MATCH FULL ON DELETE SET NULL;
 ALTER TABLE ONLY demos
     ADD CONSTRAINT demos_approved_by_user_id_fkey FOREIGN KEY (approved_by_user_id) REFERENCES users(id);
 ALTER TABLE ONLY demos
@@ -4013,8 +4153,6 @@ ALTER TABLE ONLY events
     ADD CONSTRAINT events_unique_content_id_fkey FOREIGN KEY (unique_content_id) REFERENCES contents(id);
 ALTER TABLE ONLY events
     ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
-ALTER TABLE ONLY decisions
-    ADD CONSTRAINT final_decision_choice_fk FOREIGN KEY (final_decision_choice_id) REFERENCES decision_choices(id) MATCH FULL ON DELETE SET NULL;
 ALTER TABLE ONLY topics
     ADD CONSTRAINT forum_topics_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
 ALTER TABLE ONLY funthings
@@ -4095,16 +4233,14 @@ ALTER TABLE ONLY reviews
     ADD CONSTRAINT reviews_unique_content_id_fkey FOREIGN KEY (unique_content_id) REFERENCES contents(id);
 ALTER TABLE ONLY skins_files
     ADD CONSTRAINT skins_files_skin_id_fkey FOREIGN KEY (skin_id) REFERENCES skins(id) MATCH FULL;
-ALTER TABLE ONLY staff_candidate_votes
-    ADD CONSTRAINT staff_candidate_votes_staff_candidate_id_fkey FOREIGN KEY (staff_candidate_id) REFERENCES staff_candidates(id) MATCH FULL;
-ALTER TABLE ONLY staff_candidate_votes
-    ADD CONSTRAINT staff_candidate_votes_staff_position_id_fkey FOREIGN KEY (staff_position_id) REFERENCES staff_positions(id) MATCH FULL;
-ALTER TABLE ONLY staff_candidate_votes
-    ADD CONSTRAINT staff_candidate_votes_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
 ALTER TABLE ONLY staff_candidates
     ADD CONSTRAINT staff_candidates_staff_position_id_fkey FOREIGN KEY (staff_position_id) REFERENCES staff_positions(id) MATCH FULL;
 ALTER TABLE ONLY staff_candidates
     ADD CONSTRAINT staff_candidates_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
+ALTER TABLE ONLY staff_canditate_votes
+    ADD CONSTRAINT staff_canditate_votes_staff_candidate_id_fkey FOREIGN KEY (staff_candidate_id) REFERENCES staff_candidates(id) MATCH FULL;
+ALTER TABLE ONLY staff_canditate_votes
+    ADD CONSTRAINT staff_canditate_votes_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
 ALTER TABLE ONLY staff_positions
     ADD CONSTRAINT staff_positions_staff_type_id_fkey FOREIGN KEY (staff_type_id) REFERENCES staff_types(id) MATCH FULL;
 ALTER TABLE ONLY terms
@@ -4125,6 +4261,10 @@ ALTER TABLE ONLY topics
     ADD CONSTRAINT topics_clan_id_fkey FOREIGN KEY (clan_id) REFERENCES clans(id) MATCH FULL;
 ALTER TABLE ONLY topics
     ADD CONSTRAINT topics_unique_content_id_fkey FOREIGN KEY (unique_content_id) REFERENCES contents(id);
+ALTER TABLE ONLY training_questions
+    ADD CONSTRAINT training_questions__ner_annotate_comment_comment_id_fkey FOREIGN KEY (_ner_annotate_comment_comment_id) REFERENCES comments(id) MATCH FULL;
+ALTER TABLE ONLY training_questions
+    ADD CONSTRAINT training_questions_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) MATCH FULL;
 ALTER TABLE ONLY tutorials
     ADD CONSTRAINT tutorials_unique_content_id_fkey FOREIGN KEY (unique_content_id) REFERENCES contents(id);
 ALTER TABLE ONLY user_interests

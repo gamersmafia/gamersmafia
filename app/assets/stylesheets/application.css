@@ -6,4 +6,5 @@
 *= require_tree ./components
 *= require_tree ./media-queries
 *= require typography
+*= require games_sprites
 */
