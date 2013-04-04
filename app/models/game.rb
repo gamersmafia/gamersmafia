@@ -139,7 +139,7 @@ class Game < ActiveRecord::Base
   end
 
   def check_if_icon_updated
-    if self.icon_changed?
+    if self.file_columns_changed
       Skins.delay.update_portal_favicons
     end
     true
