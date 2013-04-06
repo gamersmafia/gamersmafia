@@ -69,4 +69,9 @@ class BazarDistrictTest < ActiveSupport::TestCase
     assert bd.user_is_editor_of_content_type?(u59, ctype)
   end
 
+  test "update_portal_favicons_should_be_executed" do
+    b = BazarDistrict.first
+    Skins.expects(:update_portal_favicons)
+    b.save
+  end
 end

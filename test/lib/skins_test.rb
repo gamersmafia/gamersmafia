@@ -77,4 +77,14 @@ color: red;
     u2.pref_skin = s1.id
     assert_equal s1.used_by_users_count, 2
   end
+
+  test "games_sprites.css_should_update" do
+    File.delete("#{Skin::FAVICONS_CSS_FILENAME}")
+    Skins.update_portal_favicons
+    assert File.exists?("#{Skin::FAVICONS_CSS_FILENAME}")
+    old_time = File.mtime("#{Skin::FAVICONS_CSS_FILENAME}")
+    Skins.update_portal_favicons
+    new_time = File.mtime("#{Skin::FAVICONS_CSS_FILENAME}")
+    assert_not_equal old_time, new_time
+  end
 end

@@ -1641,7 +1641,8 @@ CREATE TABLE gaming_platforms (
     has_faction boolean DEFAULT false NOT NULL,
     user_id integer,
     created_on timestamp without time zone DEFAULT now() NOT NULL,
-    updated_on timestamp without time zone DEFAULT now() NOT NULL
+    updated_on timestamp without time zone DEFAULT now() NOT NULL,
+    icon character varying
 );
 CREATE TABLE gaming_platforms_users (
     user_id integer NOT NULL,

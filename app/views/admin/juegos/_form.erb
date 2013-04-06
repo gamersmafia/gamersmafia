@@ -8,7 +8,7 @@
 <%= text_field 'game', 'slug', :class => 'text'  %></p>
 
 <p><label for="game_file">Archivo .GIF en blanco y negro de 16x16</label><br/>
-<img src="<%=ASSET_URL%>/storage/games/<%=@game.code%>.gif" />
+<img src="<%=url_for_file_column("game", "icon")%>" />
 <%= file_field 'game', 'file' %></p>
 
 <p><label>¿Tiene GUID?</label><br/>
