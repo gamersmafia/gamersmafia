@@ -2,6 +2,7 @@
 .bundle
 .sass-cache/
 app/assets/stylesheets/user_skins/*.css.scss
+app/assets/stylesheets/games_sprites.css
 config/REVISION
 config/app_production.yml
 config/mode

@@ -2,7 +2,7 @@
 cache("/common/foros/_forums_list/#{parent.id}") do
 p = nil
 parent.children.find(:all, :conditions => ['taxonomy = ?', 'TopicsCategory'], :order => 'lower(name)').each do |forum|
-  game = Game.find_by_code(parent.root.code)
+  game = Game.find_by_slug(parent.root.code)
   if game
     favicon_class = game.code
   else
