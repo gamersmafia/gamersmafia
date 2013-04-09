@@ -125,8 +125,11 @@ module SlncFileColumn
       model_changed = true
     end
 
+    @file_columns_changed = model_changed
     self.save if model_changed
   end
+
+  attr_accessor :file_columns_changed
 
   protected
   def get_dst_dir

@@ -44,7 +44,7 @@ module Skins
       if entity.respond_to?(:icon)
         favicon_path = entity.icon
       else
-        favicon_path = "storage/games/#{entity.slug}.gif"
+        favicon_path = "storage/games/#{entity.icon}.gif"
       end
       portal_favicon = self.retrieve_portal_favicon(favicon_path)
       # Copy game sprite to big sprite

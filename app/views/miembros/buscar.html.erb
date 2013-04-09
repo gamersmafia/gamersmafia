@@ -31,7 +31,7 @@ for member in @members
   <tr class="<%=oddclass%>">
     <td class="sm-icon"><%=member_state(member.hstate)%></td>
     <td><%=link_to member.login, :action => member.login%></td>
-    <td class="sm-icon"><% if game then %><img src="<%=ASSET_URL%>/storage/games/<%=game.slug%>.gif" /><% end -%></td>
+    <td class="sm-icon"><% if game then %><img src="<%=url_for_file_column("game", "icon")%>" /><% end -%></td>
     <td class="infoinline" style="width: 150px;"><%=render :partial => '/shared/karmabar', :locals => {:user => member}%></td>
     <td class="timestamp infoinline"><%=print_tstamp(member.lastseen_on)%></td>
   </tr>

@@ -12,8 +12,11 @@ class Game < ActiveRecord::Base
   has_slug
   can_have_faction
 
+  file_column :icon
+
   after_save :update_img_file
   after_save :update_slug_in_other_places_if_changed
+  after_save :check_if_icon_updated
 
   validates_format_of :name, :with => /^[a-z\/$%\+\?&~.,0-9\(\)!':[:space:]\[\]-]{1,100}$/i
   validates_uniqueness_of :name, :scope => :gaming_platform_id
@@ -111,7 +114,7 @@ class Game < ActiveRecord::Base
   end
 
   def img_file
-    "#{Rails.root}/public/storage/games/#{self.slug}.gif"
+    "#{Rails.root}/public/#{self.icon}"
   end
 
   # TODO tb a plataformas
@@ -131,6 +134,13 @@ class Game < ActiveRecord::Base
         User.db_query("UPDATE contents SET url = nil WHERE id = #{c.id}")
       end
     end
+    end
+    true
+  end
+
+  def check_if_icon_updated
+    if self.file_columns_changed
+      Skins.delay.update_portal_favicons
     end
     true
   end

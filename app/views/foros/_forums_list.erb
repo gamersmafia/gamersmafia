@@ -2,9 +2,14 @@
 cache("/common/foros/_forums_list/#{parent.id}") do
 p = nil
 parent.children.find(:all, :conditions => ['taxonomy = ?', 'TopicsCategory'], :order => 'lower(name)').each do |forum|
-  p = forum.root if p.nil? %>
+  game = Game.find_by_code(parent.root.code)
+  if game
+    favicon_class = game.code
+  else
+    favicon_class = ""
+  end %>
 <tr class="<%=oddclass%>">
-  <td style="width: 20px;"><img src="<%=ASSET_URL%>/storage/games/<%=p.code%>.gif" /></td>
+  <td style="width: 20px;"><img src="<%=ASSET_URL%>/storage/games/gs-<%=favicon_class%>.gif" /></td>
   <td><%=render(:partial => 'forumdescription', :object => @object = forum)%></td>
   <td class="w50 infoinline right"><%=forum.contents_count%></td>
   <td class="w50 infoinline right"><%=forum.comments_count%></td>
