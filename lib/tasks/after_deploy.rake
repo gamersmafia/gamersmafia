@@ -6,7 +6,7 @@ namespace :gm do
     # After launching a new release custom skins' .css files disappear from
     # app/assets/stylesheets. This will recreate them.
     Skin.rebuild_all
-    Skin.update_portal_favicons
+    Skins.update_portal_favicons
     `bundle exec rake assets:precompile`
     `./script/delayed_job restart`
     Cms.uncompress_ckeditor_if_necessary
