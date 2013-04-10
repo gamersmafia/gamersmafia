@@ -36,6 +36,10 @@ p img {
   margin: 3px 0 0 5px;
 }
 
+div.user_faction_favicon {
+  position: absolute;
+}
+
 #login-box,
 #login-box td {
   text-align: left;
