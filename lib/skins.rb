@@ -41,7 +41,7 @@ module Skins
     i = 0
     entities_with_portals.each do |entity|
       invalid_image = false
-      if entity.respond_to?(:icon)
+      if entity.respond_to?(:icon) && entity.icon.to_s != ""
         favicon_path = entity.icon
       else
         favicon_path = "storage/games/#{entity.icon}.gif"
