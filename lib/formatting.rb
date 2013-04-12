@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 require 'rinku'
-require 'iconv'
 
 module Formatting
   SIMPLE_URL_REGEXP = /[a-zA-Z0-9_.:?#&%-\/]+/
