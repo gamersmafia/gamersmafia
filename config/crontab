@@ -1,4 +1,8 @@
 # m h  dom mon dow   command
+MAILTO=alerts@gamersmafia.com
+PATH=/usr/local/hosting/bin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:$PATH
+# m h  dom mon dow   command
+0 8 * * 1 /usr/bin/crontab -l > /home/httpd/.crontab
 43 10 1 * * /usr/bin/nice -n19 /srv/www/gamersmafia/current/script/cron_rake_task.sh gm:monthly
 12 6 * * 0 /usr/bin/nice -n19 /srv/www/gamersmafia/current/script/cron_rake_task.sh gm:weekly
 2 0 * * 0 /usr/bin/nice -n19 /srv/www/gamersmafia/current/script/cron_rake_task.sh gm:weekly_report
@@ -6,3 +10,5 @@
 */2 * * * * /usr/bin/nice -n19 /srv/www/gamersmafia/current/script/cron_rake_task.sh gm:fiveminutely
 0 0 * * * /usr/bin/nice -n19 /srv/www/gamersmafia/current/script/cron_rake_task.sh gm:midnight
 3 * * * * /usr/bin/nice -n19 /srv/www/gamersmafia/current/script/cron_rake_task.sh gm:hourly
+
+12 6 * * 6 /usr/bin/nice -n19 /home/httpd/bin/weekly_dump.sh

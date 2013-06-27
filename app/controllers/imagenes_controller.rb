@@ -23,6 +23,10 @@ class ImagenesController < BazarController
     end
   end
 
+  def no_ads
+    (@category && [1559, 1560].include?(@category.id))
+  end
+
   def index
     @categories = portal.categories(Image)
     @navpath = [['Imágenes', '/imagenes'], ]
@@ -42,6 +46,7 @@ class ImagenesController < BazarController
 
   def _after_show
     if @image # podemos estar haciendo 301
+      @category = @image.main_category
       if @image.main_category && @image.main_category.parent then
         @title = "#{@image.main_category.parent.name} &raquo; #{@image.main_category.name} &raquo; Imagen #{File.basename(@image.file) if @image.file}"
         @navpath = [['Imágenes', '/imagenes'], [@image.main_category.parent.name, "/imagenes/#{@image.main_category.parent.id}"], [@image.main_category.name, "/imagenes/#{@image.main_category.id}"], [@image.resolve_hid, gmurl(@image)]]

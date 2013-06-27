@@ -33,7 +33,7 @@ google_ad_height = 250;
   end
 
   def adsense_comments
-    if App.show_ads && !(user_is_authed && Authorization.gets_less_ads?(@user))
+    if App.show_ads && !controller.no_ads && !(user_is_authed && Authorization.gets_less_ads?(@user))
       ADSENSE_COMMENTS_SNIPPET
     end
   end
